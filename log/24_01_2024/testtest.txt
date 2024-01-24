@@ -1,0 +1,4 @@
+[04:02:17 CH]  Login : [Vàng] : 3.000 : [Ngọc] : 3.000
+[04:03:08 CH]  Nhận giftcode sachga : 1.000.000.000.000 vàng
+[04:03:08 CH]  Nhận giftcode sachga : 1.000.000.000 ngọc
+[04:09:02 CH]  Logout : [Vàng] : 1.000.000.003.000 : [Ngọc] : 1.000.003.000

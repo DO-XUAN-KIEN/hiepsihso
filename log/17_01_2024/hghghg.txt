@@ -1,0 +1,8 @@
+[10:28:25 CH]  Login : [Vàng] : 3.000 : [Ngọc] : 3.000
+[10:29:08 CH]  Logout : [Vàng] : 3.000 : [Ngọc] : 3.000
+[10:30:29 CH]  Login : [Vàng] : 3.000 : [Ngọc] : 3.000
+[10:34:55 CH]  Nhận giftcode ngochin : 1.000.000.000.000 vàng
+[10:34:55 CH]  Nhận giftcode ngochin : 1.000.000.000 ngọc
+[10:35:13 CH]  Tạo bang mất 20000 ngọc
+[10:42:07 CH]  Login : [Vàng] : 1.000.000.003.000 : [Ngọc] : 999.983.000
+[11:19:50 CH]  Login : [Vàng] : 1.000.000.003.000 : [Ngọc] : 999.983.000
