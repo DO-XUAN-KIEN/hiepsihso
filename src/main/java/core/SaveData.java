@@ -264,16 +264,16 @@ public class SaveData {
             // bxh loi dai
             BXH.BXH_loidai.clear();
             ps = conn.prepareStatement(
-                    "SELECT `id`, `level`, `name`, `body`, `itemwear`, `point_arena` FROM `player` WHERE `point_arena` > 0 ORDER BY  point_arena DESC LIMIT 20;");
-            ResultSet rq = ps.executeQuery();
-            while (rq.next()) {
+                    "SELECT `id`, `level`, `name`, `body`, `itemwear`, `point_active` FROM `player` WHERE `point_active` > 10 ORDER BY point_active  DESC LIMIT 20;");
+            ResultSet ru = ps.executeQuery();
+            while (ru.next()) {
 
 
                 Memin4 temp = new Memin4();
-                temp.level = rq.getShort("level");
-                temp.point_arena= rq.getInt("point_arena");
-                temp.name = rq.getString("name");
-                JSONArray jsar = (JSONArray) JSONValue.parse(rq.getString("body"));
+                temp.level = ru.getShort("level");
+                temp.point_active[2] = ru.getInt("point_active");
+                temp.name = ru.getString("name");
+                JSONArray jsar = (JSONArray) JSONValue.parse(ru.getString("body"));
                 if (jsar == null) {
                     return;
                 }
@@ -281,7 +281,7 @@ public class SaveData {
                 temp.hair = Byte.parseByte(jsar.get(2).toString());
                 temp.eye = Byte.parseByte(jsar.get(1).toString());
                 jsar.clear();
-                jsar = (JSONArray) JSONValue.parse(rq.getString("itemwear"));
+                jsar = (JSONArray) JSONValue.parse(ru.getString("itemwear"));
                 if (jsar == null) {
                     return;
                 }
@@ -297,13 +297,12 @@ public class SaveData {
                     temp2.part = Byte.parseByte(jsar2.get(6).toString());
                     temp.itemwear.add(temp2);
                 }
-                temp.clan = Clan.get_clan_of_player(temp.name);
                 String percents
-                        = String.format("%.0f", (((float) temp.point_arena)));
+                        = String.format("%d", (((int) temp.point_active[2])));
                 temp.info = "Level : " + (temp.level) + "\t-\t" + percents +" ";
-                BXH.BXH_Chientruong.add(temp);
+                BXH.BXH_loidai.add(temp);
             }
-            rq.close();
+            ru.close();
             // bxh level
             BXH.BXH_level.clear();
             ps = conn.prepareStatement(

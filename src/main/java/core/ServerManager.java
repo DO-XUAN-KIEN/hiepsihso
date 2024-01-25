@@ -265,7 +265,7 @@ public class ServerManager implements Runnable {
                         Manager.gI().chatKTGprocess(" Thời gian chiếm mỏ đã đóng!");
                     }
                     checkError = 10;
-                    if (hour == 13 && min == 50 && !LoiDaiManager.isRegister) {
+                    if (hour == 18 && min == 0 && !LoiDaiManager.isRegister) {
                         LoiDaiManager.gI().startRegister();
                     }
                     checkError = 11;

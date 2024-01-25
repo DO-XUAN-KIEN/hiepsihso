@@ -1263,6 +1263,7 @@ public class Player extends Body2 {
             chucphuc = 1;
             point_active[0] = 10;
             point_active[1] = 0;
+            point_active[2] = 0;
             //
             date = Date.from(Instant.now());
         }

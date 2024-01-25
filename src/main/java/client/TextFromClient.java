@@ -96,15 +96,15 @@ public class TextFromClient {
                     }
                     switch (quant) {
                         case 1: {
-                            if (conn.p.get_vang() < 10_000_000_000L) {
+                            if (conn.p.get_vang() < 5_000_000_000L) {
                                 Service.send_notice_box(conn, "Không đủ 10 tỷ vàng");
                                 return;
                             }
-                            conn.p.update_vang(-10_000_000_000L);
+                            conn.p.update_vang(-5_000_000_000L);
                             break;
                         }
                         case 2: {
-                            if (conn.p.get_ngoc() < 500_000) {
+                            if (conn.p.get_ngoc() < 800_000) {
                                 Service.send_notice_box(conn, "Không đủ 500k ngọc");
                                 return;
                             }

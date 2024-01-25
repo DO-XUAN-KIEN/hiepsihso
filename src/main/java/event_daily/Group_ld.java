@@ -2,10 +2,7 @@
 package event_daily;
 
 import client.Player;
-import core.MenuController;
-import core.SQL;
-import core.Service;
-import core.Util;
+import core.*;
 import io.Session;
 import java.io.IOException;
 import java.sql.Connection;
@@ -138,17 +135,20 @@ public class Group_ld {
             ld_entrys.remove(l);
     }
     public void GetMenuViewLD(Session conn)throws IOException{
-        String[] menu = new String[ld_entrys.size()+4];
+        String[] menu = new String[ld_entrys.size()+5];
         menu[0] = "Về làng";
         menu[1] = "Thông tin";
         menu[2] = "Thông tin nhóm đấu";
         menu[3] = "Nhận quà top 1";
+        menu[4] = "BXH Lôi Đài";
         for(int i=0; i<ld_entrys.size();i++){
-            menu[i+4] = ld_entrys.get(i).Name;
+            menu[i+5] = ld_entrys.get(i).Name;
         }
         MenuController.send_menu_select(conn, -82, menu);
     }
-    
+    public void BXH(Session conn)throws IOException {
+            BXH.send1(conn, 0);
+    }
     public void InfoGroup(Session conn)throws IOException{
         String s = "Bạn đang ở nhóm "+(65 + 10 * idxGroup)+" - "+(idxGroup == 7? "trở lên":(65 + 10 * idxGroup + 9));
         s += "\nNhóm đấu đang có "+player_entrys.size()+" đăng kí.";

@@ -213,7 +213,7 @@ public class Pet {
             }
              case 4788: {//mèo
                 temp.icon = 42;
-                temp.type = 15;
+                temp.type = 14;
                 id_ = new short[]{23, 24, 25, 26, 48, 80, 85, 86, 114, 1}; // chir so
                 param_ = new int[]{1, 1, 1, 1, 1500, 100, 100, 1000, 2, 1000};
                 maxdam_ = new int[]{0, 0, 0, 0, 4500, 200, 150, 1500, 3, 2000};

@@ -438,8 +438,8 @@ public class Session implements Runnable {
             pass = "hsr_132";
             //
             try (Connection connnect = SQL.gI().getConnection(); Statement ps = connnect.createStatement()) {
-                if (!ps.execute("INSERT INTO `account` (`user`, `pass`, `ac_admin`, `char`, `status`, `lock`, `coin`, `ip`) VALUES ('" + user
-                        + "', '" + pass + "', '0' ,'[]', '0', '0', '200000000', 0)")) {
+                if (!ps.execute("INSERT INTO `account` (`user`, `pass`, `ac_admin`, `char`, `lock`, `coin`, `ip`) VALUES ('" + user
+                        + "', '" + pass + "', '0' ,'[]', '0', '300000', 0)")) {
                     connnect.commit();
                 }
             } catch (SQLException e) {
@@ -685,14 +685,14 @@ public class Session implements Runnable {
             notice_create_char("tên không hợp lệ, nhập lại đi!!");
             return;
         }
-//            for (int i = 0; i < 1; i++) {
-//                if (this.list_char[i].isEmpty()) {
-//                    this.list_char[i] = name;
-//                    break;
-//                }
-//                notice_create_char("1 nv được rồi, lag sv đấy");
-//                return;
-//            }
+            for (int i = 0; i < 1; i++) {
+                if (this.list_char[i].isEmpty()) {
+                    this.list_char[i] = name;
+                    break;
+                }
+                notice_create_char("1 nhân vật được rồi, đừng tham lam");
+                return;
+            }
         try ( Connection connnect = SQL.gI().getConnection();  PreparedStatement ps = connnect.prepareStatement(
                 "INSERT INTO `player` (`name`, `body`, `clazz`, `level`, `exp`, `site`, `item4`, `item7`, `vang`, `kimcuong`, `tiemnang`, `kynang`, `point1`, `point2`, `point3`, `point4`, `skill`, `item3`, `item5`,`itemwear`,`giftcode`, `pet`, `maxbag`, `itembox3`, `itembox4`, `itembox7`, `rms_save`, `date`, `diemdanh`, `eff`, `itembox5`, `friend`, `enemies`, `typeexp`, `medal_create_material`,`point_active`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
             ps.setNString(1, name);
@@ -766,12 +766,12 @@ public class Session implements Runnable {
                 connnect.commit();
             }
 
-            for (int i = 0; i < this.list_char.length; i++) {
-                if (this.list_char[i].isEmpty()) {
-                    this.list_char[i] = name;
-                    break;
-                }
-            }
+//            for (int i = 0; i < this.list_char.length; i++) {
+//                if (this.list_char[i].isEmpty()) {
+//                    this.list_char[i] = name;
+//                    break;
+//                }
+//            }
             Manager.gI().ip_create_char.replace(this.ip, time_, (time_ + 1));
             send_listchar_board();
             flush();

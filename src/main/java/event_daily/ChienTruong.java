@@ -13,7 +13,6 @@ import core.Manager;
 import core.Service;
 import core.Util;
 import io.Message;
-import io.Session;
 import map.LeaveItemMap;
 import static map.LeaveItemMap.leave_vang;
 import map.Map;
@@ -146,7 +145,7 @@ public class ChienTruong {
 			Manager.gI().chatKTGprocess("Chiến trường bắt đầu , cố gắng lấy nhiều nguyên liệu, điểm nhất nào");
 			this.BXH.clear();
 			this.status = 2;
-			this.time = 60 * 60;
+			this.time = 60 * 2;
 			int init_house = this.list.size() / 40;
 			init_house = init_house > 0 ? init_house : 1;
 			this.info_house = new int[] {init_house, init_house, init_house, init_house
@@ -324,7 +323,7 @@ public class ChienTruong {
 	}
 
 	private void finish() throws IOException {
-		if (this.status == 0) {
+		if (this.status == 2) {
 			Manager.gI().chatKTGprocess("Chiến trường kết thúc, hẹn gặp lại vào ngày mai");
 			//
 			List<Player> list_receiv = new ArrayList<>();
@@ -404,7 +403,7 @@ public class ChienTruong {
 		if (this.status == 0) {
 			Manager.gI().chatKTGprocess("Chiến trường mở đăng ký, mau mau đến ");
 			this.status = 1;
-			this.time = 60*30;
+			this.time = 60*1;
 		}
 	}
 
