@@ -19,6 +19,7 @@ import template.Item3;
 import template.Item47;
 import template.ItemSell3;
 import template.Itemsellcoin;
+import template.itemselldosieupham;
 import template.ItemTemplate3;
 import template.ItemTemplate4;
 import template.ItemTemplate7;
@@ -1192,7 +1193,7 @@ public static int idxDame;
                 break;
             }
            case 37: {
-				m.writer().writeUTF("Shop Coin]");
+				m.writer().writeUTF("Shop Coin");
 				m.writer().writeByte(1);
 				m.writer().writeShort(Itemsellcoin.entry.size());
 				for (int i = 0; i < Itemsellcoin.entry.size(); i++) {
@@ -1229,6 +1230,29 @@ public static int idxDame;
                 for(int i= conn.p.TypeItemStarCreate * 5; i < conn.p.TypeItemStarCreate * 5 +5; i++)
                 {
                     m.writer().writeShort(conn.p.MaterialItemStar[i]);
+                    m.writer().writeByte(1);
+                }
+                break;
+            }
+            case 48:{
+                m.writer().writeUTF("Shop Siêu phẩm");
+                m.writer().writeByte(1);
+                m.writer().writeShort(itemselldosieupham.entry.size());
+                for (int i = 0; i < itemselldosieupham.entry.size(); i++) {
+                    itemselldosieupham temp = itemselldosieupham.entry.get(i);
+                    m.writer().writeShort(temp.id);
+                    m.writer().writeUTF(ItemTemplate3.item.get(temp.id).getName());
+                    m.writer().writeByte(ItemTemplate3.item.get(temp.id).getClazz());
+                    m.writer().writeByte(ItemTemplate3.item.get(temp.id).getType());
+                    m.writer().writeShort(ItemTemplate3.item.get(temp.id).getIcon());
+                    m.writer().writeLong(temp.price);
+                    m.writer().writeShort(10);
+                    m.writer().writeByte(0);
+                    m.writer().writeByte(temp.op.size());
+                    for (int j = 0; j < temp.op.size(); j++) {
+                        m.writer().writeByte(temp.op.get(j).id);
+                        m.writer().writeInt(temp.op.get(j).getParam(0));
+                    }
                     m.writer().writeByte(1);
                 }
                 break;
@@ -1271,7 +1295,7 @@ public static int idxDame;
             send_notice_box(conn, "Kẻ thù đang offline");
         } else {
             EffTemplate ef = p0.get_EffDefault(-125);
-            if (ef == null && p0.map.map_id != 0 && !p0.map.ismaplang) {
+            if (p0.map.map_id != 0 && !p0.map.ismaplang) {
                 conn.p.update_ngoc(-2);
                 conn.p.item.char_inventory(5);
                 conn.p.is_changemap = false;
@@ -1715,7 +1739,7 @@ public static int idxDame;
                     case 4:
                     case 7: {
                         int quant = conn.p.item.total_item_by_id(type, id);
-                        conn.p.update_vang(quant * 5);
+                        conn.p.update_vang(quant * 0);
                         conn.p.item.remove(type, id, quant);
                         conn.p.item.char_inventory(type);
 //                        conn.p.item.char_inventory(4);
@@ -1740,7 +1764,8 @@ public static int idxDame;
         // System.out.println(type);
         // System.out.println(idbuy);
         // System.out.println(quanity);
-        if (idbuy < 0 || quanity <= 0 || quanity > 32000) {
+        if (idbuy < 0 || quanity <= 0 || quanity > 1000) {
+            Service.send_notice_box(p.conn, " Mua tối đa số lượng 1000/ lần");
             return;
         }
         if (p.item.get_bag_able() < 1) {
@@ -1767,7 +1792,7 @@ public static int idxDame;
                     p.update_ngoc(-price);
                 }
                 int quant_add_bag = quanity + p.item.total_item_by_id(4, idbuy);
-                if (quant_add_bag > 32000) {
+                if (quant_add_bag > 10000) {
                     send_notice_box(p.conn, "không thể mua thêm");
                     return;
                 }
@@ -1805,6 +1830,37 @@ public static int idxDame;
                             itbag.part = ItemTemplate3.item.get(idbuy).getPart();
                             itbag.islock = true;
                            itbag.name = ItemTemplate3.item.get(idbuy).getName();
+                            itbag.tier = 0;
+                            itbag.op = new ArrayList<>();
+                            itbag.op.addAll(itsell3.op);
+                            itbag.time_use = 0;
+                            p.item.add_item_bag3(itbag);
+                            p.item.char_inventory(3);
+                            send_notice_box(p.conn, "Mua thành công trang bị " + itbag.name);
+                            return;
+                        }
+                    }
+                    send_notice_box(p.conn, "Không tìm thấy vật phẩm!");
+                    return;
+                }
+                if (Helps.CheckItem.isBuyItemCoin(idbuy))//mua bằng coin shop sieupham
+                {
+                    for (itemselldosieupham itsell3 : itemselldosieupham.entry) {
+                        if (itsell3.id == idbuy) {
+                            if (!p.update_coin(-itsell3.price)) {
+                                send_notice_box(p.conn, "Bạn không đủ coin để mua!");
+                                return;
+                            }
+                            Item3 itbag = new Item3();
+                            itbag.id = idbuy;
+                            itbag.clazz = ItemTemplate3.item.get(idbuy).getClazz();
+                            itbag.type = ItemTemplate3.item.get(idbuy).getType();
+                            itbag.level = 10;
+                            itbag.icon = ItemTemplate3.item.get(idbuy).getIcon();
+                            itbag.color = itsell3.color;
+                            itbag.part = ItemTemplate3.item.get(idbuy).getPart();
+                            itbag.islock = true;
+                            itbag.name = ItemTemplate3.item.get(idbuy).getName();
                             itbag.tier = 0;
                             itbag.op = new ArrayList<>();
                             itbag.op.addAll(itsell3.op);
@@ -1908,6 +1964,41 @@ public static int idxDame;
 						}
 						return;
 					}
+                   if (price == 0) {
+                       itemselldosieupham itemselldosieupham = null;
+                       for (int i = 0; i < itemselldosieupham.entry.size(); i++) {
+                           if (itemselldosieupham.entry.get(i).id == idbuy) {
+                               itemselldosieupham = itemselldosieupham.entry.get(i);
+                               break;
+                           }
+                       }
+                       if (itemselldosieupham != null) {
+                           if (p.update_coin(-itemselldosieupham.price)) {
+                               Item3 itbag = new Item3();
+                               itbag.id = idbuy;
+                               itbag.clazz = ItemTemplate3.item.get(idbuy).getClazz();
+                               itbag.type = ItemTemplate3.item.get(idbuy).getType();
+                               itbag.level = 10;
+                               itbag.icon = ItemTemplate3.item.get(idbuy).getIcon();
+                               itbag.color = itemselldosieupham.color;
+                               itbag.part = ItemTemplate3.item.get(idbuy).getPart();
+                               itbag.islock = true;
+                               itbag.name = ItemTemplate3.item.get(idbuy).getName();
+                               itbag.tier = 0;
+                               itbag.op = new ArrayList<>();
+                               for (int i = 0; i < itemselldosieupham.op.size(); i++) {
+                                   itbag.op.add(new Option(itemselldosieupham.op.get(i).id, itemselldosieupham.op.get(i).getParam(0)));
+                               }
+                               itbag.time_use = 0;
+                               p.item.add_item_bag3(itbag);
+                               p.item.char_inventory(3);
+                               send_notice_box(p.conn, "Mua thành công " + ItemTemplate3.item.get(idbuy).getName());
+                           } else {
+                               send_notice_box(p.conn, "Không đủ " + itemselldosieupham.price + " coin");
+                           }
+                       }
+                       return;
+                    }
                     }
                     if (buffer.pricetype == 0) {
                         if (p.get_vang() < price) {

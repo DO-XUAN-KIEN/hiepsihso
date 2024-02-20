@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import client.Party;
 import client.Pet;
+import client.Squire;
 import client.Player;
 import core.Manager;
 import core.MenuController;
@@ -489,6 +490,9 @@ public class Map implements Runnable {
                             }
                         }
                     }
+                    if (p.squire != null && !p.isSquire) {
+                        Squire.update(p);
+                    }
 
                     p.update_wings_time();
                     for (Pet pet : p.mypet) {
@@ -504,6 +508,9 @@ public class Map implements Runnable {
                     if (!p.isdie) {
                         // auto +hp,mp
                         p.update(this);
+                        if (p.squire != null && p.isLiveSquire) {
+                            p.squire.update(this);
+                        }
 
                         // auto trừ hp, mp khi dính bỏng lửa, bỏng lạnh
                         // eff medal
@@ -588,6 +595,7 @@ public class Map implements Runnable {
                             MapService.send_msg_player_inside(this, p, m, true);
                             m.cleanup();
                         }
+                        // hieu ung danh hieu
                         it = p.item.wear[19];
                         if (it != null && p.time_eff_wear < System.currentTimeMillis()) {
                             p.time_eff_wear = System.currentTimeMillis() + 5000L;
@@ -599,7 +607,7 @@ public class Map implements Runnable {
                             switch (it.id) {
 
                                 case 4812: {
-                                    byte eff_ = 78;
+                                    byte eff_ = 76;
                                     if (it.tier == 15) {
                                         eff_ = 67;
                                     }
@@ -1027,10 +1035,10 @@ public class Map implements Runnable {
         }
         if (type == 3 && item_map[id] != null
                 && (item_map[id].id_item == 3590 || item_map[id].id_item == 3591 || item_map[id].id_item == 3592)) {
-            if (item_map[id].idmaster != -1 && conn.p.index != item_map[id].idmaster) {
-                Service.send_notice_nobox_white(conn, "Vật phẩm của người khác");
-                return;
-            }
+//            if (item_map[id].idmaster != -1 && conn.p.index != item_map[id].idmaster) {
+//                Service.send_notice_nobox_white(conn, "Vật phẩm của người khác");
+//                return;
+//            }
             if (conn.p.pet_di_buon != null && conn.p.pet_di_buon.item.size() < 12) {
                 conn.p.pet_di_buon.item.add(item_map[id].id_item);
                 //

@@ -577,6 +577,17 @@ public class Body2 extends MainObject{
         p.isdie = true;
         p.type_use_mount = -1;
         Player pATK = mainAtk.isPlayer() ? (Player)mainAtk : null;
+//        if (p.get_ngoc() >= 5) {
+//            p.isdie = false;
+//            p.hp = p.body.get_HpMax();
+//            p.mp = p.body.get_MpMax();
+//            p.update_ngoc(-5);
+//            p.item.char_inventory(5);
+//            Service.send_char_main_in4(p);
+//            // chest in4
+//            Service.usepotion(p, 0, p.body.get_HpMax());
+//            Service.usepotion(p, 1, p.body.get_MpMax());
+//        }
         if(pATK != null){
             if (pATK.list_enemies.contains(this.name)) {
                 pATK.list_enemies.remove(this.name);

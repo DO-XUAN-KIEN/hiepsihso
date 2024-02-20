@@ -1,27 +1,20 @@
 package client;
 
-import core.GameSrc;
+import core.*;
+
 import java.io.IOException;
-import core.Manager;
-import core.SaveData;
-import core.ServerManager;
-import core.Service;
-import core.Util;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import event_daily.ChiemThanhManager;
 import event_daily.Wedding;
 
 import io.Message;
 import io.Session;
-import map.Dungeon;
-import map.DungeonManager;
-import map.Map;
-import map.MapService;
-import template.Clan_mems;
-import template.EffTemplate;
-import template.Item3;
-import template.Item47;
-import template.Level;
-import template.Option;
+import map.*;
+import template.*;
 
 public class Process_Yes_no_box {
 
@@ -66,14 +59,62 @@ public class Process_Yes_no_box {
             }
         } else {
             switch (type) {
+                case -127: {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
+                    if (conn.p.checkcoin() < 1_500_000) {
+                        Service.send_notice_box(conn, "Không đủ coin, Hãy kiếm thêm đi");
+                        return;
+                    }
+                    if (conn.p.level < 30) {
+                        Service.send_notice_box(conn, "Yêu cầu level trên 30");
+                        return;
+                    }
+                    if (conn.p.squire == null) {
+                        Squire.create(conn.p);
+                        conn.p.squire = new Squire(conn, conn.p.index);
+                        conn.p.squire.load();
+                        conn.p.update_coin(-1_500_000);
+                        Service.send_notice_box(conn, "Nhận thành công đệ tử");
+                        Squire.callSquire(conn);
+                    }
+                    break;
+                }
+                case -128: {
+                    Pet_di_buon_manager.remove(conn.p.pet_di_buon.name);
+                    UseItem.concac(conn);
+                    //
+                    break;
+                }
+                case -124: {
+                    if (conn.p.squire != null && conn.p.isOwner) {
+                        try (Connection connnect = SQL.gI().getConnection(); PreparedStatement ps = connnect.prepareStatement("DELETE FROM `squire` WHERE `id` = ?;")) {
+                            ps.setInt(1, conn.p.squire.index);
+                            ps.executeUpdate();
+                            connnect.commit();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        if (conn.p.isLiveSquire) {
+                            Squire.squireLeaveMap(conn.p);
+                        }
+                        conn.p.isLiveSquire = false;
+                        conn.p.squire = null;
+                        Service.send_notice_box(conn, "Đã huỷ đệ tử");
+                    } else {
+                        Service.send_notice_box(conn, "Chưa có đệ tử");
+                    }
+                    break;
+                }
                 case 112: {
                     Wedding temp = Wedding.get_obj(conn.p.name);
                     if (temp.exp < Level.entrys.get(temp.it.tier).exp) {
                         Service.send_notice_box(conn, "chưa đủ 100% exp!");
                         return;
                     }
-                    long vang_req = (3 * (temp.it.tier + 1)) * 10_000_000L;
-                    int ngoc_req = (3 * (temp.it.tier + 1)) * 10_000;
+                    long vang_req = (3 * (temp.it.tier + 1)) * 5_000_000L;
+                    int ngoc_req = (3 * (temp.it.tier + 1)) * 5000;
                     if (conn.p.get_vang() < vang_req) {
                         Service.send_notice_box(conn, "chưa đủ " + vang_req + " vàng!");
                         return;
@@ -293,11 +334,17 @@ public class Process_Yes_no_box {
                         ChiemThanhManager.ActionHoiSinh(conn.p.map, conn.p);
                     }
                     else {
-                        if (conn.p.get_ngoc() >= 5) {
+                        if (conn.p.time_use_item_arena > System.currentTimeMillis()) {
+                            Service.send_notice_box(conn,
+                                    "Chờ sau " + (conn.p.time_use_item_arena - System.currentTimeMillis()) / 1000 + " s");
+                            return;
+                        }
+                        if (conn.p.checkcoin() >= 5000) {
+                            conn.p.time_use_item_arena = System.currentTimeMillis() + 50_000;
                             conn.p.isdie = false;
                             conn.p.hp = conn.p.body.get_HpMax();
                             conn.p.mp = conn.p.body.get_MpMax();
-                            conn.p.update_ngoc(-5);
+                            conn.p.update_coin(-5000);
                             conn.p.item.char_inventory(5);
                             Service.send_char_main_in4(conn.p);
                             // chest in4
@@ -305,7 +352,7 @@ public class Process_Yes_no_box {
                             Service.usepotion(conn.p, 0, conn.p.body.get_HpMax());
                             Service.usepotion(conn.p, 1, conn.p.body.get_MpMax());
                         } else {
-                            Service.send_notice_box(conn, "Không đủ ngọc để thực hiện");
+                            Service.send_notice_box(conn, "Đừng để bị đánh lừa bởi phiên bản game, cần 5000 coin  để hồi sinh");
                         }
                     }
                     break;
@@ -571,7 +618,7 @@ public class Process_Yes_no_box {
                             case 24:
                             case 25:
                             case 26:
-                            case 14:
+                            case 102:
                             case 55:
                             case 11: { // weapon
                                 conn.p.player_wear(conn, temp3, conn.p.id_buffer_126, conn.p.id_index_126);

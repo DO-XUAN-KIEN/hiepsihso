@@ -97,7 +97,7 @@ public class LoiDaiManager {
     public void startRegister(){
         isRegister =true;
         turn = 1;
-        timeRegister = System.currentTimeMillis()+ 1000 * 60 * 1;
+        timeRegister = System.currentTimeMillis()+ 1000 * 60 * 28;
         System.out.println("StartRegister Loi Dai");
         synchronized(Group_entrys){
             for(Group_ld g : Group_entrys){

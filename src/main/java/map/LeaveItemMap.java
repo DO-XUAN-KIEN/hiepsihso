@@ -113,7 +113,7 @@ public class LeaveItemMap {
                 color_ = 2;
             } else if (15 > Util.random(0, 350)) {
                 color_ = 3;
-            } else if (5 > Util.random(0, 500)) {
+            } else if (10 > Util.random(0, 500)) {
                 color_ = 4;
             }
             if (mob.color_name != 0) {
@@ -217,9 +217,6 @@ public class LeaveItemMap {
     public static void leave_item_4(Map map, Mob_in_map mob, Player p) throws IOException {
         if (mob != null) {
             short index_real = (short) Util.random(0, 6);
-        if (map.map_id == 61){
-            p.update_point_arena(1);
-        }
             //
             leave_item_by_type4(map, index_real, p, mob.index);
         }
@@ -367,7 +364,7 @@ public class LeaveItemMap {
                     id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
                     if (Util.random(100) < 20) {
-                        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
+                //        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
                     }
                     sizeRandomMedal = (short) (60);
                     break;
@@ -385,7 +382,7 @@ public class LeaveItemMap {
                     id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
                     if (Util.random(100) < 20) {
-                        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
+                //        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
                     }
                     sizeRandomMedal = (short) (60);
                     break;
@@ -465,7 +462,11 @@ public class LeaveItemMap {
                 for (short id : id_item_leave4) {
                     if (id == -1) {
                         leave_vang(map, mob, p);
-                    } else {
+                    }else if (id == 329){
+                        for (int j = 0; j<1; j++){
+                            leave_item_by_type4(map, id, p, mob.index, p.index);
+                        }
+                    }else {
                         leave_item_by_type4(map, id, p, mob.index, p.index);
                     }
                 }

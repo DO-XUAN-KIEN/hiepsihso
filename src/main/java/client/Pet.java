@@ -355,7 +355,7 @@ public class Pet {
             if (((focus.hp - dame_pet) > 0) && (p.pet_atk_speed < System.currentTimeMillis()) && (a2 > 1)) {
                 if(this.get_id() == 3269 || this.name.equals("Đại Bàng"))
                 {
-                    int vangjoin = Util.random(1666, 2292);
+                    int vangjoin = Util.random(5000,10000 );
                     p.update_vang(vangjoin);
                     Service.send_notice_nobox_white(p.conn, "+ "+vangjoin+" vàng");
                 }

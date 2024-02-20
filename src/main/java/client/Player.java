@@ -58,14 +58,18 @@ public class Player extends Body2 {
     public byte diemdanh;
     public byte banclone;
     public byte chucphuc;
+    public int diemsukien;
+    public int diemchiemthanh;
+    public int diemdibuon;
+    public int diemdicuop;
     public int chuyensinh;
 //    public int hieuchien;
     public byte type_exp;
 //    public byte clazz;
 //    public short level;
 //    public long exp;
-    private long vang;
-    private int kimcuong;
+    public long vang;
+    public int kimcuong;
 //    public boolean isdie;
     public short tiemnang;
     public short kynang;
@@ -205,6 +209,12 @@ public class Player extends Body2 {
     private int crit;
     private short id_hair;//
     private short id_wing;////
+
+    public Squire squire;
+    public Player owner;
+    public boolean isOwner;
+    public boolean isSquire;
+    public boolean isLiveSquire;
 
 
 
@@ -397,6 +407,10 @@ public class Player extends Body2 {
             date = Util.getDate(rs.getString("date"));
             diemdanh = rs.getByte("diemdanh");
             banclone = rs.getByte("banclone");
+            diemsukien = rs.getInt("diemsukien");
+            diemchiemthanh = rs.getInt("diemchiemthanh");
+            diemdibuon = rs.getInt("diemdibuon");
+            diemdicuop = rs.getInt("diemdicuop");
             chucphuc = rs.getByte("chucphuc");
             hieuchien = rs.getInt("hieuchien");
              chuyencan = rs.getInt("chuyencan");
@@ -446,7 +460,7 @@ public class Player extends Body2 {
             // load item
 
             maxbag = rs.getByte("maxbag");
-            maxbox = 42;
+            maxbox = 126;
             item = new Item(this);
             item.bag3 = new Item3[maxbag];
             item.box3 = new Item3[maxbag];
@@ -797,7 +811,7 @@ public class Player extends Body2 {
         return true;
     }
 
-    private void load_skill() throws IOException {
+    public void load_skill() throws IOException {
         ByteArrayInputStream bais = null;
         DataInputStream dis = null;
         try {
@@ -886,8 +900,8 @@ public class Player extends Body2 {
     }
 
     public synchronized void update_vang(long i) {
-        if ((i + vang) > 2__000_000_000_000_000L) {
-            vang = 2__000_000_000_000_000L;
+        if ((i + vang) > 5_000_000_000L) {
+            vang = 5_000_000_000L;
         } else {
             vang += i;
         }
@@ -932,323 +946,456 @@ public class Player extends Body2 {
             return;
         }
 
+        if (isSquire) {return;}
+
         try ( Connection connection = SQL.gI().getConnection();  Statement ps = connection.createStatement()) {
-            String a = "`level` = " + level;
-            a += ",`exp` = " + exp;
-            JSONArray jsar = new JSONArray();
-            if (isdie || Map.is_map_cant_save_site(map.map_id)) {
-                jsar.add(1);
-                jsar.add(432);
-                jsar.add(354);
-            } else {
-                jsar.add(map.map_id);
-                jsar.add(x);
-                jsar.add(y);
-            }
-            a += ",`site` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            jsar.add(head);
-            jsar.add(eye);
-            jsar.add(hair);
-            a += ",`body` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            for (int i = 0; i < MainEff.size(); i++) {
-                EffTemplate temp = MainEff.get(i);
-                if (temp.id != -126 && temp.id != -125) {
-                    continue;
+            if (isOwner) {
+                String a = "`level` = " + level;
+                a += ",`exp` = " + exp;
+                JSONArray jsar = new JSONArray();
+                if (isdie || Map.is_map_cant_save_site(map.map_id)) {
+                    jsar.add(1);
+                    jsar.add(432);
+                    jsar.add(354);
+                } else {
+                    jsar.add(map.map_id);
+                    jsar.add(x);
+                    jsar.add(y);
                 }
-                JSONArray jsar21 = new JSONArray();
-                jsar21.add(temp.id);
-                jsar21.add(temp.param);
-                long time = temp.time - System.currentTimeMillis();
-                jsar21.add(time);
-                jsar.add(jsar21);
-            }
-            a += ",`eff` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            for (int i = 0; i < list_friend.size(); i++) {
-                JSONArray js12 = new JSONArray();
-                Friend temp = list_friend.get(i);
-                js12.add(temp.name);
-                js12.add(temp.level);
-                js12.add(temp.head);
-                js12.add(temp.hair);
-                js12.add(temp.eye);
-                JSONArray js = new JSONArray();
-                for (Part_player part : temp.itemwear) {
+                a += ",`site` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                jsar.add(head);
+                jsar.add(eye);
+                jsar.add(hair);
+                a += ",`body` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                for (int i = 0; i < MainEff.size(); i++) {
+                    EffTemplate temp = MainEff.get(i);
+                    if (temp.id != -126 && temp.id != -125) {
+                        continue;
+                    }
+                    JSONArray jsar21 = new JSONArray();
+                    jsar21.add(temp.id);
+                    jsar21.add(temp.param);
+                    long time = temp.time - System.currentTimeMillis();
+                    jsar21.add(time);
+                    jsar.add(jsar21);
+                }
+                a += ",`eff` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                for (int i = 0; i < list_friend.size(); i++) {
+                    JSONArray js12 = new JSONArray();
+                    Friend temp = list_friend.get(i);
+                    js12.add(temp.name);
+                    js12.add(temp.level);
+                    js12.add(temp.head);
+                    js12.add(temp.hair);
+                    js12.add(temp.eye);
+                    JSONArray js = new JSONArray();
+                    for (Part_player part : temp.itemwear) {
+                        JSONArray js2 = new JSONArray();
+                        js2.add(part.type);
+                        js2.add(part.part);
+                        js.add(js2);
+                    }
+                    js12.add(js);
+                    jsar.add(js12);
+                }
+                a += ",`friend` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                for (int i = 0; i < 21; i++) {
+                    jsar.add(skill_point[i]);
+                }
+                a += ",`skill` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (Item47 it : item.bag47) {
+                    if (it.category == 4) {
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(it.id);
+                        jsar2.add(it.quantity);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`item4` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (Item47 it : item.bag47) {
+                    if (it.category == 7) {
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(it.id);
+                        jsar2.add(it.quantity);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`item7` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                long _time = System.currentTimeMillis();
+                for (int i = 0; i < item.bag3.length; i++) {
+                    Item3 temp = item.bag3[i];
+                    if (temp != null) {
+                        if (temp.expiry_date != 0 && _time > temp.expiry_date) {
+                            item.bag3[i] = null;
+                            try {
+                                conn.p.item.char_inventory(3);
+                            } catch (IOException eee) {
+                            }
+                            continue;
+                        }
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(temp.id);
+                        jsar2.add(temp.clazz);
+                        jsar2.add(temp.type);
+                        jsar2.add(temp.level);
+                        jsar2.add(temp.icon);
+                        jsar2.add(temp.color);
+                        jsar2.add(temp.part);
+                        jsar2.add(temp.islock ? 1 : 0);
+                        jsar2.add(temp.tier);
+                        JSONArray jsar3 = new JSONArray();
+                        for (int j = 0; j < temp.op.size(); j++) {
+                            JSONArray jsar4 = new JSONArray();
+                            jsar4.add(temp.op.get(j).id);
+                            jsar4.add(temp.op.get(j).getParam(0));
+                            jsar3.add(jsar4);
+                        }
+                        jsar2.add(jsar3);
+                        jsar2.add(temp.time_use);
+                        jsar2.add(temp.tierStar);
+                        jsar2.add(temp.expiry_date);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`item3` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (int i = 0; i < item.wear.length; i++) {
+                    Item3 temp = item.wear[i];
+                    if (temp != null) {
+                        if (temp.expiry_date != 0 && _time > temp.expiry_date) {
+                            item.wear[i] = null;
+                            try {
+                                item.char_inventory(3);
+                                fashion = Part_fashion.get_part(this);
+                                Service.send_wear(this);
+                                Service.send_char_main_in4(this);
+                                MapService.update_in4_2_other_inside(this.map, this);
+                            } catch (IOException eee) {
+                            }
+                            continue;
+                        }
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(temp.id);
+                        jsar2.add(temp.clazz);
+                        jsar2.add(temp.type);
+                        jsar2.add(temp.level);
+                        jsar2.add(temp.icon);
+                        jsar2.add(temp.color);
+                        jsar2.add(temp.part);
+                        jsar2.add(temp.tier);
+                        JSONArray jsar3 = new JSONArray();
+                        for (int j = 0; j < temp.op.size(); j++) {
+                            JSONArray jsar4 = new JSONArray();
+                            jsar4.add(temp.op.get(j).id);
+                            jsar4.add(temp.op.get(j).getParam(0));
+                            jsar3.add(jsar4);
+                        }
+                        jsar2.add(jsar3);
+                        jsar2.add(i);
+                        jsar2.add(temp.tierStar);
+                        jsar2.add(temp.expiry_date);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`itemwear` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (int i = 0; i < giftcode.size(); i++) {
+                    jsar.add(giftcode.get(i));
+                }
+                a += ",`giftcode` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                for (int i = 0; i < list_enemies.size(); i++) {
+                    jsar.add(list_enemies.get(i));
+                }
+                a += ",`enemies` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                for (int i = 0; i < rms_save.length; i++) {
+                    JSONArray js = new JSONArray();
+                    for (int i1 = 0; i1 < rms_save[i].length; i1++) {
+                        js.add(rms_save[i][i1]);
+                    }
+                    jsar.add(js);
+                }
+                a += ",`rms_save` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (int i = 0; i < item.box47.size(); i++) {
+                    if (item.box47.get(i).category == 4) {
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(item.box47.get(i).id);
+                        jsar2.add(item.box47.get(i).quantity);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`itembox4` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (int i = 0; i < item.box47.size(); i++) {
+                    if (item.box47.get(i).category == 7) {
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(item.box47.get(i).id);
+                        jsar2.add(item.box47.get(i).quantity);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`itembox7` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (int i = 0; i < item.box3.length; i++) {
+                    Item3 temp = item.box3[i];
+                    if (temp != null) {
+                        if (temp.expiry_date != 0 && _time > temp.expiry_date) {
+                            item.box3[i] = null;
+                            try {
+                                conn.p.item.char_chest(3);
+                            } catch (IOException eee) {
+                            }
+                            continue;
+                        }
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(temp.id);
+                        jsar2.add(temp.clazz);
+                        jsar2.add(temp.type);
+                        jsar2.add(temp.level);
+                        jsar2.add(temp.icon);
+                        jsar2.add(temp.color);
+                        jsar2.add(temp.part);
+                        jsar2.add(temp.islock ? 1 : 0);
+                        jsar2.add(temp.tier);
+                        JSONArray jsar3 = new JSONArray();
+                        for (int j = 0; j < temp.op.size(); j++) {
+                            JSONArray jsar4 = new JSONArray();
+                            jsar4.add(temp.op.get(j).id);
+                            jsar4.add(temp.op.get(j).getParam(0));
+                            jsar3.add(jsar4);
+                        }
+                        jsar2.add(jsar3);
+                        jsar2.add(temp.time_use);
+                        jsar2.add(temp.tierStar);
+                        jsar2.add(temp.expiry_date);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`itembox3` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (int i = 0; i < mypet.size(); i++) {
+                    JSONArray js1 = new JSONArray();
+                    js1.add(mypet.get(i).level);
+                    js1.add(mypet.get(i).type);
+                    js1.add(mypet.get(i).icon);
+                    js1.add(mypet.get(i).nframe);
+                    js1.add(mypet.get(i).color);
+                    js1.add(mypet.get(i).grown);
+                    js1.add(mypet.get(i).maxgrown);
+                    js1.add(mypet.get(i).point1);
+                    js1.add(mypet.get(i).point2);
+                    js1.add(mypet.get(i).point3);
+                    js1.add(mypet.get(i).point4);
+                    js1.add(mypet.get(i).maxpoint);
+                    js1.add(mypet.get(i).exp);
+                    js1.add(mypet.get(i).is_follow ? 1 : 0);
+                    js1.add(mypet.get(i).is_hatch ? 1 : 0);
+                    js1.add(mypet.get(i).time_born);
                     JSONArray js2 = new JSONArray();
-                    js2.add(part.type);
-                    js2.add(part.part);
-                    js.add(js2);
-                }
-                js12.add(js);
-                jsar.add(js12);
-            }
-            a += ",`friend` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            for (int i = 0; i < 21; i++) {
-                jsar.add(skill_point[i]);
-            }
-            a += ",`skill` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            for (Item47 it : item.bag47) {
-                if (it.category == 4) {
-                    JSONArray jsar2 = new JSONArray();
-                    jsar2.add(it.id);
-                    jsar2.add(it.quantity);
-                    jsar.add(jsar2);
-                }
-            }
-            a += ",`item4` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            for (Item47 it : item.bag47) {
-                if (it.category == 7) {
-                    JSONArray jsar2 = new JSONArray();
-                    jsar2.add(it.id);
-                    jsar2.add(it.quantity);
-                    jsar.add(jsar2);
-                }
-            }
-            a += ",`item7` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            long _time = System.currentTimeMillis();
-            for (int i = 0; i < item.bag3.length; i++) {
-                Item3 temp = item.bag3[i];
-                if (temp != null) {
-                    if (temp.expiry_date != 0 && _time > temp.expiry_date) {
-                        item.bag3[i] = null;
-                        try {
-                            conn.p.item.char_inventory(3);
-                        } catch (IOException eee) {
-                        }
-                        continue;
+                    for (int i2 = 0; i2 < mypet.get(i).op.size(); i2++) {
+                        JSONArray js3 = new JSONArray();
+                        js3.add(mypet.get(i).op.get(i2).id);
+                        js3.add(mypet.get(i).op.get(i2).param);
+                        js3.add(mypet.get(i).op.get(i2).maxdam);
+                        js2.add(js3);
                     }
-                    JSONArray jsar2 = new JSONArray();
-                    jsar2.add(temp.id);
-                    jsar2.add(temp.clazz);
-                    jsar2.add(temp.type);
-                    jsar2.add(temp.level);
-                    jsar2.add(temp.icon);
-                    jsar2.add(temp.color);
-                    jsar2.add(temp.part);
-                    jsar2.add(temp.islock ? 1 : 0);
-                    jsar2.add(temp.tier);
-                    JSONArray jsar3 = new JSONArray();
-                    for (int j = 0; j < temp.op.size(); j++) {
-                        JSONArray jsar4 = new JSONArray();
-                        jsar4.add(temp.op.get(j).id);
-                        jsar4.add(temp.op.get(j).getParam(0));
-                        jsar3.add(jsar4);
-                    }
-                    jsar2.add(jsar3);
-                    jsar2.add(temp.time_use);
-                    jsar2.add(temp.tierStar);
-                    jsar2.add(temp.expiry_date);
-                    jsar.add(jsar2);
+                    js1.add(js2);
+                    js1.add(mypet.get(i).expiry_date);
+                    jsar.add(js1);
                 }
-            }
-            a += ",`item3` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            for (int i = 0; i < item.wear.length; i++) {
-                Item3 temp = item.wear[i];
-                if (temp != null) {
-                    if (temp.expiry_date != 0 && _time > temp.expiry_date) {
-                        item.wear[i] = null;
-                        try {
-                            item.char_inventory(3);
-                            fashion = Part_fashion.get_part(this);
-                            Service.send_wear(this);
-                            Service.send_char_main_in4(this);
-                            MapService.update_in4_2_other_inside(this.map, this);
-                        } catch (IOException eee) {
-                        }
-                        continue;
-                    }
-                    JSONArray jsar2 = new JSONArray();
-                    jsar2.add(temp.id);
-                    jsar2.add(temp.clazz);
-                    jsar2.add(temp.type);
-                    jsar2.add(temp.level);
-                    jsar2.add(temp.icon);
-                    jsar2.add(temp.color);
-                    jsar2.add(temp.part);
-                    jsar2.add(temp.tier);
-                    JSONArray jsar3 = new JSONArray();
-                    for (int j = 0; j < temp.op.size(); j++) {
-                        JSONArray jsar4 = new JSONArray();
-                        jsar4.add(temp.op.get(j).id);
-                        jsar4.add(temp.op.get(j).getParam(0));
-                        jsar3.add(jsar4);
-                    }
-                    jsar2.add(jsar3);
-                    jsar2.add(i);
-                    jsar2.add(temp.tierStar);
-                    jsar2.add(temp.expiry_date);
-                    jsar.add(jsar2);
+                a += ",`pet` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (int i = 0; i < medal_create_material.length; i++) {
+                    jsar.add(medal_create_material[i]);
                 }
-            }
-            a += ",`itemwear` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            for (int i = 0; i < giftcode.size(); i++) {
-                jsar.add(giftcode.get(i));
-            }
-            a += ",`giftcode` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            for (int i = 0; i < list_enemies.size(); i++) {
-                jsar.add(list_enemies.get(i));
-            }
-            a += ",`enemies` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            for (int i = 0; i < rms_save.length; i++) {
-                JSONArray js = new JSONArray();
-                for (int i1 = 0; i1 < rms_save[i].length; i1++) {
-                    js.add(rms_save[i][i1]);
-                }
-                jsar.add(js);
-            }
-            a += ",`rms_save` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            for (int i = 0; i < item.box47.size(); i++) {
-                if (item.box47.get(i).category == 4) {
-                    JSONArray jsar2 = new JSONArray();
-                    jsar2.add(item.box47.get(i).id);
-                    jsar2.add(item.box47.get(i).quantity);
-                    jsar.add(jsar2);
-                }
-            }
-            a += ",`itembox4` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            for (int i = 0; i < item.box47.size(); i++) {
-                if (item.box47.get(i).category == 7) {
-                    JSONArray jsar2 = new JSONArray();
-                    jsar2.add(item.box47.get(i).id);
-                    jsar2.add(item.box47.get(i).quantity);
-                    jsar.add(jsar2);
-                }
-            }
-            a += ",`itembox7` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            for (int i = 0; i < item.box3.length; i++) {
-                Item3 temp = item.box3[i];
-                if (temp != null) {
-                    if (temp.expiry_date != 0 && _time > temp.expiry_date) {
-                        item.box3[i] = null;
-                        try {
-                            conn.p.item.char_chest(3);
-                        } catch (IOException eee) {
-                        }
-                        continue;
-                    }
-                    JSONArray jsar2 = new JSONArray();
-                    jsar2.add(temp.id);
-                    jsar2.add(temp.clazz);
-                    jsar2.add(temp.type);
-                    jsar2.add(temp.level);
-                    jsar2.add(temp.icon);
-                    jsar2.add(temp.color);
-                    jsar2.add(temp.part);
-                    jsar2.add(temp.islock ? 1 : 0);
-                    jsar2.add(temp.tier);
-                    JSONArray jsar3 = new JSONArray();
-                    for (int j = 0; j < temp.op.size(); j++) {
-                        JSONArray jsar4 = new JSONArray();
-                        jsar4.add(temp.op.get(j).id);
-                        jsar4.add(temp.op.get(j).getParam(0));
-                        jsar3.add(jsar4);
-                    }
-                    jsar2.add(jsar3);
-                    jsar2.add(temp.time_use);
-                    jsar2.add(temp.tierStar);
-                    jsar2.add(temp.expiry_date);
-                    jsar.add(jsar2);
-                }
-            }
-            a += ",`itembox3` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            for (int i = 0; i < mypet.size(); i++) {
-                JSONArray js1 = new JSONArray();
-                js1.add(mypet.get(i).level);
-                js1.add(mypet.get(i).type);
-                js1.add(mypet.get(i).icon);
-                js1.add(mypet.get(i).nframe);
-                js1.add(mypet.get(i).color);
-                js1.add(mypet.get(i).grown);
-                js1.add(mypet.get(i).maxgrown);
-                js1.add(mypet.get(i).point1);
-                js1.add(mypet.get(i).point2);
-                js1.add(mypet.get(i).point3);
-                js1.add(mypet.get(i).point4);
-                js1.add(mypet.get(i).maxpoint);
-                js1.add(mypet.get(i).exp);
-                js1.add(mypet.get(i).is_follow ? 1 : 0);
-                js1.add(mypet.get(i).is_hatch ? 1 : 0);
-                js1.add(mypet.get(i).time_born);
-                JSONArray js2 = new JSONArray();
-                for (int i2 = 0; i2 < mypet.get(i).op.size(); i2++) {
-                    JSONArray js3 = new JSONArray();
-                    js3.add(mypet.get(i).op.get(i2).id);
-                    js3.add(mypet.get(i).op.get(i2).param);
-                    js3.add(mypet.get(i).op.get(i2).maxdam);
-                    js2.add(js3);
-                }
-                js1.add(js2);
-                js1.add(mypet.get(i).expiry_date);
-                jsar.add(js1);
-            }
-            a += ",`pet` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            for (int i = 0; i < medal_create_material.length; i++) {
-                jsar.add(medal_create_material[i]);
-            }
-            a += ",`medal_create_material` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
+                a += ",`medal_create_material` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
 
-            //
-            for (int i = 0; i < MaterialItemStar.length; i++) {
-                jsar.add(MaterialItemStar[i]);
-            }
-            a += ",`item_star_material` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
+                //
+                for (int i = 0; i < MaterialItemStar.length; i++) {
+                    jsar.add(MaterialItemStar[i]);
+                }
+                a += ",`item_star_material` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
 
-            for (int i = 0; i < point_active.length; i++) {
-                jsar.add(point_active[i]);
-            }
-            a += ",`point_active` = '" + jsar.toJSONString() + "'";
-            jsar.clear();
-            //
-            a += ",`vang` = " + vang;
-            a += ",`kimcuong` = " + kimcuong;
-            a += ",`tiemnang` = " + tiemnang;
-            a += ",`kynang` = " + kynang;
-            a += ",`diemdanh` = " + diemdanh;
-            a += ",`banclone` = " + banclone;
-            a += ",`chucphuc` = " + chucphuc;
-            a += ",`hieuchien` = " + hieuchien;
-            a += ",`chuyencan` = " + chuyencan;
-            a += ",`chuyensinh` = " + chuyensinh;
-            a += ",`typeexp` = " + type_exp;
-            a += ",`date` = '" + date.toString() + "'";
-            a += ",`point1` = " + point1;
-            a += ",`point2` = " + point2;
-            a += ",`point3` = " + point3;
-            a += ",`point4` = " + point4;
-            a += ",`point_arena` = " + pointarena;
-            if (ps.executeUpdate("UPDATE `player` SET " + a + " WHERE `id` = " + this.index + ";") > 0) {
-                connection.commit();
-            }
-            if (connection != null) {
-                ps.close();
-                connection.close();
+                for (int i = 0; i < point_active.length; i++) {
+                    jsar.add(point_active[i]);
+                }
+                a += ",`point_active` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                a += ",`vang` = " + vang;
+                a += ",`kimcuong` = " + kimcuong;
+                a += ",`tiemnang` = " + tiemnang;
+                a += ",`kynang` = " + kynang;
+                a += ",`diemdanh` = " + diemdanh;
+                a += ",`chucphuc` = " + chucphuc;
+                a += ",`hieuchien` = " + hieuchien;
+                a += ",`chuyencan` = " + chuyencan;
+                a += ",`chuyensinh` = " + chuyensinh;
+                a += ",`typeexp` = " + type_exp;
+                a += ",`date` = '" + date.toString() + "'";
+                a += ",`point1` = " + point1;
+                a += ",`point2` = " + point2;
+                a += ",`point3` = " + point3;
+                a += ",`point4` = " + point4;
+                a += ",`point_arena` = " + pointarena;
+                if (ps.executeUpdate("UPDATE `player` SET " + a + " WHERE `id` = " + this.index + ";") > 0) {
+                    connection.commit();
+                }
+                if (connection != null) {
+                    ps.close();
+                    connection.close();
+                }
+            } else {
+                String a = "";
+                JSONArray jsar = new JSONArray();
+                for (Item47 it : item.bag47) {
+                    if (it.category == 4) {
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(it.id);
+                        jsar2.add(it.quantity);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += "`item4` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (Item47 it : item.bag47) {
+                    if (it.category == 7) {
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(it.id);
+                        jsar2.add(it.quantity);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`item7` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                long _time = System.currentTimeMillis();
+                for (int i = 0; i < item.bag3.length; i++) {
+                    Item3 temp = item.bag3[i];
+                    if (temp != null) {
+                        if (temp.expiry_date != 0 && _time > temp.expiry_date) {
+                            item.bag3[i] = null;
+                            try {
+                                conn.p.item.char_inventory(3);
+                            } catch (IOException eee) {
+                            }
+                            continue;
+                        }
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(temp.id);
+                        jsar2.add(temp.clazz);
+                        jsar2.add(temp.type);
+                        jsar2.add(temp.level);
+                        jsar2.add(temp.icon);
+                        jsar2.add(temp.color);
+                        jsar2.add(temp.part);
+                        jsar2.add(temp.tier);
+                        JSONArray jsar3 = new JSONArray();
+                        for (int j = 0; j < temp.op.size(); j++) {
+                            JSONArray jsar4 = new JSONArray();
+                            jsar4.add(temp.op.get(j).id);
+                            jsar4.add(temp.op.get(j).getParam(0));
+                            jsar3.add(jsar4);
+                        }
+                        jsar2.add(jsar3);
+                        jsar2.add(i);
+                        jsar2.add(temp.tierStar);
+                        jsar2.add(temp.expiry_date);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`item3` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (int i = 0; i < item.box47.size(); i++) {
+                    if (item.box47.get(i).category == 4) {
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(item.box47.get(i).id);
+                        jsar2.add(item.box47.get(i).quantity);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`itembox4` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (int i = 0; i < item.box47.size(); i++) {
+                    if (item.box47.get(i).category == 7) {
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(item.box47.get(i).id);
+                        jsar2.add(item.box47.get(i).quantity);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`itembox7` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+                //
+                for (int i = 0; i < item.box3.length; i++) {
+                    Item3 temp = item.box3[i];
+                    if (temp != null) {
+                        if (temp.expiry_date != 0 && _time > temp.expiry_date) {
+                            item.box3[i] = null;
+                            try {
+                                conn.p.item.char_chest(3);
+                            } catch (IOException eee) {
+                            }
+                            continue;
+                        }
+                        JSONArray jsar2 = new JSONArray();
+                        jsar2.add(temp.id);
+                        jsar2.add(temp.clazz);
+                        jsar2.add(temp.type);
+                        jsar2.add(temp.level);
+                        jsar2.add(temp.icon);
+                        jsar2.add(temp.color);
+                        jsar2.add(temp.part);
+                        jsar2.add(temp.tier);
+                        JSONArray jsar3 = new JSONArray();
+                        for (int j = 0; j < temp.op.size(); j++) {
+                            JSONArray jsar4 = new JSONArray();
+                            jsar4.add(temp.op.get(j).id);
+                            jsar4.add(temp.op.get(j).getParam(0));
+                            jsar3.add(jsar4);
+                        }
+                        jsar2.add(jsar3);
+                        jsar2.add(i);
+                        jsar2.add(temp.tierStar);
+                        jsar2.add(temp.expiry_date);
+                        jsar.add(jsar2);
+                    }
+                }
+                a += ",`itembox3` = '" + jsar.toJSONString() + "'";
+                jsar.clear();
+
+                if (ps.executeUpdate("UPDATE `player` SET " + a + " WHERE `id` = " + this.owner.index + ";") > 0) {
+                    connection.commit();
+                }
+                if (connection != null) {
+                    ps.close();
+                    connection.close();
+                }
+                squire.flushSquire();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1261,9 +1408,9 @@ public class Player extends Body2 {
             // diem danh
             diemdanh = 1;
             chucphuc = 1;
+            diemsukien = 0;
             point_active[0] = 10;
             point_active[1] = 0;
-            point_active[2] = 0;
             //
             date = Date.from(Instant.now());
         }
@@ -2220,6 +2367,12 @@ public class Player extends Body2 {
         item.char_chest(7);
         item.char_inventory(3);
         item.char_chest(3);
+
+        isOwner = true;
+        owner = this;
+        squire = new Squire(this.conn, this.index);
+        squire = squire.load();
+
         Log.gI().add_log(this.name,
                 "Login : [Vàng] : " + Util.number_format(this.vang) + " : [Ngọc] : " + Util.number_format(this.kimcuong));
     }

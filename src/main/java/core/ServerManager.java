@@ -239,7 +239,7 @@ public class ServerManager implements Runnable {
                             Event_1.sort_bxh();
                         }
                     }
-                    if (hour == 21 && min == 0 && sec == 0) {
+                    if (DayOfWeek % 2 != 0 && hour == 21 && min == 0 && sec == 0) {
                         ChienTruong.gI().open_register();
                       //   Manager.gI().chatKTGprocess("Chiến Trường Đã Bắt Đầu mở đăng ký");
                     }

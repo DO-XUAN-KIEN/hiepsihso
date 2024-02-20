@@ -331,6 +331,7 @@ public class MainObject {
                 Service.send_notice_box(((Player) ObjAtk).conn, "Đối phương đang được pet bảo vệ");
                 return;
             }
+            ObjAtk.hieuchien +=100;
         }
         if (focus.get_Miss() > Util.random(10_000)) {
             if (ObjAtk.isPlayer()) {
@@ -479,9 +480,9 @@ public class MainObject {
                         mw.writer().writeByte(30);
                         byte[] id__ = new byte[]{7, 8, 9, 10, 11, 15, 0, 1, 2, 3, 4, 14};
                         int[] par__ = new int[]{2000, 2000, 2000, 2000, 2000, 2000,
-                            2 * (ObjAtk.get_param_view_in4(0) / 10), 2 * (ObjAtk.get_param_view_in4(1) / 10),
-                            2 * (ObjAtk.get_param_view_in4(2) / 10), 2 * (ObjAtk.get_param_view_in4(3) / 10),
-                            2 * (ObjAtk.get_param_view_in4(4) / 10), 2 * (ObjAtk.get_param_view_in4(14) / 10)};
+                                2 * (ObjAtk.get_param_view_in4(0) / 10), 2 * (ObjAtk.get_param_view_in4(1) / 10),
+                                2 * (ObjAtk.get_param_view_in4(2) / 10), 2 * (ObjAtk.get_param_view_in4(3) / 10),
+                                2 * (ObjAtk.get_param_view_in4(4) / 10), 2 * (ObjAtk.get_param_view_in4(14) / 10)};
                         mw.writer().writeByte(id__.length);
                         //
                         for (int i = 0; i < id__.length; i++) {
@@ -489,7 +490,7 @@ public class MainObject {
                             mw.writer().writeInt(par__[i]);
                         }
                         //
-                        MapService.send_msg_player_inside(p.map, p, mw, true);
+                        MapService.send_msg_player_inside(map, p, mw, true);
                         mw.cleanup();
                     }
                 }

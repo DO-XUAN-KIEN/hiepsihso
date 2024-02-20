@@ -607,17 +607,19 @@ public class ChiemThanhManager {
                 case 151: { 
                     id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
-                    if(Util.random(100)<10)
+                    if(Util.random(100)<15)
                         id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
                     sizeRandomMedal = (short) (50);
+                    p.diemchiemthanh += 1;
                     break;
                 }
                 case 152: { 
                     id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
-                    if(Util.random(100)<20)
-                        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
+//                    if(Util.random(100)<10)
+//                        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
                     sizeRandomMedal = (short) (60);
+                    p.diemchiemthanh += 1;
                     break;
                 }
             }

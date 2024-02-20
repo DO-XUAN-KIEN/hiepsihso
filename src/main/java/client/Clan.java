@@ -72,10 +72,10 @@ public class Clan {
                 break;
             }
             case 4: {
-//                if (!conn.p.myclan.mems.get(0).name.equals(conn.p.name)) {
-//                    Service.send_notice_box(conn, "Bạn không phải thủ lĩnh!");
-//                    return;
-//                }
+                if (!conn.p.myclan.mems.get(0).name.equals(conn.p.name)) {
+                    Service.send_notice_box(conn, "Bạn không phải thủ lĩnh!");
+                    return;
+                }
                 byte mem_type = m2.reader().readByte();
                 String name_mem = m2.reader().readUTF();
                 for (int i = 0; i < conn.p.myclan.mems.size(); i++) {
@@ -120,10 +120,10 @@ public class Clan {
                 break;
             }
             case 18: {
-//                if (!conn.p.myclan.mems.get(0).name.equals(conn.p.name)) {
-//                    Service.send_notice_box(conn, "Bạn không phải thủ lĩnh!");
-//                    return;
-//                }
+                if (!conn.p.myclan.mems.get(0).name.equals(conn.p.name)) {
+                    Service.send_notice_box(conn, "Bạn không phải thủ lĩnh!");
+                    return;
+                }
                 String name = m2.reader().readUTF();
                 this.remove_mem(name);
                 Service.send_notice_box(conn, "Đuổi cổ " + name + " thành công!");

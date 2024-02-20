@@ -399,12 +399,12 @@ public class GameSrc {
         byte type = m2.reader().readByte();
 
         if (type == 0) {
-            // if (conn.p.time_trade > System.currentTimeMillis()) {
-            // Service.send_notice_nobox_white(conn,
-            // "Chờ " + (conn.p.time_trade - System.currentTimeMillis()) / 1000 + "s nữa");
-            // return;
-            // }
-            // conn.p.time_trade = System.currentTimeMillis() + 1000L * 15;
+//             if (conn.p.time_trade > System.currentTimeMillis()) {
+//             Service.send_notice_nobox_white(conn,
+//             "Chờ " + (conn.p.time_trade - System.currentTimeMillis()) / 1000 + "s nữa");
+//             return;
+//             }
+//             conn.p.time_trade = System.currentTimeMillis() + 1000L * 15;
         }
         switch (type) {
             case 0: {
@@ -414,7 +414,7 @@ public class GameSrc {
                         return;
                     }
                     conn.p.banclone = 0;
-                    int coin_ = 1_000_000;
+                    int coin_ = 1_500_000;
                     conn.p.update_coin(-coin_);
                     conn.p.item.char_inventory(5);
                     Player p0 = Map.get_player_by_name(m2.reader().readUTF());
@@ -478,7 +478,7 @@ public class GameSrc {
                         return;
                     }
                     conn.p.banclone = 0;
-                    int coin_ = 1_000_000;
+                    int coin_ = 1_500_000;
                     conn.p.update_coin(-coin_);
                     conn.p.item.char_inventory(5);
 
@@ -1204,6 +1204,7 @@ public class GameSrc {
     }
     
     public static short[] Ratio_Upgrade_Medal = new short[] {10000, 7600, 6200, 5200, 4500, 4000, 3500, 3200, 2900, 2700, 2500, 2300, 2100, 2000, 1900, 1800};
+    public static short[] Ratio_Upgrademeday = new short[] { 500, 350, 200, 150, 100, 80, 10, 10, 10, 10};
     public static void UpgradeMedal(Session conn, byte index)throws IOException
     {
         if(index >3)
@@ -1257,8 +1258,8 @@ public class GameSrc {
             
             float[] plus_rate = new float[] {(float)0, (float)0.5, (float)0.1, (float)0.3};
 //            boolean suc = (it_temp.tier < 6) ? true : (100 > Util.random(100 + it_temp.tier * 28));//cũ là 25
-            boolean suc = (it_temp.tier < 6) ? true : ((Ratio_Upgrade_Medal[it_temp.tier] + Ratio_Upgrade_Medal[it_temp.tier] * plus_rate[index]) > Util.random(10000));
-            if (conn.ac_admin > 3 && Manager.BuffAdmin) {
+            boolean suc = (it_temp.tier < 6) ? true : ((Ratio_Upgrademeday[it_temp.tier] + Ratio_Upgrademeday[it_temp.tier] * plus_rate[index]) > Util.random(1000));
+            if (conn.ac_admin > 10 && Manager.BuffAdmin) {
                 suc = true;
             }
             
@@ -1889,7 +1890,7 @@ public class GameSrc {
                                 Service.send_notice_box(conn, "Số lượng không hợp lệ!");
                                 return;
                             }
-                            if (p_store.it_type == 4 && (Helps.CheckItem.item4CanTrade(p_store.it_id) || p_store.it_id == 135 || p_store.it_id == 52 || p_store.it_id == 56 || p_store.it_id == 143 || p_store.it_id == 226)) {
+                            if (p_store.it_type == 4 && (Helps.CheckItem.item4CanTrade(p_store.it_id) || p_store.it_id == 135 || p_store.it_id == 52 || p_store.it_id == 56 || p_store.it_id == 143 || p_store.it_id == 226 || p_store.it_id == 326 || p_store.it_id == 327 || p_store.it_id == 328)) {
                                 Service.send_notice_box(conn, "Đồ bán không hợp lệ!");
                                 return;
                             }
@@ -1924,7 +1925,6 @@ public class GameSrc {
                     MapService.send_msg_player_inside(conn.p.map, conn.p, ms, true);
                     ms.cleanup();
                     conn.p.item.remove(4, 135, 1);
-                    conn.p.item.remove(3,4701,1);
                     conn.p.item.char_inventory(4);
                     conn.p.item.char_inventory(7);
                     conn.p.item.char_inventory(3);
@@ -2478,15 +2478,15 @@ public class GameSrc {
                     conn.p.ChangeMaterialItemStar(conn.p.TypeItemStarCreate);
                     int ran = Util.random(100);
                     byte color = 0;
-                    if((conn.ac_admin>4 && Manager.BuffAdmin) || ran>=95)
+                    if((conn.ac_admin>4 && Manager.BuffAdmin) || ran>=97)//
                         color =5;
-                    else if(ran>=87)//8%
+                    else if(ran>=90)// 8%
                         color =4;
-                    else if(ran>=72)//15%
+                    else if(ran>=72)// 15%
                         color =3;
-                    else if(ran>=53)//19%
+                    else if(ran>=53)// 19%
                         color =2;
-                    else if(ran>=29)//24%
+                    else if(ran>=29)// 24%
                         color =1;
                     Item3 itbag = new Item3();
                     itbag.id = id_item;
@@ -2500,8 +2500,8 @@ public class GameSrc {
                     {
                         Option o = ops.get(i);
                         int pr = (int)o.getParam(0);
-                        int pr1 = (int)(pr + (int)(pr * (color) * 0.167));
-                        int pr2 = (int)(pr + (int)(pr * (color + 1) * 0.167));
+                        int pr1 = (int)(pr + (int)(pr * (color) * 0.142));
+                        int pr2 = (int)(pr + (int)(pr * (color + 1) * 0.142));
                         if((o.id >= 58 && o.id <=60)||(o.id >= 100 && o.id <=107))
                             itbag.op.add(new Option(o.id, pr, itbag.id));
                         else if(o.id == 37 || o.id == 38 && itbag.tierStar <7)
@@ -2519,10 +2519,10 @@ public class GameSrc {
 //                        else
 //                            itbag.op.add(new Option(o.id, Util.random(pr1, pr2), itbag.id));
                     }
-                     int[] opAo = {-111, -110, -109, -108, -107};
+                    int[] opAo = {-111, -110, -109, -108, -107};
                     int[] opNon = {-102, -113, -105};
                     int[] opVK = {-101, -113, -86, -84, -82, -80};
-                    int[] opNhan = {-91, -87, -104, -86, -84, -82, -80};
+                    int[] opNhan = {-89, -87, -104, -86, -84, -82, -80};
                     int[] opDayChuyen = {-87, -105, -103, -91};;
                     int[] opGang = {-89, -103, -91};
                     int[] opGiay = {-104, -103, -91};
@@ -2535,11 +2535,11 @@ public class GameSrc {
                                 while (opid1 == opid2) {
                                     opid1 = opAo[Util.nextInt(opAo.length)];
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opAo[Util.nextInt(opAo.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type == 2) {
                             int percent = Util.nextInt(0, 100);
@@ -2549,11 +2549,11 @@ public class GameSrc {
                                 while (opid1 == opid2) {
                                     opid1 = opNon[Util.nextInt(opNon.length)];
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opNon[Util.nextInt(opNon.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type == 3) {
                             int percent = Util.nextInt(0, 100);
@@ -2563,11 +2563,11 @@ public class GameSrc {
                                 while (opid1 == opid2) {
                                     opid1 = opGang[Util.nextInt(opGang.length)];
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opGang[Util.nextInt(opGang.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type == 4) {
                             int percent = Util.nextInt(0, 100);
@@ -2577,11 +2577,11 @@ public class GameSrc {
                                 while (opid1 == opid2) {
                                     opid1 = opNhan[Util.nextInt(opNhan.length)];
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opNhan[Util.nextInt(opNhan.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type == 5) {
                             int percent = Util.nextInt(0, 100);
@@ -2591,11 +2591,11 @@ public class GameSrc {
                                 while (opid1 == opid2) {
                                     opid1 = opDayChuyen[Util.nextInt(opDayChuyen.length)];
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opDayChuyen[Util.nextInt(opDayChuyen.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type == 6) {
                             int percent = Util.nextInt(0, 100);
@@ -2605,25 +2605,25 @@ public class GameSrc {
                                 while (opid1 == opid2) {
                                     opid1 = opGiay[Util.nextInt(opGiay.length)];
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opGiay[Util.nextInt(opGiay.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type > 6) {
-                            int percent = Util.nextInt(0, 100);
+                            int percent = Util.nextInt(0, 50);
                             if (percent > 85) {
                                 int opid1 = opVK[Util.nextInt(opVK.length)];
                                 int opid2 = opVK[Util.nextInt(opVK.length)];
                                 while (opid1 == opid2) {
                                     opid1 = opVK[Util.nextInt(opVK.length)];
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opVK[Util.nextInt(opVK.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         }
                     } else if (color == 5) {
@@ -2643,13 +2643,13 @@ public class GameSrc {
                                     opid3 = opAo[Util.nextInt(opAo.length)];
                                 }
                                 if (percent > 87) {
-                                    itbag.op.add(new Option(opid3, Util.random(10, 100), itbag.id));
+                                    itbag.op.add(new Option(opid3, Util.random(10, 50), itbag.id));
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opAo[Util.nextInt(opAo.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type == 2) {
                             int percent = Util.nextInt(0, 100);
@@ -2667,13 +2667,13 @@ public class GameSrc {
                                     opid3 = opNon[Util.nextInt(opNon.length)];
                                 }
                                 if (percent > 87) {
-                                    itbag.op.add(new Option(opid3, Util.random(10, 100), itbag.id));
+                                    itbag.op.add(new Option(opid3, Util.random(10, 50), itbag.id));
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opNon[Util.nextInt(opNon.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type == 3) {
                             int percent = Util.nextInt(0, 100);
@@ -2691,11 +2691,11 @@ public class GameSrc {
                                     opid3 = opGang[Util.nextInt(opGang.length)];
                                 }
                                 if (percent > 87) {
-                                    itbag.op.add(new Option(opid3, Util.random(10, 100), itbag.id));
+                                    itbag.op.add(new Option(opid3, Util.random(10, 50), itbag.id));
                                 }
                             } else {
                                 int opid = opGang[Util.nextInt(opGang.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type == 4) {
                             int percent = Util.nextInt(0, 100);
@@ -2713,13 +2713,13 @@ public class GameSrc {
                                     opid3 = opNhan[Util.nextInt(opNhan.length)];
                                 }
                                 if (percent > 87) {
-                                    itbag.op.add(new Option(opid3, Util.random(10, 100), itbag.id));
+                                    itbag.op.add(new Option(opid3, Util.random(10, 50), itbag.id));
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opNhan[Util.nextInt(opNhan.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type == 5) {
                             int percent = Util.nextInt(0, 100);
@@ -2737,13 +2737,13 @@ public class GameSrc {
                                     opid3 = opDayChuyen[Util.nextInt(opDayChuyen.length)];
                                 }
                                 if (percent > 87) {
-                                    itbag.op.add(new Option(opid3, Util.random(10, 100), itbag.id));
+                                    itbag.op.add(new Option(opid3, Util.random(10, 50), itbag.id));
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opDayChuyen[Util.nextInt(opDayChuyen.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type == 6) {
                             int percent = Util.nextInt(0, 100);
@@ -2761,13 +2761,13 @@ public class GameSrc {
                                     opid3 = opGiay[Util.nextInt(opGiay.length)];
                                 }
                                 if (percent > 87) {
-                                    itbag.op.add(new Option(opid3, Util.random(10, 100), itbag.id));
+                                    itbag.op.add(new Option(opid3, Util.random(10, 50), itbag.id));
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opGiay[Util.nextInt(opGiay.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         } else if (itbag.type > 7) {
                             int percent = Util.nextInt(0, 100);
@@ -2785,13 +2785,13 @@ public class GameSrc {
                                     opid3 = opVK[Util.nextInt(opVK.length)];
                                 }
                                 if (percent > 87) {
-                                    itbag.op.add(new Option(opid3, Util.random(10, 100), itbag.id));
+                                    itbag.op.add(new Option(opid3, Util.random(10, 50), itbag.id));
                                 }
-                                itbag.op.add(new Option(opid1, Util.random(10, 100), itbag.id));
-                                itbag.op.add(new Option(opid2, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid1, Util.random(10, 50), itbag.id));
+                                itbag.op.add(new Option(opid2, Util.random(10, 50), itbag.id));
                             } else {
                                 int opid = opVK[Util.nextInt(opVK.length)];
-                                itbag.op.add(new Option(opid, Util.random(10, 100), itbag.id));
+                                itbag.op.add(new Option(opid, Util.random(10, 50), itbag.id));
                             }
                         }
                     }
@@ -2855,104 +2855,6 @@ public class GameSrc {
                     Service.send_notice_box(conn, "Trang bị không phù hợp hoặc đã đạt cấp tối đa!");
                     return;
                 }
-//                if(temp == null || !(temp.id >= 4656 && temp.id <= 4675)|| tem != 3)
-//                {
-//                    Service.send_notice_box(conn, "Trang bị không phù hợp!");
-//                    return;
-//                }
-                  
-//                for(int i = conn.p.TypeItemStarCreate *5; i < conn.p.TypeItemStarCreate *5+5; i++)
-//                {
-//                    if(conn.p.item.total_item_by_id(7,conn.p.MaterialItemStar[i]) < 1 && (conn.ac_admin < 4 || !Manager.BuffAdminMaterial))
-//                    {
-//                        Service.send_notice_box(conn, "Thiếu nguyên liệu!");
-//                        return;
-//                    }
-//                }
-//
-//                if(temp.tierStar >= Ratio_UpgradeItemStar.length)
-//                {
-//                    Service.send_notice_box(conn, "Trang bị đã đạt cấp tối đa!");
-//                    return;
-//                }
-//                boolean suc = Ratio_UpgradeItemStar[temp.tierStar] > Util.random(1,101) || (conn.ac_admin >3  && Manager.BuffAdmin);
-//                if(suc)
-//                {
-//                    List<Option> ops = Helps.ItemStar.GetOpsItemStarUpgrade(temp.clazz, temp.type, temp.tierStar+1,temp.op);
-//                    if(ops == null || ops.size() <1)
-//                    {
-//                        Service.send_notice_box(conn, "không tìm thấy chỉ số trang bị phù hợp!");
-//                        return;
-//                    }
-//                    if((temp.tierStar+1) % 3 == 0)
-//                        conn.p.ChangeMaterialItemStar(conn.p.TypeItemStarCreate);
-//
-//                    temp.tierStar++;
-//                    temp.level = Helps.ItemStar.GetLevelItemStar(temp.tierStar);
-//                    temp.op.clear();
-//                    temp.UpdateName();
-//                    for(int i = 0; i <ops.size(); i++)
-//                    {
-//                        Option o = ops.get(i);
-//                        int pr = (int)o.getParam(0);
-//                        int pr1 = (int)(pr + (int)(pr * (temp.color) * 0.167));
-//                        int pr2 = (int)(pr + (int)(pr * (temp.color + 1) * 0.167));
-//                        if(o.id == 37 || o.id == 38)
-//                            temp.op.add(new Option(o.id, 1+Util.random(pr1, pr2) , temp.id));
-//                        else
-//                            temp.op.add(new Option(o.id, Util.random(pr1, pr2), temp.id));
-//                    }
-//                }
-//                for(int i = conn.p.TypeItemStarCreate *5; i< conn.p.TypeItemStarCreate *5+5; i++)
-//                    conn.p.item.remove(7, conn.p.MaterialItemStar[i], 1);
-//                conn.p.item.char_inventory(3);
-//                m = new Message(-105);
-//                m.writer().writeByte(3);
-//                if (suc) {
-//                    m.writer().writeByte(3);
-//                    m.writer().writeUTF("Thành công!");
-//                } else {
-//                    m.writer().writeByte(4);
-//                    m.writer().writeUTF("Thất bại!");
-//                }
-//                m.writer().writeByte(3);
-//                m.writer().writeUTF(temp.name);
-//                m.writer().writeByte(temp.clazz);
-//                m.writer().writeShort(temp.id);
-//                m.writer().writeByte(temp.type);
-//                m.writer().writeShort(temp.icon);
-//                m.writer().writeByte(temp.tier); // tier
-//                m.writer().writeShort(1); // level required
-//                m.writer().writeByte(temp.color); // color
-//                m.writer().writeByte(0); // can sell
-//                m.writer().writeByte(0); // can trade
-//                m.writer().writeByte(temp.op.size());
-//                for (int i = 0; i < temp.op.size(); i++) {
-//                    m.writer().writeByte(temp.op.get(i).id);
-//                    m.writer().writeInt(temp.op.get(i).getParam(0));
-//                    
-//                }
-//                m.writer().writeInt(0); // time use
-//                m.writer().writeByte(0);
-//                m.writer().writeByte(0);
-//                m.writer().writeByte(0);
-//                conn.addmsg(m);
-//                m.cleanup();
-//                if(temp.tierStar <9){
-//                    m = new Message(-105);
-//                    m.writer().writeByte(5);
-//                    if (suc) {
-//                        m.writer().writeByte(3);
-//                        m.writer().writeUTF("Thành công, xin chúc mừng :)");
-//                    } else {
-//                        m.writer().writeByte(4);
-//                        m.writer().writeUTF("Thất bại rồi :(");
-//                    }
-//                    m.writer().writeShort(id);
-//                    conn.addmsg(m);
-//                    m.cleanup();
-//                }
-                
                 break;
             }
             default:
@@ -2962,8 +2864,8 @@ public class GameSrc {
             }
         }
     }
-    
-    public static void UpgradeItemStar(Session conn, byte index) throws IOException {
+
+    public static void UpgradeItemStar(Session conn, byte index) throws IOException { // nâng cấp tt
 //        try{
         int id = conn.p.id_Upgrade_Medal_Star;
         if (id >= conn.p.item.bag3.length || id < 0) {
@@ -3005,8 +2907,8 @@ public class GameSrc {
             {
                 Option o = ops.get(i);
                 int pr = (int)o.getParam(0);
-                int pr1 = (int)(pr + (int)(pr * (temp.color) * 0.08));
-                int pr2 = (int)(pr + (int)(pr * (temp.color + 1) * 0.08));
+                int pr1 = (int)(pr + (int)(pr * (temp.color) * 0.109));
+                int pr2 = (int)(pr + (int)(pr * (temp.color + 1) * 0.109));
                 if((o.id >= 58 && o.id <=60)||(o.id >= 100 && o.id <=107))
                     temp.op.add(new Option(o.id, pr, temp.id));
                 else if(o.id == 37 || o.id == 38 && temp.tierStar <7)
@@ -3027,7 +2929,7 @@ public class GameSrc {
         if(index == 1)
             conn.p.item.remove(7, 471, 1);
         if(suc && (temp.tierStar+1) % 3 == 0)
-                conn.p.ChangeMaterialItemStar(conn.p.TypeItemStarCreate);
+            conn.p.ChangeMaterialItemStar(conn.p.TypeItemStarCreate);
         conn.p.item.char_inventory(4);
         conn.p.item.char_inventory(7);
         conn.p.item.char_inventory(3);
@@ -3081,6 +2983,6 @@ public class GameSrc {
 //            eee.printStackTrace();
 //        }
     }
-    
-    
+
+
 }

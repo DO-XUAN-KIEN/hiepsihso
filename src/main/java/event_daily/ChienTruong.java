@@ -77,12 +77,6 @@ public class ChienTruong {
 				}
 			} else if (this.status == 2) {
 				this.time--;
-				// event
-				if (this.time == 60 * 50) {
-					create_boss(10);
-				} else if (this.time == 60 * 40) {
-					create_boss(20);
-				}
 				//
 				if (this.time <= 0) {
 					this.finish();
@@ -145,7 +139,7 @@ public class ChienTruong {
 			Manager.gI().chatKTGprocess("Chiến trường bắt đầu , cố gắng lấy nhiều nguyên liệu, điểm nhất nào");
 			this.BXH.clear();
 			this.status = 2;
-			this.time = 60 * 2;
+			this.time = 60 * 60;
 			int init_house = this.list.size() / 40;
 			init_house = init_house > 0 ? init_house : 1;
 			this.info_house = new int[] {init_house, init_house, init_house, init_house
@@ -326,31 +320,31 @@ public class ChienTruong {
 		if (this.status == 2) {
 			Manager.gI().chatKTGprocess("Chiến trường kết thúc, hẹn gặp lại vào ngày mai");
 			//
-			List<Player> list_receiv = new ArrayList<>();
+//			List<Player> list_receiv = new ArrayList<>();
+//			for (Entry<String, Member_ChienTruong> en : this.list.entrySet()) {
+//				Player p0 = Map.get_player_by_name(en.getKey());
+//				if (p0 != null && Map.is_map_chien_truong(p0.map.map_id)) {
+//					list_receiv.add(p0);
+//				}
+//			}
+//			long vang_re = this.vang / (list_receiv.size() < 0 ? 1 : list_receiv.size());
+//			long ngoc_re = this.ngoc / (list_receiv.size() < 0 ? 1 : list_receiv.size());
+//			list_receiv.forEach(l -> {
+//				if (l.conn != null) {
+//					l.update_vang(vang_re);
+//					l.update_ngoc(ngoc_re);
+//					try {
+//						l.item.char_inventory(5);
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			});
+//			this.vang = 0;
+//			this.ngoc = 0;
+//			list_receiv.clear();
 			for (Entry<String, Member_ChienTruong> en : this.list.entrySet()) {
-				Player p0 = Map.get_player_by_name(en.getKey());
-				if (p0 != null && Map.is_map_chien_truong(p0.map.map_id)) {
-					list_receiv.add(p0);
-				}
-			}
-			long vang_re = this.vang / (list_receiv.size() < 0 ? 1 : list_receiv.size());
-			long ngoc_re = this.ngoc / (list_receiv.size() < 0 ? 1 : list_receiv.size());
-			list_receiv.forEach(l -> {
-				if (l.conn != null) {
-					l.update_vang(vang_re);
-					l.update_ngoc(ngoc_re);
-					try {
-						l.item.char_inventory(5);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			this.vang = 0;
-			this.ngoc = 0;
-			list_receiv.clear();
-			for (Entry<String, Member_ChienTruong> en : this.list.entrySet()) {
-				// System.out.println(en.getKey() + " " + en.getValue().village);
+				 System.out.println(en.getKey() + " " + en.getValue().village);
 				Player p0 = Map.get_player_by_name(en.getKey());
 				if (p0 != null) {
 					Vgo vgo = new Vgo();
@@ -361,12 +355,12 @@ public class ChienTruong {
 					MapService.change_flag(p0.map, p0, -1);
 				}
 			}
-			for (int i = 0; i < boss.size(); i++) {
-				boss.get(i).level = 10;
-				boss.get(i).hp = 0;
-				boss.get(i).is_boss_active = false;
-				boss.get(i).isdie = true;
-			}
+//			for (int i = 0; i < boss.size(); i++) {
+//				boss.get(i).level = 10;
+//				boss.get(i).hp = 0;
+//				boss.get(i).is_boss_active = false;
+//				boss.get(i).isdie = true;
+//			}
 			for (Entry<String, Member_ChienTruong> en : this.list.entrySet()) {
 				this.BXH.add(en.getValue());
 			}
@@ -517,8 +511,8 @@ public class ChienTruong {
             short sizeRandomMedal = 0;
             switch (mob.template.mob_id) {
                 case 93: {
-					id_item_leave7 = new short[]{(short) Util.random(126, 135)};
-					if(Util.random(20000) < 1 ){
+					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
+					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					p.update_point_arena(1);
@@ -526,8 +520,8 @@ public class ChienTruong {
                     break;
                 }
                 case 94: {
-					id_item_leave7 =new short[]{(short) Util.random(126, 135)};
-					if(Util.random(20000) < 1 ){
+					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
+					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					p.update_point_arena(1);
@@ -535,8 +529,8 @@ public class ChienTruong {
 					break;
                 }
                 case 95: {
-					id_item_leave7 =new short[]{(short) Util.random(126, 135)};
-					if(Util.random(20000) < 1 ){
+					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
+					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					p.update_point_arena(1);
@@ -544,8 +538,8 @@ public class ChienTruong {
 					break;
                 }
                 case 96: {
-					id_item_leave7 =new short[]{(short) Util.random(126, 135)};
-					if(Util.random(20000) < 1 ){
+					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
+					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					p.update_point_arena(1);
@@ -553,8 +547,8 @@ public class ChienTruong {
 					break;
                 }
                 case 97: {
-					id_item_leave7 =new short[]{(short) Util.random(126, 135)};
-					if(Util.random(20000) < 1 ){
+					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
+					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					p.update_point_arena(1);
@@ -562,8 +556,8 @@ public class ChienTruong {
 					break;
                 }
                 case 98: {
-					id_item_leave7 =new short[]{(short) Util.random(126, 135)};
-					if(Util.random(20000) < 1 ){
+					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
+					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					p.update_point_arena(1);
@@ -571,8 +565,8 @@ public class ChienTruong {
 					break;
                 }
                 case 99: {
-					id_item_leave7 =new short[]{(short) Util.random(126, 135)};
-					if(Util.random(20000) < 1 ){
+					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
+					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					p.update_point_arena(1);
@@ -580,8 +574,8 @@ public class ChienTruong {
 					break;
                 }
                 case 100: {
-					id_item_leave7 =new short[]{(short) Util.random(126, 135)};
-					if(Util.random(20000) < 1 ){
+					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
+					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					p.update_point_arena(1);

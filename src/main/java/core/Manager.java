@@ -97,6 +97,7 @@ public class Manager {
     public static boolean isLockVX = false;
     public static boolean isGiaoDich = false;
     public static boolean isKmb = true;
+    public static boolean doicoin = false;
     public static boolean isServerTest;
     public static boolean BuffAdmin = true;
     public static boolean BuffAdminMaterial = true;

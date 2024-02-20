@@ -97,7 +97,7 @@ public class TextFromClient {
                     switch (quant) {
                         case 1: {
                             if (conn.p.get_vang() < 5_000_000_000L) {
-                                Service.send_notice_box(conn, "Không đủ 10 tỷ vàng");
+                                Service.send_notice_box(conn, "Không đủ 5 tỷ vàng");
                                 return;
                             }
                             conn.p.update_vang(-5_000_000_000L);
@@ -105,10 +105,10 @@ public class TextFromClient {
                         }
                         case 2: {
                             if (conn.p.get_ngoc() < 800_000) {
-                                Service.send_notice_box(conn, "Không đủ 500k ngọc");
+                                Service.send_notice_box(conn, "Không đủ 800k ngọc");
                                 return;
                             }
-                            conn.p.update_ngoc(-500_000);
+                            conn.p.update_ngoc(-800_000);
                             break;
                         }
                         case 3: {
@@ -636,25 +636,7 @@ public class TextFromClient {
                 break;
             }
             case 8: {
-//                if (size != 1) {
-//                    return;
-//                }
-//                String value = m2.reader().readUTF();
-//                if (!(Util.isnumber(value))) {
-//                    Service.send_notice_box(conn, "Dữ liệu nhập không phải số!!");
-//                    return;
-//                }
-//                int coin_exchange = Integer.parseInt(value);
-//                if (coin_exchange <= 0 || coin_exchange > 1_000_000_000) {
-//                    Service.send_notice_box(conn, "Số nhập không hợp lệ, hãy thử lại");
-//                    return;
-//                }
-//                if (conn.p.update_coin(-coin_exchange)) {
-//                    conn.p.update_vang(coin_exchange * 5000);
-//                    conn.p.item.char_inventory(5);
-//                    Service.send_notice_box(conn, "Đổi thành công");
-//                }
-//                break;
+
             }
             case 9: {
                 if (size != 1) {
@@ -1183,10 +1165,10 @@ public class TextFromClient {
                             short quant = (short) Util.random(2, 5);
                             ids.add(new box_item_template(id, quant, (byte) 7));
                             conn.p.item.add_item_bag47(id, quant, (byte) 7);
-                        } else if (ran < 2) { //sách
-                            short idsach = (short) Util.random(4577, 4585);
-                            ids.add(new box_item_template(idsach, (short) 1, (byte) 3));
-                            conn.p.item.add_item_bag3_default(idsach, 0, false);
+//                        } else if (ran < 2) { //sách
+//                            short idsach = (short) Util.random(4577, 4585);
+//                            ids.add(new box_item_template(idsach, (short) 1, (byte) 3));
+//                            conn.p.item.add_item_bag3_default(idsach, 0, false);
                         } else if (ran < 5) {//nlmd vang tim
                             short id = (short) Util.random(126, 146);
                             short quant = (short) 1;
@@ -1282,6 +1264,35 @@ public class TextFromClient {
                     }
                 }
                 Service.Show_open_box_notice_item(p0, "Quà hoa đăng từ "+conn.p.name, ids);
+                break;
+            }
+            case 33: {
+                if (size != 1) {
+                    return;
+                }
+                String value = m2.reader().readUTF();
+                if (!(Util.isnumber(value))) {
+                    Service.send_notice_box(conn, "Dữ liệu nhập không phải số!!");
+                    return;
+                }
+                int vang_exchange = Integer.parseInt(value);
+                if (vang_exchange < 1_000_000 || vang_exchange > 200_000_000) {
+                    Service.send_notice_box(conn, "Chỉ có thể đổi tối thiểu là 1 triệu và tối đa là 200 triệu");
+                    return;
+                }
+                if (conn.p.get_vang() < vang_exchange) {
+                    Service.send_notice_box(conn, "Không đủ " + vang_exchange + " vàng");
+                    return;
+                }
+                if(conn.p.diemsukien >= 100_000){
+                    Service.send_notice_box(conn," Đã đạt giới hạn đổi vàng sang coin ngày hôm nay");
+                    return;
+                }
+                conn.p.update_vang(-vang_exchange);
+                conn.p.update_coin(vang_exchange /5_000);
+                conn.p.diemsukien += vang_exchange/5000;
+                conn.p.item.char_inventory(5);
+                Service.send_notice_box(conn, "Đổi thành công nhận " + vang_exchange /5_000 + " coin");
                 break;
             }
             default: {

@@ -130,7 +130,7 @@ public class BossManager {
                     if(map[mob.zone_id].Boss_entrys.contains(mob))
                         map[mob.zone_id].Boss_entrys.remove(mob);
                     map[mob.zone_id].Boss_entrys.add(mob);
-                    Manager.gI().chatKTGprocess(""+mob.template.name+" Đã Xuất Hiện Tại "+map[mob.zone_id].name);
+                 //   Manager.gI().chatKTGprocess(""+mob.template.name+" Đã Xuất Hiện Tại "+map[mob.zone_id].name);
                     //System.out.println("Boss "+mob.template.name+" Acctive "+map[mob.zone_id].name+ " khu "+(mob.zone_id+1));
                 }
             }

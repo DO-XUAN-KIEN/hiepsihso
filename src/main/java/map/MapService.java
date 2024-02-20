@@ -12,6 +12,7 @@ import client.Body2;
 import client.Clan;
 import client.Pet;
 import client.Player;
+import client.Squire;
 import core.Manager;
 import core.MenuController;
 import core.Service;
@@ -49,6 +50,9 @@ public class MapService {
 //        }
         if (!map.players.contains(p)) {
             map.players.add(p);
+        }
+        if(p.isLiveSquire) {
+            Squire.squireEnterMap(p);
         }
         p.change_new_date();
         //
@@ -149,6 +153,9 @@ public class MapService {
         if (map.players.contains(p)) {
             map.players.remove(p);
         }
+        if(p.isLiveSquire) {
+            Squire.squireLeaveMap(p);
+        }
         try {
             if (map.map_id == 87) {
                 ChiemThanhManager.PlayerDie(p);
@@ -178,7 +185,7 @@ public class MapService {
     public static void send_msg_player_inside(Map map, MainObject mainObj, Message m, boolean included) {
         for (int i = 0; i < map.players.size(); i++) {
             Player p0 = map.players.get(i);
-            if (p0 != null && ((Math.abs(p0.x - mainObj.x) < 200 && Math.abs(p0.y - mainObj.y) < 200)
+            if (p0 != null && !p0.isSquire && ((Math.abs(p0.x - mainObj.x) < 1500 && Math.abs(p0.y - mainObj.y) < 1500)
                     || Map.is_map__load_board_player(map.map_id)) && (included || (mainObj.index != p0.index))) {
                 p0.conn.addmsg(m);
             }
@@ -192,7 +199,7 @@ public class MapService {
         }
         for (int i = 0; i < map.players.size(); i++) {
             Player p0 = map.players.get(i);
-            if (p0.index != p.index && ((Math.abs(p0.x - p.x) < 200 && Math.abs(p0.y - p.y) < 200)
+            if (p0.index != p.index && !p0.isSquire && ((Math.abs(p0.x - p.x) < 1500 && Math.abs(p0.y - p.y) < 1500)
                     || Map.is_map__load_board_player(map.map_id))) {
                 MapService.send_in4_other_char(map, p0, p);
             }
@@ -430,6 +437,9 @@ public class MapService {
         for (int i = 0; i < map.players.size() && !isth; i++) {
             Player p0 = map.players.get(i);
             if (p0.index == p.index) {
+                continue;
+            }
+            if (p0.isSquire) {
                 continue;
             }
             if ((Math.abs(p0.x - p.x) < 200 && Math.abs(p0.y - p.y) < 200) || Map.is_map__load_board_player(map.map_id)) {
@@ -1437,7 +1447,7 @@ public class MapService {
             conn.addmsg(m);
             m.cleanup();
             MenuController.send_menu_select(conn, 126, new String[]{"Bảo trì", "Cộng vàng x1.000.000.000",
-                    "Cộng ngọc x1.000.000", "Update data", "Lấy item", "Up level", "Set Xp", "Khóa mõm", "Gỡ khóa mõm", "Khóa vòng quay", "Khóa GD", "Khóa KMB", "Ấp trứng nhanh",
+                    "Cộng ngọc x1.000.000", "Update data", "Lấy item", "Up level", "Set Xp", "Khóa mõm", "Gỡ khóa mõm", "Khóa vòng quay", "Khóa GD", "Khóa KMB", "Mở đổi vàng sang coin", "Ấp trứng nhanh",
                     "Buff Admin", "Buff Nguyên liệu", "Mở chiếm mỏ", "Đóng chiếm mỏ", (LoiDaiManager.isRegister ? "Đóng" : "Mở") + " đăng kí Lôi Đài", "Reset mob events",
                     (ChiemThanhManager.isRegister ? "Đóng" : "Mở") + " đăng kí chiếm thành", "Mở đăng kí chiến trường", "Dịch map", "loadconfig",
                     (Manager.logErrorLogin ? "tắt" : "bật") + " log bug", "disconnect client", "check bug", "fix bug", "đăng kí chiến trường"});
@@ -1751,7 +1761,7 @@ public class MapService {
         }
     }
 
-    private static Player get_player_by_id(Map map, int n2) {
+    public static Player get_player_by_id(Map map, int n2) {
         for (Player p0 : map.players) {
             if (p0.index == n2) {
                 return p0;
@@ -1912,6 +1922,8 @@ public class MapService {
             long time_ = System.currentTimeMillis();
             byte index_skill = m.reader().readByte();
             int n = m.reader().readByte();
+            int ObjAtk = 0;
+            short n3 = 0;
 
             //int sk_point = conn.p.body.get_skill_point(index_skill);
             int sk_point1 = conn.p.skill_point[index_skill];
@@ -1966,7 +1978,7 @@ public class MapService {
             List<Integer> ListATK = new ArrayList<>();
             if (type_atk == 0) {
                 for (int i = 0; i < n; ++i) {
-                    int ObjAtk = Short.toUnsignedInt(m.reader().readShort());
+                    ObjAtk = Short.toUnsignedInt(m.reader().readShort());
                     Mob_in_map mob_target = MapService.get_mob_by_index(map, ObjAtk);
                     if (mob_target == null) {
                         mob_target = map.GetBoss(ObjAtk);
@@ -2023,7 +2035,7 @@ public class MapService {
                 }
             } else if (type_atk == 1) {
                 for (int i = 0; i < n; ++i) {
-                    short n3 = m.reader().readShort();
+                    n3 = m.reader().readShort();
                     int n2 = Short.toUnsignedInt(n3);
                     Player p_target = null;
                     if ((p_target = MapService.get_player_by_id(map, n2)) != null) {
@@ -2075,6 +2087,9 @@ public class MapService {
                         Eff_special_skill.send_eff_kham(conn.p, StrucEff.NgocHonNguyen, 3000);
                     }
                 }
+            }
+            if (conn.p.squire != null && conn.p.isLiveSquire) {
+                conn.p.squire.use_skill(map, conn, n, ObjAtk, n3, type_atk);
             }
         } catch (Exception e) {
             e.printStackTrace();

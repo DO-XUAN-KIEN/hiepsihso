@@ -48,7 +48,7 @@ public class MessageHandler {
                 } else if (m.reader().available() == 2) {
                     MoLy.Lottery_process(conn.p, m);
                 } else {
-                    String[] menu = new String[]{"Mở ly", "Vòng xoay", "Điểm pk", "Thoát kẹt", "Rơi nguyên liệu mề đay", "Xem lôi đài",
+                    String[] menu = new String[]{"Mở ly", "Vòng xoay", "Điểm pk", "Điểm chiếm thành", "Thoát kẹt", "Rơi nguyên liệu mề đay", "Xem lôi đài",
                         (conn.p.isShowMobEvents ? "Tắt " : "Bật ") + "hiển thị sự kiện"};
                     MenuController.send_menu_select(conn, -91, menu);
                 }
@@ -505,7 +505,7 @@ public class MessageHandler {
         }
     }
 
-    private static void dataloginmap(Session conn) throws IOException {
+    public static void dataloginmap(Session conn) throws IOException {
         Service.send_quest(conn);
         Service.send_auto_atk(conn);
         Service.send_char_main_in4(conn.p);

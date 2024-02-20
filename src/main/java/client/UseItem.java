@@ -9,23 +9,10 @@ import core.Service;
 import core.Util;
 import io.Message;
 import io.Session;
-import map.LeaveItemMap;
-import map.MapService;
-import map.Vgo;
-import map.Map;
-import template.EffTemplate;
-import template.Item3;
-import template.Item47;
-import template.ItemTemplate3;
-import template.ItemTemplate4;
-import template.ItemTemplate7;
-import template.Level;
-import template.Option;
-import template.Pet_di_buon;
-import template.Pet_di_buon_manager;
-import template.box_item_template;
-
+import map.*;
+import template.*;
 public class UseItem {
+    int diemtest = 50;
 
     public static void ProcessItem4(Session conn, Message m2) throws IOException {
         short id = m2.reader().readShort();
@@ -66,6 +53,27 @@ public class UseItem {
 
     }
 
+    public static void concac(Session conn){
+        try{
+            conn.p.time_use_item_arena = System.currentTimeMillis() + 10_000;
+            conn.p.pet_di_buon = new Pet_di_buon(84, Manager.gI().get_index_mob_new(), conn.p.x, conn.p.y,
+                    conn.p.map.map_id, conn.p.name, conn.p);
+            Pet_di_buon_manager.add(conn.p.name, conn.p.pet_di_buon);
+            //
+            Message m22 = new Message(4);
+            m22.writer().writeByte(1);
+            m22.writer().writeShort(131);
+            m22.writer().writeShort(conn.p.pet_di_buon.index);
+            m22.writer().writeShort(conn.p.pet_di_buon.x);
+            m22.writer().writeShort(conn.p.pet_di_buon.y);
+            m22.writer().writeByte(-1);
+            conn.addmsg(m22);
+            m22.cleanup();
+
+        }catch (Exception e){
+
+        }
+    }
     private static void use_item4_default(Session conn, short id_potion) throws IOException {
         switch (id_potion) {
             case 57:
@@ -87,27 +95,29 @@ public class UseItem {
                     Service.send_notice_box(conn, "Chỉ dùng được khi là thương nhân ");
                     return;
                 }
-                if (conn.p.pet_di_buon == null) {
-                    conn.p.pet_di_buon = new Pet_di_buon(84, Manager.gI().get_index_mob_new(), conn.p.x, conn.p.y,
-                            conn.p.map.map_id, conn.p.name, conn.p);
-                    Pet_di_buon_manager.add(conn.p.name, conn.p.pet_di_buon);
-                    //
-                    Message m22 = new Message(4);
-                    m22.writer().writeByte(1);
-                    m22.writer().writeShort(131);
-                    m22.writer().writeShort(conn.p.pet_di_buon.index);
-                    m22.writer().writeShort(conn.p.pet_di_buon.x);
-                    m22.writer().writeShort(conn.p.pet_di_buon.y);
-                    m22.writer().writeByte(-1);
-                    conn.addmsg(m22);
-                    m22.cleanup();
-                    //
-                    conn.p.item.remove(4, id_potion, 1);
-                } else {
-                    Service.send_notice_box(conn,
-                            "Bạn đang dắt 1 con rồi!\nVị trí:\n" + Map.get_map_by_id(conn.p.pet_di_buon.id_map)[0].name + "\n"
-                            + conn.p.pet_di_buon.x + " " + conn.p.pet_di_buon.y);
+                if (conn.p.hp == 0 && conn.p.isdie == true){
+                    Service.send_notice_box(conn," Bạn đang đen xì không thể sử dụng bò");
+                    return;
                 }
+                if (conn.p.time_use_item_arena > System.currentTimeMillis()) {
+                    Service.send_notice_box(conn,
+                            "Chờ sau " + (conn.p.time_use_item_arena - System.currentTimeMillis()) / 1000 + " s");
+                    return;
+                }
+                if (conn.p.pet_di_buon == null) {
+                    concac(conn);
+                    conn.p.item.remove(4, id_potion, 1);
+                }else {
+                    Service.send_box_input_yesno(conn, -128, "bạn sẽ mất con bò đang sử dụng, bạn chắc muốn dùng?");
+                }
+
+
+
+//                } else {
+//                    Service.send_notice_box(conn,
+//                            "Bạn đang dắt 1 con rồi!\nVị trí:\n" + Map.get_map_by_id(conn.p.pet_di_buon.id_map)[0].name + "\n"
+//                            + conn.p.pet_di_buon.x + " " + conn.p.pet_di_buon.y);
+//                }
                 break;
             }
             case 86: {
@@ -120,7 +130,17 @@ public class UseItem {
                     Service.send_notice_box(conn, "Chỉ dùng được khi là cướp ");
                     return;
                 }
+                if (conn.p.hp == 0 && conn.p.isdie == true){
+                    Service.send_notice_box(conn," Bạn đang đen xì không thể sử dụng bò");
+                    return;
+                }
+                if (conn.p.time_use_item_arena > System.currentTimeMillis()) {
+                    Service.send_notice_box(conn,
+                            "Chờ sau " + (conn.p.time_use_item_arena - System.currentTimeMillis()) / 1000 + " s");
+                    return;
+                }
                 if (conn.p.pet_di_buon == null) {
+                    conn.p.time_use_item_arena = System.currentTimeMillis() + 10_000;
                     conn.p.pet_di_buon = new Pet_di_buon(86, Manager.gI().get_index_mob_new(), conn.p.x, conn.p.y,
                             conn.p.map.map_id, conn.p.name, conn.p);
                     Pet_di_buon_manager.add(conn.p.name, conn.p.pet_di_buon);
@@ -384,7 +404,147 @@ public class UseItem {
                 conn.p.item.remove(4, id_potion, 1);
                 break;
             }
+            case 326 :{ // rương danh hieu
+                if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_nobox_white(conn, "Hành trang đầy!");
+                    return;
+                }
+                //conn.p.diemsukien += 10;
+                short[] allowedIds = {4720, 4721, 4722, 4723, 4724, 4725, 4726, 4727, 4765, 4766, 4767, 4775, 4776, 4777, 4778, 4779, 4780, 4781, 4782, 4783};
+                short iditem = allowedIds[Util.random(0, allowedIds.length - 1)];
+                Item3 itbag = new Item3();
+                itbag.id = iditem;
+                itbag.name = ItemTemplate3.item.get(iditem).getName();
+                itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                itbag.type = ItemTemplate3.item.get(iditem).getType();
+                itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                itbag.op = new ArrayList<>();
+                itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                itbag.op = ItemTemplate3.item.get(iditem).getOp();
+                itbag.tier = 0;
+                itbag.islock = false;
+                itbag.time_use = 0;
+                if (Util.random(100) > 5) {
+                    itbag.expiry_date = System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 1;
+                }
+                conn.p.item.add_item_bag3(itbag);
+                conn.p.item.char_inventory(5);
+                conn.p.item.remove(4, 326, 1);
+                List<box_item_template> ids = new ArrayList<>();
+                ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                break;
+            }
+            case 327 :{ // rương huy hieu
+                if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_nobox_white(conn, "Hành trang đầy!");
+                    return;
+                }
+              //  conn.p.diemsukien += 10;
+                short[] allowedIds = {4653, 4728, 4729};
+                short iditem = allowedIds[Util.random(0, allowedIds.length - 1)];
+                Item3 itbag = new Item3();
+                itbag.id = iditem;
+                itbag.name = ItemTemplate3.item.get(iditem).getName();
+                itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                itbag.type = ItemTemplate3.item.get(iditem).getType();
+                itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                itbag.op = new ArrayList<>();
+                itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                itbag.op = ItemTemplate3.item.get(iditem).getOp();
+                itbag.tier = 0;
+                itbag.islock = false;
+                itbag.time_use = 0;
+                if (Util.random(100) > 5) {
+                    itbag.expiry_date = System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 1;
+                }
+                conn.p.item.add_item_bag3(itbag);
+                conn.p.item.remove(4, 327, 1);
+                conn.p.item.char_inventory(5);
+                List<box_item_template> ids = new ArrayList<>();
+                ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                break;
+            }
+            case 328 :{ // rương huy chuong
+                if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_nobox_white(conn, "Hành trang đầy!");
+                    return;
+                }
+              //  conn.p.diemsukien += 10;
+                short[] allowedIds = {4649, 4650, 4651,4652};
+                short iditem = allowedIds[Util.random(0, allowedIds.length - 1)];
+                Item3 itbag = new Item3();
+                itbag.id = iditem;
+                itbag.name = ItemTemplate3.item.get(iditem).getName();
+                itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                itbag.type = ItemTemplate3.item.get(iditem).getType();
+                itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                itbag.op = new ArrayList<>();
+                itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                itbag.op = ItemTemplate3.item.get(iditem).getOp();
+                itbag.tier = 0;
+                itbag.islock = false;
+                itbag.time_use = 0;
+                if (Util.random(100) > 5) {
+                    itbag.expiry_date = System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 1;
+                }
+                conn.p.item.add_item_bag3(itbag);
+                conn.p.item.remove(4, 328, 1);
+                conn.p.item.char_inventory(5);
+                conn.p.item.char_inventory(3);
+                List<box_item_template> ids = new ArrayList<>();
+                ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                break;
+            }
+            case 329: {
+                if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_nobox_white(conn, "Hành trang đầy!");
+                    return;
+                }
+                ItemTemplate4 iditem = ItemTemplate4.item.get(Util.random(254, 259));
+                int quant1_ = 1;
+                //
+                Message m = new Message(78);
+                m.writer().writeUTF("Rương sự kiện");
+                m.writer().writeByte(3); // size
+//                for (int i = 0; i < 3; i++) {
+                m.writer().writeUTF(""); // name
+                m.writer().writeShort(iditem.getIcon()); // icon
+                m.writer().writeInt(quant1_); // quantity
+                m.writer().writeByte(4); // type in bag
+                m.writer().writeByte(0); // tier
+                m.writer().writeByte(0); // color
+                //
 
+//                }
+                m.writer().writeUTF("");
+                m.writer().writeByte(1);
+                m.writer().writeByte(0);
+                conn.addmsg(m);
+                m.cleanup();
+                //
+                Item47 itbag = new Item47();
+                itbag.id = iditem.getId();
+                itbag.quantity = (short) quant1_;
+                itbag.category = 4;
+                conn.p.item.add_item_bag47(4, itbag);
+             //   conn.p.diemsukien += 1;
+                //
+                conn.p.item.remove(4, id_potion, 1);
+                conn.p.item.char_inventory(4);
+                break;
+            }
             case 207: // ruong tim
             case 205: { // ruong do
                 if (conn.p.item.get_bag_able() < 1) {
@@ -908,10 +1068,10 @@ public class UseItem {
                             short quant = (short) Util.random(2, 5);
                             ids.add(new box_item_template(id, quant, (byte) 7));
                             conn.p.item.add_item_bag47(id, quant, (byte) 7);
-                        } else if (ran < 2) { //sách
-                            short idsach = (short) Util.random(4577, 4585);
-                            ids.add(new box_item_template(idsach, (short) 1, (byte) 3));
-                            conn.p.item.add_item_bag3_default(idsach, 0, false);
+//                        } else if (ran < 2) { //sách
+//                            short idsach = (short) Util.random(4577, 4585);
+//                            ids.add(new box_item_template(idsach, (short) 1, (byte) 3));
+//                            conn.p.item.add_item_bag3_default(idsach, 0, false);
                         } else if (ran < 5) {//nlmd vang tim
                             short id = (short) Util.random(126, 146);
                             short quant = (short) 1;
@@ -1014,6 +1174,14 @@ public class UseItem {
                 }
 //                }catch(Exception e){e.printStackTrace();}
                 break;
+            }
+            case 219: {
+                if (conn.p.squire != null) {
+                    conn.p.item.remove(4, 219, 1);
+                    Squire.callSquire(conn);
+                } else {
+                    Service.send_notice_box(conn, "Chưa co de tu");
+                }
             }
             default: {
                 // Service.send_notice_nobox_white(conn, "4Chưa có chức năng này");
@@ -1154,7 +1322,6 @@ public class UseItem {
                 break;
             }
             case 268: {
-                conn.p.item.remove(4, id, 1);
                 conn.p.type_use_mount = (byte) 20;
                 conn.p.map.send_mount(conn.p);
                 conn.p.id_horse = 69;
@@ -1407,6 +1574,13 @@ public class UseItem {
                 conn.p.type_use_mount = (byte) 22;
                 conn.p.map.send_mount(conn.p);
                 conn.p.id_horse = 145;
+                MapService.update_in4_2_other_inside(conn.p.map, conn.p);
+                Service.send_char_main_in4(conn.p);
+                break;
+            }
+            case 326: {
+                conn.p.type_use_mount = (byte) 5;
+                conn.p.map.send_mount(conn.p);
                 MapService.update_in4_2_other_inside(conn.p.map, conn.p);
                 Service.send_char_main_in4(conn.p);
                 break;

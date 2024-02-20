@@ -176,8 +176,8 @@ public class LoiDai2 {
         }
         else 
         {
-//            pl_1.point_active[2] += 25;
-//            pl_2.point_active[2] += 25;
+         //   pl_1.point_active[2] += 25;
+         //   pl_2.point_active[2] += 25;
             LoiDaiManager.gI().SetPoint(idxGroup, pl_1.index, 25);
             LoiDaiManager.gI().SetPoint(idxGroup, pl_2.index, 25);
             Send_Notice_Map_Insider("Kết quả chung cuộc: Hòa. mỗi hiệp sĩ sẽ nhận về 25đ lôi đài");
@@ -186,7 +186,7 @@ public class LoiDai2 {
     
     public void SetWinRound(Player p)throws IOException{
         if(isMapStart || timeOut > System.currentTimeMillis()) return;
-        if(round<3){
+        if(round <3){
             if(p.index == pl_1.index)
                 point1++;
             else if(p.index == pl_2.index)

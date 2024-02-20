@@ -50,12 +50,12 @@ public class MenuController {
         String[] menu;
         switch (idnpc) {
             case -81: {
-                menu = new String[]{"Đăng ký lôi đài", "Vào lôi đài", "Xem lôi đài", "Thông tin", "Xem điểm lôi đài", "Huong dan", "Tháo ngọc khảm"};
+                menu = new String[]{"Đăng ký lôi đài", "Vào lôi đài", "Xem lôi đài", "Thông tin", "Xem điểm lôi đài", "Huong dan", "Tháo ngọc khảm","Luyện đệ tử", "Huỷ đệ tử"};
                 break;
             }
             case -3: { // Lisa
                 menu = new String[]{"Mua bán", "Mở ly", "Thuế", "Nhận quà chiến trường",
-                    "Đóng"};
+                    "nhận quà chiếm thành"};
                 break;
             }
             case -20: { // Lisa
@@ -101,7 +101,7 @@ public class MenuController {
                 break;
             }
             case -8: {
-                menu = new String[]{"Cửa Hàng Tóc", "Điểm danh hằng ngày", "Đổi coin sang ngọc", "Đổi coin sang vàng", (conn.p.type_exp == 0 ? "Bật" : "Tắt") + " nhận exp", "Đổi Mật Khẩu"};
+                menu = new String[]{"Cửa Hàng Tóc", "Điểm danh hằng ngày", "Đổi coin sang ngọc", "Đổi coin sang vàng", "Đổi vàng sang coin", (conn.p.type_exp == 0 ? "Bật" : "Tắt") + " nhận exp", "Đổi Mật Khẩu"};
 //                if (conn.p.type_exp == 1) {
 //                    menu = new String[]{"Cửa Hàng Tóc", "Điểm danh hằng ngày", "Đổi coin sang ngọc", "Đổi coin sang vàng",
 //                        "Đăng ký treo chống pk", "Tgian còn lại", "Tắt nhận exp"};
@@ -127,7 +127,7 @@ public class MenuController {
                 break;
             }
             case -32: {
-                menu = new String[]{"Xem BXH Level", "Xem BXH bang","Xem BXH chiến trường", "Đổi Áo Choàng"};
+                menu = new String[]{"Xem BXH Level", "Xem BXH bang","Xem BXH chiến trường","Xem BXH chiếm thành", "Đổi Áo Choàng"};
                 break;
             }
             case -21: { // blackeye
@@ -201,7 +201,7 @@ public class MenuController {
                 break;
             }
             case -49: { //menu_top
-                menu = new String[]{"LIKE", "Shop Coin", "Kết Hôn", "Thông Tin Cá Nhân ", "Nhận quà hiếu chiến", "Làng Phủ Sương", "Khu Boss "};
+                menu = new String[]{"LIKE", "Shop Coin","Shop Siêu phẩm", "Kết Hôn", "Thông Tin Cá Nhân ", "Nhận quà hiếu chiến", "Làng Phủ Sương", "Khu Boss "};
                 break;
             }
             case -82: {
@@ -222,7 +222,7 @@ public class MenuController {
                         "Đổi trứng khỉ nâu"};
 
                 } else if (Manager.gI().event == 2) {
-                    menu = new String[]{"Mâm trái cây", "Top sự kiện", "Đổi quà may mắn"};
+                    menu = new String[]{"Mâm trái cây", "Top sự kiện", "Top Mở rương", "Đổi quà may mắn"};
                     send_menu_select(conn, -69, menu, (byte) Manager.gI().event);
                     return;
                     //menu = new String[]{"Coming soon", infoServer.Website};
@@ -454,6 +454,10 @@ public class MenuController {
             }
             case -9:{
                 Qua_chientruong(conn, index);
+                break;
+            }
+            case -13:{
+                Sach_skill(conn, index);
                 break;
             }
             case -10: {
@@ -762,7 +766,7 @@ public class MenuController {
 //                            }
 //
 //                        }
-                        send_menu_select(conn, -9, new String[]{"Trứng đại bàng","Đang nghĩ thêm"});
+                        send_menu_select(conn, -9, new String[]{"Trứng đại bàng","Sách skill 110"});
                         break;
 
                     }
@@ -783,8 +787,8 @@ public class MenuController {
     private static void Qua_chientruong(Session conn, byte index) throws IOException {
         switch (index) {
             case 0: {
-                if (conn.p.pointarena < 5000) {
-                    Service.send_notice_box(conn, "Phải cần tối thiểu 5000 điểm tích lũy chiến trường để có thể đổi trứng đại bàng.");
+                if (conn.p.pointarena < 44444) {
+                    Service.send_notice_box(conn, "Phải cần tối thiểu 44444 điểm tích lũy chiến trường để có thể đổi trứng đại bàng.");
                 } else if (conn.p.item.get_bag_able() < 1) {
                     Service.send_notice_box(conn, "Cần tối thiểu 1 ô trống để có thể đổi.");
                 } else {
@@ -810,7 +814,386 @@ public class MenuController {
                             itbag.islock = false;
                             itbag.time_use = 0;
                             conn.p.item.add_item_bag3(itbag);
-                            conn.p.pointarena -= 5000;
+                            conn.p.pointarena -= 44444;
+                            conn.p.item.char_inventory(3);
+                            String query
+                                    = "INSERT INTO `history_doi_dai_bang` (`user`, `name_player`, `last_point` , `point_arena`) VALUES ('"
+                                    + conn.user + "', '" + conn.p.name + "', '" + last_point + "', '" + conn.p.pointarena + "')";
+                            if (st.executeUpdate(query) > 0) {
+                                connection.commit();
+                            }
+                            List<box_item_template> ids = new ArrayList<>();
+                            ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                            Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+            case 1: {
+                send_menu_select(conn, -13, new String[]{"Sách học kiếm địa chấn","Sách học bão lửa","Sách học thần tốc","Sách học bão độc","Sách học cơn phẫn nộ","Sách học băng trận","Sách học súng thần công","Sách học súng điện từ"});
+                break;
+            }
+            default:
+                Service.send_notice_box(conn, "Chức năng đang được hoàn thiện.");
+                break;
+        }
+    }
+    private static void Sach_skill(Session conn, byte index) throws IOException {
+        switch (index) {
+            case 0: {
+                if (conn.p.pointarena < 44444) {
+                    Service.send_notice_box(conn, "Phải cần tối thiểu 44444 điểm tích lũy chiến trường để có thể đổi sách skill.");
+                } else if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 1 ô trống để có thể đổi.");
+                } else {
+                    try (Connection connection = SQL.gI().getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM `history_doi_dai_bang` WHERE `user` = '" + conn.user + "' AND `time` >= DATE_SUB(NOW(), INTERVAL 1 WEEK);")) {
+                        if (rs.next()) {
+                            Service.send_notice_box(conn, "Trong vòng 1 tuần 1 tài khoản chỉ có thể đổi 1 lần.");
+                            return;
+                        } else {
+                            int last_point = conn.p.pointarena;
+                            short iditem = 4577;
+                            Item3 itbag = new Item3();
+                            itbag.id = iditem;
+                            itbag.name = ItemTemplate3.item.get(iditem).getName();
+                            itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                            itbag.type = ItemTemplate3.item.get(iditem).getType();
+                            itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                            itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                            itbag.op = new ArrayList<>();
+                            itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                            itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                            itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                            itbag.tier = 0;
+                            itbag.islock = false;
+                            itbag.time_use = 0;
+                            conn.p.item.add_item_bag3(itbag);
+                            conn.p.pointarena -= 44444;
+                            conn.p.item.char_inventory(3);
+                            String query
+                                    = "INSERT INTO `history_doi_dai_bang` (`user`, `name_player`, `last_point` , `point_arena`) VALUES ('"
+                                    + conn.user + "', '" + conn.p.name + "', '" + last_point + "', '" + conn.p.pointarena + "')";
+                            if (st.executeUpdate(query) > 0) {
+                                connection.commit();
+                            }
+                            List<box_item_template> ids = new ArrayList<>();
+                            ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                            Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+            case 1: {
+                if (conn.p.pointarena < 44444) {
+                    Service.send_notice_box(conn, "Phải cần tối thiểu 44444 điểm tích lũy chiến trường để có thể đổi sách skill.");
+                } else if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 1 ô trống để có thể đổi.");
+                } else {
+                    try (Connection connection = SQL.gI().getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM `history_doi_dai_bang` WHERE `user` = '" + conn.user + "' AND `time` >= DATE_SUB(NOW(), INTERVAL 1 WEEK);")) {
+                        if (rs.next()) {
+                            Service.send_notice_box(conn, "Trong vòng 1 tuần 1 tài khoản chỉ có thể đổi 1 lần.");
+                            return;
+                        } else {
+                            int last_point = conn.p.pointarena;
+                            short iditem = 4578;
+                            Item3 itbag = new Item3();
+                            itbag.id = iditem;
+                            itbag.name = ItemTemplate3.item.get(iditem).getName();
+                            itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                            itbag.type = ItemTemplate3.item.get(iditem).getType();
+                            itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                            itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                            itbag.op = new ArrayList<>();
+                            itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                            itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                            itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                            itbag.tier = 0;
+                            itbag.islock = false;
+                            itbag.time_use = 0;
+                            conn.p.item.add_item_bag3(itbag);
+                            conn.p.pointarena -= 44444;
+                            conn.p.item.char_inventory(3);
+                            String query
+                                    = "INSERT INTO `history_doi_dai_bang` (`user`, `name_player`, `last_point` , `point_arena`) VALUES ('"
+                                    + conn.user + "', '" + conn.p.name + "', '" + last_point + "', '" + conn.p.pointarena + "')";
+                            if (st.executeUpdate(query) > 0) {
+                                connection.commit();
+                            }
+                            List<box_item_template> ids = new ArrayList<>();
+                            ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                            Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+            case 2: {
+                if (conn.p.pointarena < 44444) {
+                    Service.send_notice_box(conn, "Phải cần tối thiểu 44444 điểm tích lũy chiến trường để có thể đổi sách skill.");
+                } else if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 1 ô trống để có thể đổi.");
+                } else {
+                    try (Connection connection = SQL.gI().getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM `history_doi_dai_bang` WHERE `user` = '" + conn.user + "' AND `time` >= DATE_SUB(NOW(), INTERVAL 1 WEEK);")) {
+                        if (rs.next()) {
+                            Service.send_notice_box(conn, "Trong vòng 1 tuần 1 tài khoản chỉ có thể đổi 1 lần.");
+                            return;
+                        } else {
+                            int last_point = conn.p.pointarena;
+                            short iditem = 4580;
+                            Item3 itbag = new Item3();
+                            itbag.id = iditem;
+                            itbag.name = ItemTemplate3.item.get(iditem).getName();
+                            itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                            itbag.type = ItemTemplate3.item.get(iditem).getType();
+                            itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                            itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                            itbag.op = new ArrayList<>();
+                            itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                            itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                            itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                            itbag.tier = 0;
+                            itbag.islock = false;
+                            itbag.time_use = 0;
+                            conn.p.item.add_item_bag3(itbag);
+                            conn.p.pointarena -= 44444;
+                            conn.p.item.char_inventory(3);
+                            String query
+                                    = "INSERT INTO `history_doi_dai_bang` (`user`, `name_player`, `last_point` , `point_arena`) VALUES ('"
+                                    + conn.user + "', '" + conn.p.name + "', '" + last_point + "', '" + conn.p.pointarena + "')";
+                            if (st.executeUpdate(query) > 0) {
+                                connection.commit();
+                            }
+                            List<box_item_template> ids = new ArrayList<>();
+                            ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                            Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+            case 3: {
+                if (conn.p.pointarena < 44444) {
+                    Service.send_notice_box(conn, "Phải cần tối thiểu 44444 điểm tích lũy chiến trường để có thể đổi sách skill.");
+                } else if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 1 ô trống để có thể đổi.");
+                } else {
+                    try (Connection connection = SQL.gI().getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM `history_doi_dai_bang` WHERE `user` = '" + conn.user + "' AND `time` >= DATE_SUB(NOW(), INTERVAL 1 WEEK);")) {
+                        if (rs.next()) {
+                            Service.send_notice_box(conn, "Trong vòng 1 tuần 1 tài khoản chỉ có thể đổi 1 lần.");
+                            return;
+                        } else {
+                            int last_point = conn.p.pointarena;
+                            short iditem = 4579;
+                            Item3 itbag = new Item3();
+                            itbag.id = iditem;
+                            itbag.name = ItemTemplate3.item.get(iditem).getName();
+                            itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                            itbag.type = ItemTemplate3.item.get(iditem).getType();
+                            itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                            itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                            itbag.op = new ArrayList<>();
+                            itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                            itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                            itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                            itbag.tier = 0;
+                            itbag.islock = false;
+                            itbag.time_use = 0;
+                            conn.p.item.add_item_bag3(itbag);
+                            conn.p.pointarena -= 44444;
+                            conn.p.item.char_inventory(3);
+                            String query
+                                    = "INSERT INTO `history_doi_dai_bang` (`user`, `name_player`, `last_point` , `point_arena`) VALUES ('"
+                                    + conn.user + "', '" + conn.p.name + "', '" + last_point + "', '" + conn.p.pointarena + "')";
+                            if (st.executeUpdate(query) > 0) {
+                                connection.commit();
+                            }
+                            List<box_item_template> ids = new ArrayList<>();
+                            ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                            Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+            case 4: {
+                if (conn.p.pointarena < 44444) {
+                    Service.send_notice_box(conn, "Phải cần tối thiểu 44444 điểm tích lũy chiến trường để có thể đổi sách skill.");
+                } else if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 1 ô trống để có thể đổi.");
+                } else {
+                    try (Connection connection = SQL.gI().getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM `history_doi_dai_bang` WHERE `user` = '" + conn.user + "' AND `time` >= DATE_SUB(NOW(), INTERVAL 1 WEEK);")) {
+                        if (rs.next()) {
+                            Service.send_notice_box(conn, "Trong vòng 1 tuần 1 tài khoản chỉ có thể đổi 1 lần.");
+                            return;
+                        } else {
+                            int last_point = conn.p.pointarena;
+                            short iditem = 4582;
+                            Item3 itbag = new Item3();
+                            itbag.id = iditem;
+                            itbag.name = ItemTemplate3.item.get(iditem).getName();
+                            itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                            itbag.type = ItemTemplate3.item.get(iditem).getType();
+                            itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                            itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                            itbag.op = new ArrayList<>();
+                            itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                            itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                            itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                            itbag.tier = 0;
+                            itbag.islock = false;
+                            itbag.time_use = 0;
+                            conn.p.item.add_item_bag3(itbag);
+                            conn.p.pointarena -= 44444;
+                            conn.p.item.char_inventory(3);
+                            String query
+                                    = "INSERT INTO `history_doi_dai_bang` (`user`, `name_player`, `last_point` , `point_arena`) VALUES ('"
+                                    + conn.user + "', '" + conn.p.name + "', '" + last_point + "', '" + conn.p.pointarena + "')";
+                            if (st.executeUpdate(query) > 0) {
+                                connection.commit();
+                            }
+                            List<box_item_template> ids = new ArrayList<>();
+                            ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                            Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+            case 5: {
+                if (conn.p.pointarena < 44444) {
+                    Service.send_notice_box(conn, "Phải cần tối thiểu 44444 điểm tích lũy chiến trường để có thể đổi sách skill.");
+                } else if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 1 ô trống để có thể đổi.");
+                } else {
+                    try (Connection connection = SQL.gI().getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM `history_doi_dai_bang` WHERE `user` = '" + conn.user + "' AND `time` >= DATE_SUB(NOW(), INTERVAL 1 WEEK);")) {
+                        if (rs.next()) {
+                            Service.send_notice_box(conn, "Trong vòng 1 tuần 1 tài khoản chỉ có thể đổi 1 lần.");
+                            return;
+                        } else {
+                            int last_point = conn.p.pointarena;
+                            short iditem = 4581;
+                            Item3 itbag = new Item3();
+                            itbag.id = iditem;
+                            itbag.name = ItemTemplate3.item.get(iditem).getName();
+                            itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                            itbag.type = ItemTemplate3.item.get(iditem).getType();
+                            itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                            itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                            itbag.op = new ArrayList<>();
+                            itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                            itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                            itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                            itbag.tier = 0;
+                            itbag.islock = false;
+                            itbag.time_use = 0;
+                            conn.p.item.add_item_bag3(itbag);
+                            conn.p.pointarena -= 44444;
+                            conn.p.item.char_inventory(3);
+                            String query
+                                    = "INSERT INTO `history_doi_dai_bang` (`user`, `name_player`, `last_point` , `point_arena`) VALUES ('"
+                                    + conn.user + "', '" + conn.p.name + "', '" + last_point + "', '" + conn.p.pointarena + "')";
+                            if (st.executeUpdate(query) > 0) {
+                                connection.commit();
+                            }
+                            List<box_item_template> ids = new ArrayList<>();
+                            ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                            Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+            case 6: {
+                if (conn.p.pointarena < 44444) {
+                    Service.send_notice_box(conn, "Phải cần tối thiểu 44444 điểm tích lũy chiến trường để có thể đổi sách skill.");
+                } else if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 1 ô trống để có thể đổi.");
+                } else {
+                    try (Connection connection = SQL.gI().getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM `history_doi_dai_bang` WHERE `user` = '" + conn.user + "' AND `time` >= DATE_SUB(NOW(), INTERVAL 1 WEEK);")) {
+                        if (rs.next()) {
+                            Service.send_notice_box(conn, "Trong vòng 1 tuần 1 tài khoản chỉ có thể đổi 1 lần.");
+                            return;
+                        } else {
+                            int last_point = conn.p.pointarena;
+                            short iditem = 4583;
+                            Item3 itbag = new Item3();
+                            itbag.id = iditem;
+                            itbag.name = ItemTemplate3.item.get(iditem).getName();
+                            itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                            itbag.type = ItemTemplate3.item.get(iditem).getType();
+                            itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                            itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                            itbag.op = new ArrayList<>();
+                            itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                            itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                            itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                            itbag.tier = 0;
+                            itbag.islock = false;
+                            itbag.time_use = 0;
+                            conn.p.item.add_item_bag3(itbag);
+                            conn.p.pointarena -= 44444;
+                            conn.p.item.char_inventory(3);
+                            String query
+                                    = "INSERT INTO `history_doi_dai_bang` (`user`, `name_player`, `last_point` , `point_arena`) VALUES ('"
+                                    + conn.user + "', '" + conn.p.name + "', '" + last_point + "', '" + conn.p.pointarena + "')";
+                            if (st.executeUpdate(query) > 0) {
+                                connection.commit();
+                            }
+                            List<box_item_template> ids = new ArrayList<>();
+                            ids.add(new box_item_template(iditem, (short) 1, (byte) 3));
+                            Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ids);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+            case 7: {
+                if (conn.p.pointarena < 44444) {
+                    Service.send_notice_box(conn, "Phải cần tối thiểu 44444 điểm tích lũy chiến trường để có thể đổi sách skill.");
+                } else if (conn.p.item.get_bag_able() < 1) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 1 ô trống để có thể đổi.");
+                } else {
+                    try (Connection connection = SQL.gI().getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM `history_doi_dai_bang` WHERE `user` = '" + conn.user + "' AND `time` >= DATE_SUB(NOW(), INTERVAL 1 WEEK);")) {
+                        if (rs.next()) {
+                            Service.send_notice_box(conn, "Trong vòng 1 tuần 1 tài khoản chỉ có thể đổi 1 lần.");
+                            return;
+                        } else {
+                            int last_point = conn.p.pointarena;
+                            short iditem = 4584;
+                            Item3 itbag = new Item3();
+                            itbag.id = iditem;
+                            itbag.name = ItemTemplate3.item.get(iditem).getName();
+                            itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                            itbag.type = ItemTemplate3.item.get(iditem).getType();
+                            itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                            itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                            itbag.op = new ArrayList<>();
+                            itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                            itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                            itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                            itbag.tier = 0;
+                            itbag.islock = false;
+                            itbag.time_use = 0;
+                            conn.p.item.add_item_bag3(itbag);
+                            conn.p.pointarena -= 44444;
                             conn.p.item.char_inventory(3);
                             String query
                                     = "INSERT INTO `history_doi_dai_bang` (`user`, `name_player`, `last_point` , `point_arena`) VALUES ('"
@@ -829,7 +1212,7 @@ public class MenuController {
                 break;
             }
             default:
-                Service.send_notice_box(conn, "Chức năng đang được hoàn thiện.");
+                Service.send_notice_nobox_white(conn,"Chưa có Chức năng");
                 break;
         }
     }
@@ -876,10 +1259,10 @@ public class MenuController {
                             short quant = (short) Util.random(2, 5);
                             ids.add(new box_item_template(id, quant, (byte) 7));
                             conn.p.item.add_item_bag47(id, quant, (byte) 7);
-                        } else if (ran < 2) {
-                            short idsach = (short) Util.random(4577, 4585);
-                            ids.add(new box_item_template(idsach, (short) 1, (byte) 3));
-                            conn.p.item.add_item_bag3_default(idsach, 0, false);
+//                        } else if (ran < 2) {
+//                            short idsach = (short) Util.random(4577, 4585);
+//                            ids.add(new box_item_template(idsach, (short) 1, (byte) 3));
+//                            conn.p.item.add_item_bag3_default(idsach, 0, false);
                         } else if (ran < 6) {
                             short idsach = (short) 4762;
                             ids.add(new box_item_template(idsach, (short) 1, (byte) 3));
@@ -925,6 +1308,10 @@ public class MenuController {
                     break;
                 }
                 case 2: {
+                    BXH.send2(conn,1);
+                    break;
+                }
+                case 3: {
                     if (conn.p.item.get_bag_able() < 1) {
                         Service.send_notice_box(conn, "Hành trang đầy");
                         return;
@@ -1185,6 +1572,10 @@ public class MenuController {
                     break;
                 }
                 case 3: {
+                    Service.send_notice_box(conn, "Bạn đang có " + conn.p.diemchiemthanh + " Điểm Chiếm thành.");
+                    break;
+                }
+                case 4: {
                     if (conn.p.map.ld2 != null) {
                         Menu_Mrs_Oda_trong_LoiDai(conn, (byte) 0);
                     } else {
@@ -1200,12 +1591,12 @@ public class MenuController {
                     }
                     break;
                 }
-                case 4: {
+                case 5: {
                     conn.p.isDropMaterialMedal = !conn.p.isDropMaterialMedal;
                     Service.send_notice_box(conn, "Rơi nguyên liệu mề đay đã " + (conn.p.isDropMaterialMedal ? "bật" : "tắt"));
                     break;
                 }
-                case 5: {
+                case 6: {
                     if (conn.p.map.ld2 != null) {
                         LoiDaiManager.gI().GetMenuViews(conn, conn.p.map.ld2.idxGroup);
                     } else {
@@ -1213,7 +1604,7 @@ public class MenuController {
                     }
                     break;
                 }
-                case 6: {
+                case 7: {
                     conn.p.isShowMobEvents = !conn.p.isShowMobEvents;
                     Service.send_notice_box(conn, "Đã " + (conn.p.isShowMobEvents ? "bật" : "tắt") + " hiển thị cây sự kiện");
                     break;
@@ -1225,8 +1616,8 @@ public class MenuController {
     }
 
     private static void Menu_View_LoiDai(Session conn, byte index) throws IOException {
-        Service.send_notice_box(conn, "Chức năng chưa hoàn thiện");
-        //LoiDaiManager.gI().JoinMap(conn.p, index);
+       // Service.send_notice_box(conn, "Chức năng chưa hoàn thiện");
+        LoiDaiManager.gI().JoinMap(conn.p, index);
     }
 
     private static void Menu_Mrs_Oda_trong_LoiDai(Session conn, byte index) throws IOException {
@@ -1363,6 +1754,24 @@ public class MenuController {
                 MenuController.send_menu_select(conn, 117, list_show);
                 break;
             }
+            case 7: {
+                Service.send_notice_box(conn," Sắp ra mắt");
+//                if (conn.p.squire != null) {
+//                    conn.p.squire.switchToSquire(conn.p);
+//                } else {
+//                    Service.send_box_input_yesno(conn, -127, "Bạn có muốn nhận đệ tử với giá 1tr coin?");
+//                }
+                break;
+            }
+            case 8: {
+                Service.send_notice_box(conn," Sắp ra mắt");
+//                if (conn.p.squire != null) {
+//                    Service.send_box_input_yesno(conn, -124, "Hủy đệ tử sẽ mất hết trang bị đang mặc, bạn chắc muốn hủy?");
+//                } else {
+//                    Service.send_notice_box(conn, "Chua co de tu");
+//                }
+                break;
+            }
 
             default: {
                 Service.send_notice_box(conn, "Chưa có chức năng");
@@ -1444,7 +1853,7 @@ public class MenuController {
                         } else if (conn.p.pet_di_buon.item.get(i) == 3591) {
                             vang_recei += 800_000;
                         } else if (conn.p.pet_di_buon.item.get(i) == 3592) {
-                            vang_recei += 1_000_000;
+                            vang_recei += 2_000_000;
                         }
                     }
                     if (vang_recei > 0) {
@@ -1532,7 +1941,7 @@ public class MenuController {
                         } else if (conn.p.pet_di_buon.item.get(i) == 3591) {
                             vang_recei += 350_000;
                         } else if (conn.p.pet_di_buon.item.get(i) == 3592) {
-                            vang_recei += 450_000;
+                            vang_recei += 2_100_000;
                         }
                     }
                     if (vang_recei > 0) {
@@ -1865,13 +2274,13 @@ public class MenuController {
                     conn.p.chucphuc = 0;
                     int ngoc_ = Util.random(1000, 2000);
                     int vang_ = Util.random(10000, 100000);
-                    int coin_ = Util.random(1000, 10000);
+                    int coin_ = Util.random(10000, 30000);
                     conn.p.update_ngoc(ngoc_);
                     conn.p.update_vang(vang_);
                     conn.p.update_coin(coin_);
                     conn.p.item.char_inventory(5);
                     Service.send_notice_box(conn,
-                            "Cảm ơn bạn đã like cho tôi, để tỏ lòng biết ơn tôi tặng bạn: " + ngoc_ + " ngọc," + vang_ + "Vàng," + coin_ + "coin");
+                            "Cảm ơn bạn đã like cho tôi, để tỏ lòng biết ơn tôi tặng bạn: " + ngoc_ + " ngọc," + vang_ + " Vàng," + coin_ + " coin");
                 } else {
                     Service.send_notice_box(conn, "Hôm nay bạn đã like rồi, tôi không có nhiều tiền để phát quà vậy đâu!");
                 }
@@ -1881,19 +2290,24 @@ public class MenuController {
                 Service.send_box_UI(conn, 37);
                 break;
             }
-
             case 2: {
+                Service.send_notice_box(conn,"Sắp ra mắt");
+              //  Service.send_box_UI(conn,48);
+                break;
+            }
+
+            case 3: {
                 if (conn.p.level < 60) {
                     Service.send_notice_box(conn, "Yêu cầu level trên 60");
                     return;
                 }
                 if (conn.p.banclone == 1) {
                     if (conn.p.checkcoin() < 1_500_000) {
-                        Service.send_notice_box(conn, "Hãy bỏ 1,5tr coin để mở khóa giao dịch");
+                        Service.send_notice_box(conn, "Hãy bỏ 1,5tr coin để mở khóa kết hôn");
                         return;
                     }
                     conn.p.banclone = 0;
-                    int coin_ = 1_000_000;
+                    int coin_ = 1_500_000;
                     conn.p.update_coin(-coin_);
                     conn.p.item.char_inventory(5);
                     send_menu_select(conn, 114, new String[]{"Cầu hôn", "Ly hôn", "Nâng cấp nhẫn", "Hướng dẫn"});
@@ -1901,7 +2315,7 @@ public class MenuController {
 
                 } else {
                     if (conn.p.checkcoin() < 100000) {
-                        Service.send_notice_box(conn, "Không đủ điều kiện 100k coin để giao dịch");
+                        Service.send_notice_box(conn, "Không đủ điều kiện 100k coin để kết hôn");
                         return;
                     }
                     send_menu_select(conn, 114, new String[]{"Cầu hôn", "Ly hôn", "Nâng cấp nhẫn", "Hướng dẫn"});
@@ -1911,7 +2325,7 @@ public class MenuController {
 //                break;
             }
 
-            case 3: {
+            case 4: {
                 send_menu_select(conn, 115, new String[]{"Chest Thông Tin Tài Khoản", "Thông Tin Bản Thân"});
                 break;
             }
@@ -1920,78 +2334,79 @@ public class MenuController {
             //                new String[]{"Hướng dẫn", "Nhận nhiệm vụ", "Hủy nhiệm vụ", "Trả nhiệm vụ", "Kiểm tra"});
             //        break;
             //      }
-            case 4: {
+            case 5: {
                 if (conn.p.hieuchien < 1000) {
                     Service.send_notice_box(conn, "Chưa đủ 1000 điểm pk");
                     return;
                 }
-                conn.p.hieuchien -= 1000;
-                int random = Util.random(100);
-                if (random < 10) {
-                    short id_ = 4718;
-                    Item3 itbag = new Item3();
-                    itbag.id = id_;
-                    itbag.name = ItemTemplate3.item.get(id_).getName();
-                    itbag.clazz = ItemTemplate3.item.get(id_).getClazz();
-                    itbag.type = ItemTemplate3.item.get(id_).getType();
-                    itbag.level = ItemTemplate3.item.get(id_).getLevel();
-                    itbag.icon = ItemTemplate3.item.get(id_).getIcon();
-                    itbag.op = ItemTemplate3.item.get(id_).getOp();
-                    itbag.color = ItemTemplate3.item.get(id_).getColor();
-                    itbag.part = ItemTemplate3.item.get(id_).getPart();
-                    itbag.tier = 0;
-                    itbag.islock = false;
-                    itbag.time_use = 0;
-                    conn.p.item.add_item_bag3(itbag);
-                    conn.p.item.char_inventory(3);
-                    Service.send_notice_box(conn, "Nhận được " + itbag.name);
-                    return;
-                } else if (random > 10 && random < 20) {
-                    short id_ = 4719;
-                    Item3 itbag = new Item3();
-                    itbag.id = id_;
-                    itbag.name = ItemTemplate3.item.get(id_).getName();
-                    itbag.clazz = ItemTemplate3.item.get(id_).getClazz();
-                    itbag.type = ItemTemplate3.item.get(id_).getType();
-                    itbag.level = ItemTemplate3.item.get(id_).getLevel();
-                    itbag.icon = ItemTemplate3.item.get(id_).getIcon();
-                    itbag.op = ItemTemplate3.item.get(id_).getOp();
-                    itbag.color = ItemTemplate3.item.get(id_).getColor();
-                    itbag.part = ItemTemplate3.item.get(id_).getPart();
-                    itbag.tier = 0;
-                    itbag.islock = false;
-                    itbag.time_use = 0;
-                    conn.p.item.add_item_bag3(itbag);
-                    conn.p.item.char_inventory(3);
-                    Service.send_notice_box(conn, "Nhận được " + itbag.name);
-                    return;
-                } else if (random > 20 && random < 30) {
-                    short id_ = 4709;
-                    Item3 itbag = new Item3();
-                    itbag.id = id_;
-                    itbag.name = ItemTemplate3.item.get(id_).getName();
-                    itbag.clazz = ItemTemplate3.item.get(id_).getClazz();
-                    itbag.type = ItemTemplate3.item.get(id_).getType();
-                    itbag.level = ItemTemplate3.item.get(id_).getLevel();
-                    itbag.icon = ItemTemplate3.item.get(id_).getIcon();
-                    itbag.op = ItemTemplate3.item.get(id_).getOp();
-                    itbag.color = ItemTemplate3.item.get(id_).getColor();
-                    itbag.part = ItemTemplate3.item.get(id_).getPart();
-                    itbag.tier = 0;
-                    itbag.islock = false;
-                    itbag.time_use = 0;
-                    conn.p.item.add_item_bag3(itbag);
-                    conn.p.item.char_inventory(3);
-                    Service.send_notice_box(conn, "Nhận được " + itbag.name);
-                    return;
-                } else if (random > 30) {
-                    int vang = Util.random(5000, 100000);
-                    int ngoc = Util.random(200, 400);
-                    conn.p.update_vang(vang);
-                    conn.p.update_ngoc(ngoc);
-                    conn.p.item.char_inventory(5);
-                    Service.send_notice_box(conn, "Nhận được " + vang + "Vàng. " + ngoc + "Ngọc");
-                }
+//                conn.p.hieuchien -= 1000;
+//                int random = Util.random(100);
+//                if (random < 10) {
+//                    short id_ = 4718;
+//                    Item3 itbag = new Item3();
+//                    itbag.id = id_;
+//                    itbag.name = ItemTemplate3.item.get(id_).getName();
+//                    itbag.clazz = ItemTemplate3.item.get(id_).getClazz();
+//                    itbag.type = ItemTemplate3.item.get(id_).getType();
+//                    itbag.level = ItemTemplate3.item.get(id_).getLevel();
+//                    itbag.icon = ItemTemplate3.item.get(id_).getIcon();
+//                    itbag.op = ItemTemplate3.item.get(id_).getOp();
+//                    itbag.color = ItemTemplate3.item.get(id_).getColor();
+//                    itbag.part = ItemTemplate3.item.get(id_).getPart();
+//                    itbag.tier = 0;
+//                    itbag.islock = false;
+//                    itbag.time_use = 0;
+//                    conn.p.item.add_item_bag3(itbag);
+//                    conn.p.item.char_inventory(3);
+//                    Service.send_notice_box(conn, "Nhận được " + itbag.name);
+//                    return;
+//                } else if (random > 10 && random < 20) {
+//                    short id_ = 4719;
+//                    Item3 itbag = new Item3();
+//                    itbag.id = id_;
+//                    itbag.name = ItemTemplate3.item.get(id_).getName();
+//                    itbag.clazz = ItemTemplate3.item.get(id_).getClazz();
+//                    itbag.type = ItemTemplate3.item.get(id_).getType();
+//                    itbag.level = ItemTemplate3.item.get(id_).getLevel();
+//                    itbag.icon = ItemTemplate3.item.get(id_).getIcon();
+//                    itbag.op = ItemTemplate3.item.get(id_).getOp();
+//                    itbag.color = ItemTemplate3.item.get(id_).getColor();
+//                    itbag.part = ItemTemplate3.item.get(id_).getPart();
+//                    itbag.tier = 0;
+//                    itbag.islock = false;
+//                    itbag.time_use = 0;
+//                    conn.p.item.add_item_bag3(itbag);
+//                    conn.p.item.char_inventory(3);
+//                    Service.send_notice_box(conn, "Nhận được " + itbag.name);
+//                    return;
+//                } else if (random > 20 && random < 30) {
+//                    short id_ = 4709;
+//                    Item3 itbag = new Item3();
+//                    itbag.id = id_;
+//                    itbag.name = ItemTemplate3.item.get(id_).getName();
+//                    itbag.clazz = ItemTemplate3.item.get(id_).getClazz();
+//                    itbag.type = ItemTemplate3.item.get(id_).getType();
+//                    itbag.level = ItemTemplate3.item.get(id_).getLevel();
+//                    itbag.icon = ItemTemplate3.item.get(id_).getIcon();
+//                    itbag.op = ItemTemplate3.item.get(id_).getOp();
+//                    itbag.color = ItemTemplate3.item.get(id_).getColor();
+//                    itbag.part = ItemTemplate3.item.get(id_).getPart();
+//                    itbag.tier = 0;
+//                    itbag.islock = false;
+//                    itbag.time_use = 0;
+//                    conn.p.item.add_item_bag3(itbag);
+//                    conn.p.item.char_inventory(3);
+//                    Service.send_notice_box(conn, "Nhận được " + itbag.name);
+//                    return;
+//                } else if (random > 30) {
+//                    int vang = Util.random(5000, 100000);
+//                    int ngoc = Util.random(200, 400);
+//                    conn.p.update_vang(vang);
+//                    conn.p.update_ngoc(ngoc);
+//                    conn.p.item.char_inventory(5);
+//                    Service.send_notice_box(conn, "Nhận được " + vang + "Vàng. " + ngoc + "Ngọc");
+//                }
+                Service.send_notice_box(conn, "Chức năng đang được nghiên cứu thêm");
                 break;
             }
            // case 5: {
@@ -2003,7 +2418,7 @@ public class MenuController {
               //      Service.send_notice_box(conn, "Không đủ 1000 ngọc");
             //        return;
             //    }
-            //    conn.p.update_ngoc(-100);
+            //    conn.p.update_ngoc(-1000);
 //
             //    Vgo vgo = null;
            //     vgo = new Vgo();
@@ -2014,7 +2429,7 @@ public class MenuController {
 
            //     break;
           //  }
-            case 6: {
+            case 7: {
                 if (conn.status != 0) {
                     Service.send_notice_box(conn, "Tài khoản chưa được kích hoạt,");
                     return;
@@ -2218,7 +2633,7 @@ public class MenuController {
                             return;
                         }
                         conn.p.banclone = 0;
-                        int coin_ = 1_000_000;
+                        int coin_ = 1_500_000;
                         conn.p.update_coin(-coin_);
                         conn.p.item.char_inventory(5);
                         Service.send_box_input_text(conn, 13, "Nhập tên :", new String[]{"Nhập tên :"});
@@ -2553,7 +2968,7 @@ public class MenuController {
                                 return;
                             }
                             conn.p.banclone = 0;
-                            int coin_ = 1_000_000;
+                            int coin_ = 1_500_000;
                             conn.p.update_coin(-coin_);
                             conn.p.item.char_inventory(5);
                             Service.send_box_input_text(conn, 8, "Góp vàng", new String[]{"Số lượng :"});
@@ -2577,7 +2992,7 @@ public class MenuController {
                                 return;
                             }
                             conn.p.banclone = 0;
-                            int coin_ = 1_000_000;
+                            int coin_ = 1_500_000;
                             conn.p.update_coin(-coin_);
                             conn.p.item.char_inventory(5);
                             Service.send_box_input_text(conn, 9, "Góp Ngọc", new String[]{"Số lượng :"});
@@ -2654,7 +3069,7 @@ public class MenuController {
                                 return;
                             }
                             conn.p.banclone = 0;
-                            int coin_ = 1_000_000;
+                            int coin_ = 1_500_000;
                             conn.p.update_coin(-coin_);
                             conn.p.item.char_inventory(5);
                             Service.send_box_input_text(conn, 8, "Góp vàng", new String[]{"Số lượng :"});
@@ -2678,7 +3093,7 @@ public class MenuController {
                                 return;
                             }
                             conn.p.banclone = 0;
-                            int coin_ = 1_000_000;
+                            int coin_ = 1_500_000;
                             conn.p.update_coin(-coin_);
                             conn.p.item.char_inventory(5);
                             Service.send_box_input_text(conn, 9, "Góp Ngọc", new String[]{"Số lượng :"});
@@ -2733,7 +3148,7 @@ public class MenuController {
                         return;
                     }
                     conn.p.banclone = 0;
-                    int coin_ = 1_000_000;
+                    int coin_ = 1_500_000;
                     conn.p.update_coin(-coin_);
                     conn.p.item.char_inventory(5);
                     Service.send_box_input_text(conn, 3, "Vòng xoay vàng", new String[]{"Tham gia (tối thiểu 10k) :"});
@@ -3015,6 +3430,10 @@ public class MenuController {
                 break;
             }
             case 3: {
+                BXH.send2(conn, 2);
+                break;
+            }
+            case 4: {
                 if (conn.status != 0) {
                     Service.send_notice_box(conn, "Tài khoản chưa được kích hoạt,");
                     return;
@@ -3191,7 +3610,7 @@ public class MenuController {
                             itbag.part = ItemTemplate3.item.get(it).getPart();
                             itbag.tier = 0;
                             itbag.time_use = 0;
-                            itbag.islock = false;
+                            itbag.islock = true;
                             if (date > 0) {
                            //     itbag.expiry_date = System.currentTimeMillis() + 1000L * 60 * 60 * 24 * date;
                             }
@@ -4953,15 +5372,27 @@ public class MenuController {
                 break;
             }
             case 4: {
+                if (conn.ac_admin < 50) {
+                    Service.send_notice_box(conn, "Bạn không đủ quyền!");
+                    return;
+                }
                 Service.send_box_input_text(conn, 1, "Get Item",
                         new String[]{"Nhập loại (3,4,7) vật phẩm :", "Nhập id vật phẩm", "Nhập số lượng"});
                 break;
             }
             case 5: {
+                if (conn.ac_admin < 5) {
+                    Service.send_notice_box(conn, "Bạn không đủ quyền!");
+                    return;
+                }
                 Service.send_box_input_text(conn, 2, "Plus Level", new String[]{"Nhập level :"});
                 break;
             }
             case 6: {
+                if (conn.ac_admin < 50) {
+                    Service.send_notice_box(conn, "Bạn không đủ quyền!");
+                    return;
+                }
                 Service.send_box_input_text(conn, 4, "Set Xp", new String[]{"Nhập mức x :"});
                 break;
             }
@@ -5002,6 +5433,15 @@ public class MenuController {
                 break;
             }
             case 12: {
+                if (conn.ac_admin < 10) {
+                    Service.send_notice_box(conn, "Bạn không đủ quyền!");
+                    return;
+                }
+                Manager.doicoin = !Manager.doicoin;
+                Service.send_notice_box(conn, "Đổi vàng sang coin đã " + (Manager.doicoin ? "mở" : "khóa"));
+                break;
+            }
+            case 13: {
                 if (conn.ac_admin < 4) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5014,7 +5454,7 @@ public class MenuController {
                 Service.send_notice_box(conn, "Đã xong");
                 break;
             }
-            case 13: {
+            case 14: {
                 if (conn.ac_admin < 4) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5023,7 +5463,7 @@ public class MenuController {
                 Service.send_notice_box(conn, "Buff Admin đã: " + (Manager.BuffAdmin ? "Bật" : "Tắt"));
                 break;
             }
-            case 14: {
+            case 15: {
                 if (conn.ac_admin < 4) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5032,7 +5472,7 @@ public class MenuController {
                 Service.send_notice_box(conn, "Buff nguyên liệu cho Admin Đã: " + (Manager.BuffAdminMaterial ? "Bật" : "Tắt"));
                 break;
             }
-            case 15: {
+            case 16: {
                 if (conn.ac_admin < 5) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5041,7 +5481,7 @@ public class MenuController {
                 Manager.gI().chatKTGprocess(" Thời gian chiếm mỏ đã đến!");
                 break;
             }
-            case 16: {
+            case 17: {
                 if (conn.ac_admin < 10) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5050,7 +5490,7 @@ public class MenuController {
                 Manager.gI().chatKTGprocess(" Thời gian chiếm mỏ đã đóng!");
                 break;
             }
-            case 17: {
+            case 18: {
                 if (conn.ac_admin < 10) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5064,7 +5504,7 @@ public class MenuController {
                 }
                 break;
             }
-            case 18: {
+            case 19: {
                 if (conn.ac_admin < 10) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5076,7 +5516,7 @@ public class MenuController {
                 }
                 break;
             }
-            case 19: {
+            case 20: {
                 if (conn.ac_admin < 10) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5089,11 +5529,11 @@ public class MenuController {
                 Service.send_notice_box(conn, "Đã thực hiện " + (ChiemThanhManager.isRegister ? "mở" : "đóng") + " đăng kí chiếm thành");
                 break;
             }
-            case 20: {
+            case 21: {
                 Service.send_notice_box(conn, "Chức năng đang được hoàn thiện.");
                 break;
             }
-            case 21: {
+            case 22: {
                 if (conn.ac_admin < 4) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5102,7 +5542,7 @@ public class MenuController {
                         new String[]{"Nhập idMap", "Nhập tọa độ x", "Nhập tọa độ y"});
                 break;
             }
-            case 22: {
+            case 23: {
                 if (conn.ac_admin < 10) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5110,7 +5550,7 @@ public class MenuController {
                 Manager.gI().load_config();
                 break;
             }
-            case 23: {
+            case 24: {
                 if (conn.ac_admin < 10) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5119,11 +5559,11 @@ public class MenuController {
                 Service.send_notice_box(conn, "Bạn đã " + (Manager.logErrorLogin ? "Bật" : "Tắt") + " log error");
                 break;
             }
-            case 24: {
+            case 25: {
                 Service.send_box_input_text(conn, 24, "Disconnect", new String[]{"Nhập loại :", "Nhập Tên :"});
                 break;
             }
-            case 25: {
+            case 26: {
                 String ssss = "Start Check \n-----------------------------\n";
                 try {
                     Message m = new Message(53);
@@ -5186,7 +5626,7 @@ public class MenuController {
                 Helps.Save_Log.process("checkbug.txt", ssss);
                 break;
             }
-            case 26: {
+            case 27: {
                 String ssss = "Start Fix \n-----------------------------\n";
                 try {
                     Message m = new Message(53);
@@ -5248,7 +5688,7 @@ public class MenuController {
                 Helps.Save_Log.process("checkbug.txt", ssss);
                 break;
             }
-            case 27: {
+            case 28: {
                if (conn.ac_admin < 10) {
                     Service.send_notice_box(conn, "Bạn không đủ quyền!");
                     return;
@@ -5287,7 +5727,7 @@ public class MenuController {
                 if (conn.p.diemdanh == 1) {
                     conn.p.diemdanh = 0;
                     int ngoc_ = Util.random(100, 1000);
-                    int coin_ = Util.random(1000, 10000);
+                    int coin_ = Util.random(10000, 30000);
                     conn.p.update_ngoc(ngoc_);
                     conn.p.update_coin(coin_);
                     Log.gI().add_log(conn.p.name, "Điểm danh ngày được " + Util.number_format(ngoc_) + " ngọc");
@@ -5304,6 +5744,14 @@ public class MenuController {
             }
             case 3: {
                 Service.send_box_input_text(conn, 14, "Đổi coin sang vàng", new String[]{"Tỷ lệ 1000 coin = 5tr vàng"});
+                break;
+            }
+            case 4: {
+                if (!Manager.doicoin) {
+                    Service.send_notice_box(conn, "Đổi Vàng sang coin đang tạm khóa!");
+                    return;
+                }
+                Service.send_box_input_text(conn, 33, "Đổi vàng sang coin", new String[]{"Tỷ lệ 100tr vàng = 20k coin"});
                 break;
             }
 
@@ -5323,7 +5771,7 @@ public class MenuController {
 //                }
 //                break;
 //            }
-            case 4: {
+            case 5: {
                 if (conn.p.type_exp == 0) {
                     conn.p.type_exp = 1;
                     Service.send_notice_box(conn, "Đã bật nhận exp");
@@ -5333,7 +5781,7 @@ public class MenuController {
                 }
                 break;
             }
-            case 5: {
+            case 6: {
                 Service.send_box_input_text(conn, 30, "Đổi mật khẩu", new String[]{"nhập mật khẩu cũ",
                     "nhập mật khẩu mới", "nhập lại mật khẩu mới"});
                 break;
@@ -5441,7 +5889,7 @@ public class MenuController {
                         return;
                     }
                     conn.p.banclone = 0;
-                    int coin_ = 1_000_000;
+                    int coin_ = 1_500_000;
                     conn.p.update_coin(-coin_);
                     conn.p.item.char_inventory(5);
                     vgo = new Vgo();
@@ -6731,7 +7179,7 @@ public class MenuController {
                 }
                 break;
             }
-            case 5: { // cua hang potion
+            case 4: { // cua hang potion
                 ChiemThanhManager.NhanQua(conn.p);
                 break;
             }

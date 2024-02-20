@@ -670,6 +670,16 @@ public class Session implements Runnable {
         if (this.list_char == null || !this.list_char[2].isEmpty()) {
             return;
         }
+        // fix tạo 1  nhân vật
+        int charNumber = 0;
+        for (String charName : this.list_char
+        ) {
+            if(!charName.equals("")) charNumber++;
+        }
+        if (charNumber>0) {
+            notice_create_char("Chỉ được tạo 1 nhân vật thôi!!");
+            return;
+        }
         byte clazz = m.reader().readByte();
         String name = m.reader().readUTF().toLowerCase();
         byte hair = m.reader().readByte();
@@ -685,14 +695,6 @@ public class Session implements Runnable {
             notice_create_char("tên không hợp lệ, nhập lại đi!!");
             return;
         }
-            for (int i = 0; i < 1; i++) {
-                if (this.list_char[i].isEmpty()) {
-                    this.list_char[i] = name;
-                    break;
-                }
-                notice_create_char("1 nhân vật được rồi, đừng tham lam");
-                return;
-            }
         try ( Connection connnect = SQL.gI().getConnection();  PreparedStatement ps = connnect.prepareStatement(
                 "INSERT INTO `player` (`name`, `body`, `clazz`, `level`, `exp`, `site`, `item4`, `item7`, `vang`, `kimcuong`, `tiemnang`, `kynang`, `point1`, `point2`, `point3`, `point4`, `skill`, `item3`, `item5`,`itemwear`,`giftcode`, `pet`, `maxbag`, `itembox3`, `itembox4`, `itembox7`, `rms_save`, `date`, `diemdanh`, `eff`, `itembox5`, `friend`, `enemies`, `typeexp`, `medal_create_material`,`point_active`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
             ps.setNString(1, name);
@@ -766,12 +768,12 @@ public class Session implements Runnable {
                 connnect.commit();
             }
 
-//            for (int i = 0; i < this.list_char.length; i++) {
-//                if (this.list_char[i].isEmpty()) {
-//                    this.list_char[i] = name;
-//                    break;
-//                }
-//            }
+            for (int i = 0; i < this.list_char.length; i++) {
+                if (this.list_char[i].isEmpty()) {
+                    this.list_char[i] = name;
+                    break;
+                }
+            }
             Manager.gI().ip_create_char.replace(this.ip, time_, (time_ + 1));
             send_listchar_board();
             flush();
