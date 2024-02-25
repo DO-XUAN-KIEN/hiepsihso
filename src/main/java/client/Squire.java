@@ -25,40 +25,46 @@ public class Squire extends Player {
     private long delay_move;
     private long delay_chat;
 
-    public Squire(Session session, int id) {super(session, -10000 - id);}
+    public Squire(Session session, int id) {
+        super(session, -10000 - id);
+    }
 
-    public void switchToSquire(Player owner) throws IOException {
-        owner.flush();
-        if (owner.party != null && owner.party.get_mems().size() > 1) {
-            owner.party.remove_mems(owner);
-            owner.party.sendin4();
-            owner.party.send_txt_notice(owner.name + " rời nhóm");
-            owner.party = null;
+    public void switchToSquire(Player owner) {
+        try {
+            owner.flush();
+            if (owner.party != null && owner.party.get_mems().size() > 1) {
+                owner.party.remove_mems(owner);
+                owner.party.sendin4();
+                owner.party.send_txt_notice(owner.name + " rời nhóm");
+                owner.party = null;
+            }
+            if (owner.isLiveSquire) {
+                Squire.squireLeaveMap(owner);
+            }
+            owner.isLiveSquire = false;
+            this.maxbag = owner.maxbag;
+            this.item.box3 = owner.item.box3;
+            this.item.box47 = owner.item.box47;
+            this.item.bag3 = owner.item.bag3;
+            this.item.bag47 = owner.item.bag47;
+            this.kimcuong = owner.kimcuong;
+            this.vang = owner.vang;
+            this.isOwner = false;
+            this.isSquire = false;
+            this.isdie = false;
+            this.x = owner.x;
+            this.y = owner.y;
+            this.map = owner.map;
+            conn.p = this;
+            this.owner = owner;
+            this.squire = this;
+            setInfo();
+            MapService.leave(owner.map, owner);
+            MessageHandler.dataloginmap(conn);
+            removeClan();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (owner.isLiveSquire) {
-            Squire.squireLeaveMap(owner);
-        }
-        owner.isLiveSquire = false;
-        this.maxbag = owner.maxbag;
-        this.item.box3 = owner.item.box3;
-        this.item.box47 = owner.item.box47;
-        this.item.bag3 = owner.item.bag3;
-        this.item.bag47 = owner.item.bag47;
-        this.kimcuong = owner.kimcuong;
-        this.vang = owner.vang;
-        this.isOwner = false;
-        this.isSquire = false;
-        this.isdie = false;
-        this.x = owner.x;
-        this.y = owner.y;
-        this.map = owner.map;
-        conn.p = this;
-        this.owner = owner;
-        this.squire = this;
-        setInfo();
-        MapService.leave(owner.map, owner);
-        MessageHandler.dataloginmap(conn);
-        removeClan();
     }
 
     public void setInfo() throws IOException {
@@ -352,7 +358,7 @@ public class Squire extends Player {
                 jsar.clear();
                 for (int i = 0; i < MainEff.size(); i++) {
                     EffTemplate temp = MainEff.get(i);
-                    if (temp.id != -126 && temp.id != -125 && temp.id != -127 && temp.id != -128) {
+                    if (temp.id != -126 && temp.id != -125) {
                         continue;
                     }
                     JSONArray jsar21 = new JSONArray();
@@ -573,6 +579,9 @@ public class Squire extends Player {
     public static void update(Player p) {
         try {
             if (p.isLiveSquire) {
+                if (p.typepk != p.squire.typepk) {
+                    MapService.change_flag(p.map, p.squire, p.typepk);
+                }
                 Squire s = p.squire;
                 s.sendMove(p);
                 if (s.delay_chat < System.currentTimeMillis()) {
@@ -665,7 +674,7 @@ public class Squire extends Player {
                         if (d != null) {
                             Mob_Dungeon mod_target_dungeon = d.get_mob(ObjAtk);
                             if (mod_target_dungeon != null) {
-                                MainObject.MainAttack(map, this, mod_target_dungeon, index_skill, _skill, type);
+                                Squire.SquireAttack(map, this, mod_target_dungeon, index_skill, _skill, type);
                             }
                         }
                     } else if (Map.is_map_chiem_mo(conn.p.map, true) && conn.p.myclan != null) {
@@ -728,7 +737,7 @@ public class Squire extends Player {
         if (ObjAtk == null || focus == null || ObjAtk.equals(focus) || ObjAtk.isdie || ObjAtk.isStunes(true)) {
             return;
         }
-        if (ObjAtk.isPlayer() && focus.isPlayer() && !map.isMapChiemThanh() && (map.ismaplang || ObjAtk.level < 11 || focus.level < 11
+        if (ObjAtk.isPlayer() && focus.isPlayer() && !map.isMapChiemThanh() && (map.ismaplang || ObjAtk.level < 10 || focus.level < 11
                 || (ObjAtk.typepk != 0 && ObjAtk.typepk == focus.typepk) || ObjAtk.hieuchien > 32_000)) {
             return;
         }
@@ -736,9 +745,6 @@ public class Squire extends Player {
             return;
         }
         if (focus.isMob() && focus.isBoss() && Math.abs(focus.level - ObjAtk.level) > 5) {
-            return;
-        }
-        if (Math.abs(ObjAtk.x - focus.x) > 300 || Math.abs(ObjAtk.y - focus.y) > 300) {
             return;
         }
         if (ObjAtk.isStunes(true)) {
@@ -771,10 +777,9 @@ public class Squire extends Player {
             return;
         }
         //</editor-fold>
-
         Player p = ObjAtk.isPlayer() ? (Player) ObjAtk : null;
         EffTemplate ef;
-        long dame = ObjAtk.get_DameBase();
+        long dame = ObjAtk.get_DameBase()*3L;
         int hutHP = 0;
         float ptCrit = 0;
         float DamePlus = 0;
@@ -852,11 +857,14 @@ public class Squire extends Player {
         }
 
         //</editor-fold>
+
         List<Float> giamdame = new ArrayList<>();
         ef = ObjAtk.get_EffDefault(3);
         if (ef != null) {
             giamdame.add((float) 0.2);
             GiamDame += 0.2;
+//            DamePlus -= 0.2;
+//            dame = (dame / 10) * 8;
         }
         if (ObjAtk.isPlayer() && p.getlevelpercent() < 0) {
             giamdame.add((float) 0.5);
@@ -869,6 +877,93 @@ public class Squire extends Player {
         if (ef != null && ObjAtk.hp < hpmax) {
             HoiHP += hpmax / 100;
         }
+
+        //<editor-fold defaultstate="collapsed" desc="Tác dụng mề...">
+        boolean isEffKhaiHoan = focus.isPlayer() && focus.get_EffMe_Kham(StrucEff.NgocKhaiHoan) != null;
+        int prMeday = 0;
+        if (focus.isPlayer()) {
+            giamdame.add((float) (((Player) focus).total_item_param(80) * 0.0001));
+        }
+//        GiamDame += focus.isPlayer() ? (float) (((Player) focus).total_item_param(80) * 0.0001) : 0;//giáp hắc ám
+        if (ObjAtk.isPlayer()) {
+            if ((ef = ObjAtk.get_EffMe_Kham(StrucEff.TangHinh)) == null && ObjAtk.total_item_param(82) > Util.random(10_000)) {
+                ObjAtk.add_EffMe_Kham(StrucEff.TangHinh, 0, System.currentTimeMillis() + (prMeday = ObjAtk.total_item_param(81)));
+                Eff_special_skill.send_eff_TangHinh(p, 81, prMeday);
+            } else if ((ef = ObjAtk.get_EffMe_Kham(StrucEff.KhienMaThuat)) == null && ObjAtk.total_item_param(85) > Util.random(10_000)) {
+                ObjAtk.add_EffMe_Kham(StrucEff.KhienMaThuat, 0, System.currentTimeMillis() + (prMeday = ObjAtk.total_item_param(86)));
+                Eff_special_skill.send_eff_Meday(p, 86, prMeday);
+            }
+        }
+        if (focus.isPlayer() && !isEffKhaiHoan) {
+            if (focus.get_EffMe_Kham(StrucEff.BongLua) == null && ObjAtk.total_item_param(76) > Util.random(10_000)) {
+                focus.add_EffMe_Kham(StrucEff.BongLua, 0, System.currentTimeMillis() + (prMeday = ObjAtk.total_item_param(77)));
+                Eff_special_skill.send_eff_Meday((Player) focus, 77, prMeday);
+            } else if (focus.get_EffMe_Kham(StrucEff.BongLanh) == null && ObjAtk.total_item_param(78) > Util.random(10_000)) {
+                focus.add_EffMe_Kham(StrucEff.BongLanh, 0, System.currentTimeMillis() + (prMeday = ObjAtk.total_item_param(79)));
+                Eff_special_skill.send_eff_Meday((Player) focus, 79, prMeday);
+            } else if (focus.get_EffMe_Kham(StrucEff.LuLan) == null && ObjAtk.total_item_param(87) > Util.random(10_000)) {
+                focus.add_EffMe_Kham(StrucEff.LuLan, 0, System.currentTimeMillis() + (prMeday = ObjAtk.total_item_param(88)));
+                Eff_special_skill.send_eff_Meday((Player) focus, 88, prMeday);
+            }
+            if (focus.get_EffMe_Kham(StrucEff.KhienMaThuat) != null) {
+                GiamDame += 0.5;
+                giamdame.add((float) 0.5);
+            }
+        }
+        //</editor-fold>
+
+        //<editor-fold defaultstate="collapsed" desc="Tác dụng khảm...">
+        int prKham = 0;
+        if (focus.isPlayer() && (ObjAtk.isBoss() || ObjAtk.get_TypeObj() == 0)) {
+            if (!isEffKhaiHoan && (prKham = focus.total_item_param(101)) > 0) {
+                if (focus.kham.idAtk_KH == ObjAtk.index) {
+                    focus.kham.CountAtk_KH++;
+                } else {
+                    focus.kham.idAtk_KH = ObjAtk.index;
+                    focus.kham.CountAtk_KH = 1;
+                }
+
+                if (focus.kham.CountAtk_KH >= prKham) {
+                    focus.kham.idAtk_KH = 0;
+                    focus.kham.CountAtk_KH = 0;
+                    focus.add_EffMe_Kham(StrucEff.NgocKhaiHoan, 0, System.currentTimeMillis() + 3000);
+                    Eff_special_skill.send_eff_kham((Player) focus, StrucEff.NgocKhaiHoan, 3000);
+                }
+            }
+
+            if ((ef = focus.get_EffMe_Kham(StrucEff.NgocLucBao)) != null) {
+                hutHP += (int) (dame * 0.1);
+            } else if ((prKham = focus.total_item_param(102)) > Util.random(10000)) {
+                focus.add_EffMe_Kham(StrucEff.NgocLucBao, prKham, System.currentTimeMillis() + 3000);
+                Eff_special_skill.send_eff_kham((Player) focus, StrucEff.NgocLucBao, 3000);
+            }
+        }
+
+        if (ObjAtk.isPlayer()) {
+            if ((focus.isBoss() || focus.get_TypeObj() == 0)) {
+                if (ObjAtk.get_EffMe_Kham(StrucEff.NgocHonNguyen) != null) {
+                    DamePlus += 1;
+                }
+            }
+
+            double ptHP = (ObjAtk.hp / ObjAtk.get_HpMax()) * 100;
+            if ((ef = ObjAtk.get_EffMe_Kham(StrucEff.NgocPhongMa)) != null) {
+                HoiHP += (int) (hpmax * ef.param * 0.0001);
+            } else if (ptHP < ObjAtk.total_item_param(104) / 100 && (prKham = ObjAtk.total_item_param(103)) > Util.random(10_000)) {
+                ObjAtk.add_EffMe_Kham(StrucEff.NgocPhongMa, prKham, System.currentTimeMillis() + 5000);
+                Eff_special_skill.send_eff_kham(p, StrucEff.NgocPhongMa, 5000);
+            }
+
+            if (focus.isBoss() && (ef = ObjAtk.get_EffMe_Kham(StrucEff.NgocSinhMenh)) != null) {
+                DamePlus += 0.5;
+//                dame += (long)(dame * 0.5);
+            } else if (focus.isBoss() && (prKham = ObjAtk.total_item_param(106)) > Util.random(10_000)) {
+                ObjAtk.add_EffMe_Kham(StrucEff.NgocSinhMenh, prKham, System.currentTimeMillis() + 3000);
+                Eff_special_skill.send_eff_kham(p, StrucEff.NgocSinhMenh, 3000);
+            }
+            ptCrit += ObjAtk.total_item_param(107) * 0.0001;
+        }
+        //</editor-fold>
 
         dame += (long) (dame * DamePlus);
 

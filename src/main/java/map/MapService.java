@@ -1,14 +1,11 @@
 package map;
 
-import BossHDL.BossManager;
 import ai.MobAi;
 import ai.NhanBan;
 import ai.Player_Nhan_Ban;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map.Entry;
 
-import client.Body2;
 import client.Clan;
 import client.Pet;
 import client.Player;
@@ -17,8 +14,6 @@ import core.Manager;
 import core.MenuController;
 import core.Service;
 import core.Util;
-import core.tools;
-import event_daily.ChiemMo;
 import event_daily.ChiemThanhManager;
 import event_daily.LoiDaiManager;
 import event_daily.ChienTruong;
@@ -29,13 +24,10 @@ import java.util.List;
 import template.EffTemplate;
 import template.Eff_TextFire;
 import template.Item3;
-import template.Level;
 import template.LvSkill;
 import template.MainObject;
 import template.Mob_Dungeon;
 import template.Mob_MoTaiNguyen;
-import template.Option;
-import template.Option_pet;
 import template.Pet_di_buon;
 import template.Pet_di_buon_manager;
 import template.StrucEff;
@@ -300,7 +292,7 @@ public class MapService {
                     if (p.pet_di_buon.speed != 1 && p.pet_di_buon.time_skill < System.currentTimeMillis()) {
                         p.pet_di_buon.speed = 1;
                         //
-                        System.out.println("map.MapService.send_move()111");
+                     //   System.out.println("map.MapService.send_move()111");
                         Message mm = new Message(7);
                         mm.writer().writeShort(p.pet_di_buon.index);
                         mm.writer().writeByte((byte) 120);
@@ -2096,7 +2088,7 @@ public class MapService {
         }
     }
 
-    private static void Fire_Mob_DiBuon(Map map, Session conn, Pet_di_buon pet_di_buon, int index_skill, int dameBase) throws IOException {
+    public static void Fire_Mob_DiBuon(Map map, Session conn, Pet_di_buon pet_di_buon, int index_skill, int dameBase) throws IOException {
         if (dameBase < 0) {
             dameBase = 0;
         }
@@ -2114,14 +2106,14 @@ public class MapService {
                 }
                 mout.cleanup();
                 Pet_di_buon_manager.remove(pet_di_buon.name);
-                pet_di_buon.p.pet_di_buon = null;
+                pet_di_buon.playerForPetDiBuon.pet_di_buon = null;
                 for (int j = 0; j < pet_di_buon.item.size(); j++) {
                     ItemMap it_leave = new ItemMap();
                     it_leave.id_item = (short) pet_di_buon.item.get(j);
                     it_leave.color = (byte) 0;
                     it_leave.quantity = 1;
                     it_leave.category = 3;
-                    it_leave.idmaster = (short) pet_di_buon.p.index;
+                    it_leave.idmaster = (short) pet_di_buon.playerForPetDiBuon.index;
                     it_leave.op = new ArrayList<>();
                     it_leave.time_exist = System.currentTimeMillis() + 60_000L;
                     it_leave.time_pick = System.currentTimeMillis() + 1_500L;

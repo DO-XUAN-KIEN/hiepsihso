@@ -39,6 +39,7 @@ public class MainObject {
     public byte clazz;
     public Kham_template kham;
     public int hieuchien;
+    public Pet_di_buon pet_di_buon;
 
     public int Set_hpMax(int hp_max) {
         return this.hp_max = hp_max;
@@ -348,6 +349,7 @@ public class MainObject {
         float ptCrit = 0;
         float DamePlus = 0;
         float GiamDame = 0;
+        float ptxuyengiap = 0;
         boolean xuyengiap = ObjAtk.get_Pierce() > Util.random(10_000);
 
         //<editor-fold defaultstate="collapsed" desc="Get Dame default...">  
@@ -450,7 +452,7 @@ public class MainObject {
             GiamDame += 0.5;
         }
 
-        //<editor-fold defaultstate="collapsed" desc="Nộ cánh...">  
+        //<editor-fold defaultstate="collapsed" desc="Nộ cánh...">
         if (ObjAtk.isPlayer()) {
             EffTemplate temp2 = ObjAtk.get_EffDefault(StrucEff.PowerWing);
             if (temp2 == null) {
@@ -458,6 +460,7 @@ public class MainObject {
                 if (it != null) {
                     int percent = 0;
                     int time = 0;
+                    int dameno = 0;
                     for (Option op : it.op) {
                         if (op.id == 41) {
                             percent = op.getParam(it.tier);
@@ -659,6 +662,10 @@ public class MainObject {
             }
         }
         if (xuyengiap) {
+            dame += dame * (ptxuyengiap + 0.65);
+            if (dame > 2_000_000_000) {
+                dame = 2_000_000_000;
+            }
             ListEf.add(new Eff_TextFire(1, (int) dame));
         } else if (ObjAtk.get_Crit() > Util.random(10_000)) {
             //       dame *= 2;
@@ -716,6 +723,7 @@ public class MainObject {
         if (focus.isMobDiBuon()) {
             dame = focus.hp_max * 5 / 100;
         }
+
         focus.hp -= dame;
         Mob_in_map mob = focus.isMob() ? (Mob_in_map) focus : null;
         if (focus.isBoss() && mob != null && ObjAtk.isPlayer()) {
@@ -936,6 +944,12 @@ public class MainObject {
                         if (focus.isMob() && (my_pet.get_id() == 3269 || my_pet.name.equals("Đại Bàng"))) {
                             int vangjoin = Util.random(1666, 2292);
                             p.update_vang(vangjoin);
+                            Service.send_notice_nobox_white(p.conn, "+ " + vangjoin + " vàng");
+                        }
+                        if (focus.isMob() && (my_pet.get_id() == 4626 || my_pet.name.equals("Đại Bàng"))) {
+                            int vangjoin = Util.random(1666, 2292);
+                            p.update_vang(vangjoin);
+
                             Service.send_notice_nobox_white(p.conn, "+ " + vangjoin + " vàng");
                         }
                         p.pet_atk_speed = System.currentTimeMillis() + 1500L;

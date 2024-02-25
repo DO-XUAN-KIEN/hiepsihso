@@ -834,6 +834,9 @@ public static int idxDame;
                     }
                 }
             }
+            if (p0.isSquire) {
+                return;
+            }
             if (p0 != null) {
                 send_notice_nobox_white(p0.conn, conn.p.name + " đang dòm ngó đồ đạc của bạn");
                 Message m2 = new Message(49);

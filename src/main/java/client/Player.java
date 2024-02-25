@@ -197,80 +197,14 @@ public class Player extends Body2 {
     public long time_henshin;
     public int id_henshin;
     public List<Part_player> part_p;
-    public boolean is_move;
-    private short clan_icon = -1;
-    private int clan_id = -1;
-    private String clan_name_clan_shorted;
-    private byte clan_mem_type;
-    private short weapon;
-    private short mat_na;//
-    private short phi_phong;//
-    private int pierce;
-    private int crit;
-    private short id_hair;//
-    private short id_wing;////
 
     public Squire squire;
     public Player owner;
-    public boolean isOwner;
+
+    public boolean isOwner = true;
     public boolean isSquire;
     public boolean isLiveSquire;
 
-
-
-    public void testthu(Player p0) {
-        this.index = Short.toUnsignedInt((short) Manager.gI().get_index_mob_new());
-        this.x = p0.x;
-        this.y = p0.y;
-        this.part_p = new ArrayList<>();
-        for (int i = 0; i < p0.item.wear.length; i++) {
-            Part_player temp_add = new Part_player();
-            if (i != 0 && i != 1 && i != 6 && i != 7 && i != 10) {
-                continue;
-            }
-            Item3 temp = p0.item.wear[i];
-            if (temp != null) {
-                temp_add.type = temp.type;
-                if (i == 10 && p0.item.wear[14] != null && (p0.item.wear[14].id >= 4638 && p0.item.wear[14].id <= 4648)) {
-                    temp_add.part = p0.item.wear[14].part;
-                } else {
-                    temp_add.part = temp.part;
-                }
-            }
-            this.part_p.add(temp_add);
-        }
-        this.name = p0.name + " dt_ ";
-        this.clazz = p0.clazz;
-        this.head = p0.head;
-        this.eye = p0.eye;
-        this.hair = p0.hair;
-        this.level = p0.level;
-        this.hp = (int) Math.min(p0.hp, Integer.MAX_VALUE);
-        this.hp_max = (int) Math.min(p0.body.get_HpMax(), Integer.MAX_VALUE);
-        this.pointpk = p0.pointpk;
-        this.clan_icon = p0.myclan.icon;
-        this.clan_id = Clan.get_id_clan(p0.myclan);
-        this.clan_name_clan_shorted = p0.myclan.name_clan_shorted;
-        this.clan_mem_type = p0.myclan.get_mem_type(p0.name);
-        this.fashion = p0.fashion;
-        this.mat_na = Service.get_id_mat_na(p0);
-        this.phi_phong = Service.get_id_phiphong(p0);
-        this.weapon = Service.get_id_weapon(p0);
-        this.id_horse = p0.id_horse;
-        this.id_hair = Service.get_id_hair(p0);
-        this.id_wing = Service.get_id_wing(p0);
-        this.type_use_mount = p0.type_use_mount;
-        this.dame = (p0.body.get_DameBase() + p0.body.get_DameProp(1) + p0.body.get_DameProp(2)
-                + p0.body.get_DameProp(3) + p0.body.get_DameProp(4)) / 2;
-        this.map_id = p0.map.map_id;
-        this.crit = p0.body.get_Crit();
-        this.def = p0.body.get_DefBase();
-        this.pierce = p0.body.get_Pierce();
-        if (this.pierce > 5000) {
-            this.pierce = 5000;
-        }
-        this.is_move = true;
-    }
 
     public void ResetCreateItemStar() {
         isCreateItemStar = false;
@@ -350,465 +284,475 @@ public class Player extends Body2 {
         }
     }
 
-    public boolean setup() throws IOException {
-        long _time = System.currentTimeMillis();
-        String query = "SELECT * FROM `player` WHERE `id` = '" + this.index + "' LIMIT 1;";
-        try ( Connection connection = SQL.gI().getConnection();  Statement ps = connection.createStatement();  ResultSet rs = ps.executeQuery(query)) {
-            if (!rs.next()) {
-                return false;
-            }
-            //
-            this.kham = new Kham_template();
-            this.name = rs.getString("name");
-            this.timeBlockCTG = rs.getLong("time_block_ctg");
-            JSONArray jsar = (JSONArray) JSONValue.parse(rs.getString("body"));
-            if (jsar == null) {
-                return false;
-            }
-            head = Byte.parseByte(jsar.get(0).toString());
-            eye = Byte.parseByte(jsar.get(1).toString());
-            hair = Byte.parseByte(jsar.get(2).toString());
-            jsar.clear();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("site"));
-            if (jsar == null) {
-                return false;
-            }
-            Map[] map_enter = Map.get_map_by_id(Byte.parseByte(jsar.get(0).toString()));
-            if (map_enter != null) {
-                x = Short.parseShort(jsar.get(1).toString());
-                y = Short.parseShort(jsar.get(2).toString());
-            } else {
-                map_enter = Map.entrys.get(1);
-                x = 432;
-                y = 354;
-            }
-            map = map_enter[0];
-            other_player_inside = new HashMap<>();
-            other_mob_inside = new HashMap<>();
-            other_mob_inside_update = new HashMap<>();
-            jsar.clear();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("eff"));
-            if (jsar == null) {
-                return false;
-            }
-//            list_eff = new ArrayList<>();
-            for (int i = 0; i < jsar.size(); i++) {
-                JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                if (jsar2 == null) {
+    public boolean setup() {
+        try {
+            long _time = System.currentTimeMillis();
+            String query = "SELECT * FROM `player` WHERE `id` = '" + this.index + "' LIMIT 1;";
+            try (Connection connection = SQL.gI().getConnection(); Statement ps = connection.createStatement(); ResultSet rs = ps.executeQuery(query)) {
+                if (!rs.next()) {
                     return false;
                 }
-                this.body.add_EffDefault(Integer.parseInt(jsar2.get(0).toString()), Integer.parseInt(jsar2.get(1).toString()),
-                        (System.currentTimeMillis() + Long.parseLong(jsar2.get(2).toString())));
+                //
+                this.kham = new Kham_template();
+                this.name = rs.getString("name");
+                this.timeBlockCTG = rs.getLong("time_block_ctg");
+                JSONArray jsar = (JSONArray) JSONValue.parse(rs.getString("body"));
+                if (jsar == null) {
+                    return false;
+                }
+                head = Byte.parseByte(jsar.get(0).toString());
+                eye = Byte.parseByte(jsar.get(1).toString());
+                hair = Byte.parseByte(jsar.get(2).toString());
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("site"));
+                if (jsar == null) {
+                    return false;
+                }
+                Map[] map_enter = Map.get_map_by_id(Byte.parseByte(jsar.get(0).toString()));
+                if (map_enter != null) {
+                    x = Short.parseShort(jsar.get(1).toString());
+                    y = Short.parseShort(jsar.get(2).toString());
+                } else {
+                    map_enter = Map.entrys.get(1);
+                    x = 432;
+                    y = 354;
+                }
+                map = map_enter[0];
+                other_player_inside = new HashMap<>();
+                other_mob_inside = new HashMap<>();
+                other_mob_inside_update = new HashMap<>();
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("eff"));
+                if (jsar == null) {
+                    return false;
+                }
+//            list_eff = new ArrayList<>();
+                for (int i = 0; i < jsar.size(); i++) {
+                    JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                    if (jsar2 == null) {
+                        return false;
+                    }
+                    this.body.add_EffDefault(Integer.parseInt(jsar2.get(0).toString()), Integer.parseInt(jsar2.get(1).toString()),
+                            (System.currentTimeMillis() + Long.parseLong(jsar2.get(2).toString())));
 //                list_eff.add(
 //                        new EffTemplate(Integer.parseInt(jsar2.get(0).toString()), Integer.parseInt(jsar2.get(1).toString()),
 //                                (System.currentTimeMillis() + Long.parseLong(jsar2.get(2).toString()))));
-            }
-            jsar.clear();
-            date = Util.getDate(rs.getString("date"));
-            diemdanh = rs.getByte("diemdanh");
-            banclone = rs.getByte("banclone");
-            diemsukien = rs.getInt("diemsukien");
-            diemchiemthanh = rs.getInt("diemchiemthanh");
-            diemdibuon = rs.getInt("diemdibuon");
-            diemdicuop = rs.getInt("diemdicuop");
-            chucphuc = rs.getByte("chucphuc");
-            hieuchien = rs.getInt("hieuchien");
-             chuyencan = rs.getInt("chuyencan");
-             chuyensinh = rs.getInt("chuyensinh");
-            type_exp = rs.getByte("typeexp");
-            clazz = rs.getByte("clazz");
-            level = rs.getShort("level");
-            exp = rs.getLong("exp");
-            //
-            if (level > Manager.gI().lvmax) {
-                level = (short) Manager.gI().lvmax;
-                if (exp >= Level.entrys.get(level - 1).exp) {
-                    exp = Level.entrys.get(level - 1).exp - 1;
                 }
-            }
-            //
-            vang = rs.getLong("vang");
-            kimcuong = rs.getInt("kimcuong");
-            isdie = false;
-            tiemnang = rs.getShort("tiemnang");
-            kynang = rs.getShort("kynang");
-            point1 = rs.getShort("point1");
-            point2 = rs.getShort("point2");
-            point3 = rs.getShort("point3");
-            point4 = rs.getShort("point4");
-            pointarena = rs.getInt("point_arena");
-            short it_name_ = rs.getShort("id_name");
-            if (it_name_ != -1) {
-                id_name = (short) (ItemTemplate3.item.get(it_name_).getPart() + 41);
-                id_name
-                        = (short) (((it_name_ >= 4720 && it_name_ <= 4727) || (it_name_ >= 4765 && it_name_ <= 4767)) ? id_name
-                                : 78);
-            } else {
-                id_name = -1;
-            }
-            skill_point = new byte[21];
-            time_delay_skill = new long[21];
-            jsar = (JSONArray) JSONValue.parse(rs.getString("skill"));
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < 21; i++) {
-                skill_point[i] = Byte.parseByte(jsar.get(i).toString());
-                time_delay_skill[i] = 0;
-            }
-            jsar.clear();
-            // load item
-
-            maxbag = rs.getByte("maxbag");
-            maxbox = 126;
-            item = new Item(this);
-            item.bag3 = new Item3[maxbag];
-            item.box3 = new Item3[maxbag];
-            item.wear = new Item3[24];
-            item.bag47 = new ArrayList<>();
-            item.box47 = new ArrayList<>();
-            for (int i = 0; i < 24; i++) {
-                item.wear[i] = null;
-            }
-            for (int i = 0; i < maxbag; i++) {
-                item.bag3[i] = null;
-                item.box3[i] = null;
-            }
-            jsar = (JSONArray) JSONValue.parse(rs.getString("item4"));
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < jsar.size(); i++) {
-                JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                Item47 temp = new Item47();
-                temp.id = Short.parseShort(jsar2.get(0).toString());
-                temp.quantity = Short.parseShort(jsar2.get(1).toString());
-                temp.category = 4;
-                if (temp.quantity > 0) {
-                    item.bag47.add(temp);
+                jsar.clear();
+                date = Util.getDate(rs.getString("date"));
+                diemdanh = rs.getByte("diemdanh");
+                banclone = rs.getByte("banclone");
+                diemsukien = rs.getInt("diemsukien");
+                diemchiemthanh = rs.getInt("diemchiemthanh");
+                diemdibuon = rs.getInt("diemdibuon");
+                diemdicuop = rs.getInt("diemdicuop");
+                chucphuc = rs.getByte("chucphuc");
+                hieuchien = rs.getInt("hieuchien");
+                chuyencan = rs.getInt("chuyencan");
+                chuyensinh = rs.getInt("chuyensinh");
+                type_exp = rs.getByte("typeexp");
+                clazz = rs.getByte("clazz");
+                level = rs.getShort("level");
+                exp = rs.getLong("exp");
+                //
+                if (level > Manager.gI().lvmax) {
+                    level = (short) Manager.gI().lvmax;
+                    if (exp >= Level.entrys.get(level - 1).exp) {
+                        exp = Level.entrys.get(level - 1).exp - 1;
+                    }
                 }
-                jsar2.clear();
-            }
-            jsar.clear();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("item7"));
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < jsar.size(); i++) {
-                JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                Item47 temp = new Item47();
-                temp.id = Short.parseShort(jsar2.get(0).toString());
-                temp.quantity = Short.parseShort(jsar2.get(1).toString());
-                temp.category = 7;
-                if (temp.quantity > 0) {
-                    item.bag47.add(temp);
+                //
+                vang = rs.getLong("vang");
+                kimcuong = rs.getInt("kimcuong");
+                isdie = false;
+                tiemnang = rs.getShort("tiemnang");
+                kynang = rs.getShort("kynang");
+                point1 = rs.getShort("point1");
+                point2 = rs.getShort("point2");
+                point3 = rs.getShort("point3");
+                point4 = rs.getShort("point4");
+                pointarena = rs.getInt("point_arena");
+                short it_name_ = rs.getShort("id_name");
+                if (it_name_ != -1) {
+                    id_name = (short) (ItemTemplate3.item.get(it_name_).getPart() + 41);
+                    id_name
+                            = (short) (((it_name_ >= 4720 && it_name_ <= 4727) || (it_name_ >= 4765 && it_name_ <= 4767)) ? id_name
+                            : 78);
+                } else {
+                    id_name = -1;
                 }
-                jsar2.clear();
-            }
-            jsar.clear();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("item3"));
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < jsar.size(); i++) {
-                JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                Item3 temp = new Item3();
-                temp.id = Short.parseShort(jsar2.get(0).toString());
-                temp.clazz = Byte.parseByte(jsar2.get(1).toString());
-                temp.type = Byte.parseByte(jsar2.get(2).toString());
-                temp.level = Short.parseShort(jsar2.get(3).toString());
-                temp.icon = Short.parseShort(jsar2.get(4).toString());
-                temp.color = Byte.parseByte(jsar2.get(5).toString());
-                temp.part = Byte.parseByte(jsar2.get(6).toString());
-                temp.islock = Byte.parseByte(jsar2.get(7).toString()) == 1;
-                temp.name = ItemTemplate3.item.get(temp.id).getName();
-                if (temp.islock) {
-                    temp.name += " [Khóa]";
-                }
-                temp.tier = Byte.parseByte(jsar2.get(8).toString());
-                // if (temp.type == 15) {
-                // temp.tier = 0;
-                // }
-                JSONArray jsar3 = (JSONArray) JSONValue.parse(jsar2.get(9).toString());
-                temp.op = new ArrayList<>();
-                for (int j = 0; j < jsar3.size(); j++) {
-                    JSONArray jsar4 = (JSONArray) JSONValue.parse(jsar3.get(j).toString());
-                    temp.op.add(
-                            new Option(Byte.parseByte(jsar4.get(0).toString()), Integer.parseInt(jsar4.get(1).toString()), temp.id));
-                }
-                temp.time_use = 0;
-                if (jsar2.size() >= 11) {
-                    temp.time_use = Long.parseLong(jsar2.get(10).toString());
-                }
-                if (jsar2.size() >= 12) {
-                    temp.tierStar = Byte.parseByte(jsar2.get(11).toString());
-                }
-                if (jsar2.size() >= 13) {
-                    temp.expiry_date = Long.parseLong(jsar2.get(12).toString());
-                }
-                temp.UpdateName();
-                if (temp.expiry_date == 0 || temp.expiry_date > _time) {
-                    item.bag3[i] = temp;
-                }
-            }
-            jsar.clear();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("itemwear"));
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < jsar.size(); i++) {
-                JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                if (jsar2 == null) {
+                skill_point = new byte[21];
+                time_delay_skill = new long[21];
+                jsar = (JSONArray) JSONValue.parse(rs.getString("skill"));
+                if (jsar == null) {
                     return false;
                 }
-                Item3 temp = new Item3();
-                temp.id = Short.parseShort(jsar2.get(0).toString());
-                temp.name = ItemTemplate3.item.get(temp.id).getName() + " [Khóa]";
-                temp.clazz = Byte.parseByte(jsar2.get(1).toString());
-                temp.type = Byte.parseByte(jsar2.get(2).toString());
-                temp.level = Short.parseShort(jsar2.get(3).toString());
-                temp.icon = Short.parseShort(jsar2.get(4).toString());
-                temp.color = Byte.parseByte(jsar2.get(5).toString());
-                temp.part = Byte.parseByte(jsar2.get(6).toString());
-                temp.tier = Byte.parseByte(jsar2.get(7).toString());
-                // if (temp.type == 15) {
-                // temp.tier = 0;
-                // }
-                temp.islock = true;
-                JSONArray jsar3 = (JSONArray) JSONValue.parse(jsar2.get(8).toString());
-                temp.op = new ArrayList<>();
-                for (int j = 0; j < jsar3.size(); j++) {
-                    JSONArray jsar4 = (JSONArray) JSONValue.parse(jsar3.get(j).toString());
-                    if (jsar4 == null) {
+                for (int i = 0; i < 21; i++) {
+                    skill_point[i] = Byte.parseByte(jsar.get(i).toString());
+                    time_delay_skill[i] = 0;
+                }
+                jsar.clear();
+                // load item
+
+                maxbag = rs.getByte("maxbag");
+                maxbox = 126;
+                item = new Item(this);
+                item.bag3 = new Item3[maxbag];
+                item.box3 = new Item3[maxbag];
+                item.wear = new Item3[24];
+                item.bag47 = new ArrayList<>();
+                item.box47 = new ArrayList<>();
+                for (int i = 0; i < 24; i++) {
+                    item.wear[i] = null;
+                }
+                for (int i = 0; i < maxbag; i++) {
+                    item.bag3[i] = null;
+                    item.box3[i] = null;
+                }
+                jsar = (JSONArray) JSONValue.parse(rs.getString("item4"));
+                if (jsar == null) {
+                    return false;
+                }
+                for (int i = 0; i < jsar.size(); i++) {
+                    JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                    Item47 temp = new Item47();
+                    temp.id = Short.parseShort(jsar2.get(0).toString());
+                    temp.quantity = Short.parseShort(jsar2.get(1).toString());
+                    temp.category = 4;
+                    if (temp.quantity > 0) {
+                        item.bag47.add(temp);
+                    }
+                    jsar2.clear();
+                }
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("item7"));
+                if (jsar == null) {
+                    return false;
+                }
+                for (int i = 0; i < jsar.size(); i++) {
+                    JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                    Item47 temp = new Item47();
+                    temp.id = Short.parseShort(jsar2.get(0).toString());
+                    temp.quantity = Short.parseShort(jsar2.get(1).toString());
+                    temp.category = 7;
+                    if (temp.quantity > 0) {
+                        item.bag47.add(temp);
+                    }
+                    jsar2.clear();
+                }
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("item3"));
+                if (jsar == null) {
+                    return false;
+                }
+                for (int i = 0; i < jsar.size(); i++) {
+
+                    JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                    Item3 temp = new Item3();
+                    temp.id = Short.parseShort(jsar2.get(0).toString());
+                    temp.clazz = Byte.parseByte(jsar2.get(1).toString());
+                    temp.type = Byte.parseByte(jsar2.get(2).toString());
+                    temp.level = Short.parseShort(jsar2.get(3).toString());
+                    temp.icon = Short.parseShort(jsar2.get(4).toString());
+                    temp.color = Byte.parseByte(jsar2.get(5).toString());
+                    temp.part = Byte.parseByte(jsar2.get(6).toString());
+                    temp.islock = Byte.parseByte(jsar2.get(7).toString()) == 1;
+                    temp.name = ItemTemplate3.item.get(temp.id).getName();
+                    if (temp.islock) {
+                        temp.name += " [Khóa]";
+                    }
+                    if (!jsar2.get(8).toString().matches("\\d+")) {
+                        jsar2.add(8, "0");
+                    }
+                    temp.tier = Byte.parseByte(jsar2.get(8).toString());
+
+                    JSONArray jsar3 = (JSONArray) JSONValue.parse(jsar2.get(9).toString());
+                    temp.op = new ArrayList<>();
+                    for (int j = 0; j < jsar3.size(); j++) {
+                        JSONArray jsar4 = (JSONArray) JSONValue.parse(jsar3.get(j).toString());
+                        temp.op.add(
+                                new Option(Byte.parseByte(jsar4.get(0).toString()), Integer.parseInt(jsar4.get(1).toString()), temp.id));
+                    }
+                    temp.time_use = 0;
+                    if (jsar2.size() >= 11) {
+                        temp.tierStar = Byte.parseByte(jsar2.get(10).toString());
+                    }
+                    if (jsar2.size() >= 12) {
+                        temp.time_use = Long.parseLong(jsar2.get(11).toString());
+                    }
+                    if (jsar2.size() >= 13) {
+                        temp.expiry_date = Long.parseLong(jsar2.get(12).toString());
+                    }
+                    temp.UpdateName();
+                    if (temp.expiry_date == 0 || temp.expiry_date > _time) {
+                        item.bag3[i] = temp;
+                    }
+                }
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("itemwear"));
+                if (jsar == null) {
+                    return false;
+                }
+                for (int i = 0; i < jsar.size(); i++) {
+                    try {
+                        JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                        if (jsar2 == null) {
+                            return false;
+                        }
+                        Item3 temp = new Item3();
+                        temp.id = Short.parseShort(jsar2.get(0).toString());
+                        temp.name = ItemTemplate3.item.get(temp.id).getName() + " [Khóa]";
+                        temp.clazz = Byte.parseByte(jsar2.get(1).toString());
+                        temp.type = Byte.parseByte(jsar2.get(2).toString());
+                        temp.level = Short.parseShort(jsar2.get(3).toString());
+                        temp.icon = Short.parseShort(jsar2.get(4).toString());
+                        temp.color = Byte.parseByte(jsar2.get(5).toString());
+                        temp.part = Byte.parseByte(jsar2.get(6).toString());
+                        temp.tier = Byte.parseByte(jsar2.get(7).toString());
+                        // if (temp.type == 15) {
+                        // temp.tier = 0;
+                        // }
+                        temp.islock = true;
+                        JSONArray jsar3 = (JSONArray) JSONValue.parse(jsar2.get(8).toString());
+                        temp.op = new ArrayList<>();
+                        for (int j = 0; j < jsar3.size(); j++) {
+                            JSONArray jsar4 = (JSONArray) JSONValue.parse(jsar3.get(j).toString());
+                            if (jsar4 == null) {
+                                return false;
+                            }
+                            temp.op.add(
+                                    new Option(Byte.parseByte(jsar4.get(0).toString()), Integer.parseInt(jsar4.get(1).toString()), temp.id));
+                        }
+                        Byte idx = Byte.parseByte(jsar2.get(9).toString());
+                        if (jsar2.size() >= 11) {
+                            temp.tierStar = Byte.parseByte(jsar2.get(10).toString());
+                        }
+                        if (jsar2.size() >= 12) {
+                            temp.expiry_date = Long.parseLong(jsar2.get(11).toString());
+                        }
+                        temp.time_use = 0;
+                        temp.UpdateName();
+                        if (temp.expiry_date == 0 || temp.expiry_date > _time) {
+                            item.wear[idx] = temp;
+                        }
+                    } catch (Exception eee) {
+                        eee.printStackTrace();
+                    }
+                }
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("giftcode"));
+                if (jsar == null) {
+                    return false;
+                }
+                giftcode = new ArrayList<>();
+                for (int i = 0; i < jsar.size(); i++) {
+                    giftcode.add(jsar.get(i).toString());
+                }
+                jsar.clear();
+                // box
+                jsar = (JSONArray) JSONValue.parse(rs.getString("itembox4"));
+                if (jsar == null) {
+                    return false;
+                }
+                for (int i = 0; i < jsar.size(); i++) {
+                    JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                    if (jsar2 == null) {
                         return false;
                     }
-                    temp.op.add(
-                            new Option(Byte.parseByte(jsar4.get(0).toString()), Integer.parseInt(jsar4.get(1).toString()), temp.id));
+                    Item47 temp = new Item47();
+                    temp.id = Short.parseShort(jsar2.get(0).toString());
+                    temp.quantity = Short.parseShort(jsar2.get(1).toString());
+                    temp.category = 4;
+                    if (temp.quantity > 0) {
+                        item.box47.add(temp);
+                    }
+                    jsar2.clear();
                 }
-                Byte idx = Byte.parseByte(jsar2.get(9).toString());
-                if (jsar2.size() >= 11) {
-                    temp.tierStar = Byte.parseByte(jsar2.get(10).toString());
-                }
-                if (jsar2.size() >= 12) {
-                    temp.expiry_date = Long.parseLong(jsar2.get(11).toString());
-                }
-                temp.time_use = 0;
-                temp.UpdateName();
-                if (temp.expiry_date == 0 || temp.expiry_date > _time) {
-                    item.wear[idx] = temp;
-                }
-            }
-            jsar.clear();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("giftcode"));
-            if (jsar == null) {
-                return false;
-            }
-            giftcode = new ArrayList<>();
-            for (int i = 0; i < jsar.size(); i++) {
-                giftcode.add(jsar.get(i).toString());
-            }
-            jsar.clear();
-            // box
-            jsar = (JSONArray) JSONValue.parse(rs.getString("itembox4"));
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < jsar.size(); i++) {
-                JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                if (jsar2 == null) {
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("itembox7"));
+                if (jsar == null) {
                     return false;
                 }
-                Item47 temp = new Item47();
-                temp.id = Short.parseShort(jsar2.get(0).toString());
-                temp.quantity = Short.parseShort(jsar2.get(1).toString());
-                temp.category = 4;
-                if (temp.quantity > 0) {
-                    item.box47.add(temp);
+                for (int i = 0; i < jsar.size(); i++) {
+                    JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                    if (jsar2 == null) {
+                        return false;
+                    }
+                    Item47 temp = new Item47();
+                    temp.id = Short.parseShort(jsar2.get(0).toString());
+                    temp.quantity = Short.parseShort(jsar2.get(1).toString());
+                    temp.category = 7;
+                    if (temp.quantity > 0) {
+                        item.box47.add(temp);
+                    }
+                    jsar2.clear();
                 }
-                jsar2.clear();
-            }
-            jsar.clear();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("itembox7"));
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < jsar.size(); i++) {
-                JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                if (jsar2 == null) {
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("itembox3"));
+                if (jsar == null) {
                     return false;
                 }
-                Item47 temp = new Item47();
-                temp.id = Short.parseShort(jsar2.get(0).toString());
-                temp.quantity = Short.parseShort(jsar2.get(1).toString());
-                temp.category = 7;
-                if (temp.quantity > 0) {
-                    item.box47.add(temp);
+                for (int i = 0; i < jsar.size(); i++) {
+
+                    JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                    Item3 temp = new Item3();
+                    temp.id = Short.parseShort(jsar2.get(0).toString());
+                    temp.clazz = Byte.parseByte(jsar2.get(1).toString());
+                    temp.type = Byte.parseByte(jsar2.get(2).toString());
+                    temp.level = Short.parseShort(jsar2.get(3).toString());
+                    temp.icon = Short.parseShort(jsar2.get(4).toString());
+                    temp.color = Byte.parseByte(jsar2.get(5).toString());
+                    temp.part = Byte.parseByte(jsar2.get(6).toString());
+                    temp.islock = Byte.parseByte(jsar2.get(7).toString()) == 1;
+                    temp.name = ItemTemplate3.item.get(temp.id).getName();
+                    if (temp.islock) {
+                        temp.name += " [Khóa]";
+                    }
+                    if (jsar2.get(8).toString().length() >= 3) {
+                        jsar2.add(8, "0");
+                    }
+                    temp.tier = Byte.parseByte(jsar2.get(8).toString());
+
+                    JSONArray jsar3 = (JSONArray) JSONValue.parse(jsar2.get(9).toString());
+                    temp.op = new ArrayList<>();
+                    for (int j = 0; j < jsar3.size(); j++) {
+                        JSONArray jsar4 = (JSONArray) JSONValue.parse(jsar3.get(j).toString());
+                        temp.op.add(
+                                new Option(Byte.parseByte(jsar4.get(0).toString()), Integer.parseInt(jsar4.get(1).toString()), temp.id));
+                    }
+                    temp.time_use = 0;
+                    if (jsar2.size() >= 11) {
+                        temp.tierStar = Byte.parseByte(jsar2.get(10).toString());
+                    }
+                    if (jsar2.size() >= 12) {
+                        temp.time_use = Long.parseLong(jsar2.get(11).toString());
+                    }
+                    if (jsar2.size() >= 13) {
+                        temp.expiry_date = Long.parseLong(jsar2.get(12).toString());
+                    }
+                    temp.UpdateName();
+                    if (temp.expiry_date == 0 || temp.expiry_date > _time) {
+                        item.box3[i] = temp;
+                    }
                 }
-                jsar2.clear();
-            }
-            jsar.clear();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("itembox3"));
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < jsar.size(); i++) {
-                JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                if (jsar2 == null) {
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("rms_save"));
+                if (jsar == null) {
                     return false;
                 }
-                Item3 temp = new Item3();
-                temp.id = Short.parseShort(jsar2.get(0).toString());
-                temp.clazz = Byte.parseByte(jsar2.get(1).toString());
-                temp.type = Byte.parseByte(jsar2.get(2).toString());
-                temp.level = Short.parseShort(jsar2.get(3).toString());
-                temp.icon = Short.parseShort(jsar2.get(4).toString());
-                temp.color = Byte.parseByte(jsar2.get(5).toString());
-                temp.part = Byte.parseByte(jsar2.get(6).toString());
-                temp.islock = Byte.parseByte(jsar2.get(7).toString()) == 1;
-                temp.name = ItemTemplate3.item.get(temp.id).getName();
-                if (temp.islock) {
-                    temp.name += " [Khóa]";
+                rms_save = new byte[jsar.size()][];
+                for (int i = 0; i < rms_save.length; i++) {
+                    JSONArray js = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                    rms_save[i] = new byte[js.size()];
+                    for (int j = 0; j < rms_save[i].length; j++) {
+                        rms_save[i][j] = Byte.parseByte(js.get(j).toString());
+                    }
                 }
-                temp.tier = Byte.parseByte(jsar2.get(8).toString());
-                // if (temp.type == 15) {
-                // temp.tier = 0;
-                // }
-                JSONArray jsar3 = (JSONArray) JSONValue.parse(jsar2.get(9).toString());
-                temp.op = new ArrayList<>();
-                for (int j = 0; j < jsar3.size(); j++) {
-                    JSONArray jsar4 = (JSONArray) JSONValue.parse(jsar3.get(j).toString());
-                    temp.op.add(
-                            new Option(Byte.parseByte(jsar4.get(0).toString()), Integer.parseInt(jsar4.get(1).toString()), temp.id));
+                jsar.clear();
+                //
+                mypet = new ArrayList<>();
+                pet_follow = -1;
+                jsar = (JSONArray) JSONValue.parse(rs.getString("pet"));
+                long t_off = 0;
+                if (jsar == null) {
+                    return false;
                 }
-                temp.time_use = 0;
-                if (jsar2.size() >= 11) {
-                    temp.time_use = Long.parseLong(jsar2.get(10).toString());
+                for (int i = 0; i < jsar.size(); i++) {
+                    JSONArray js = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                    Pet temp = new Pet();
+                    temp.setup(js);
+                    temp.update_grown(t_off);
+                    if (temp.is_follow) {
+                        pet_follow = temp.get_id();
+                    }
+                    if (temp.expiry_date == 0 || _time < temp.expiry_date) {
+                        mypet.add(temp);
+                    }
                 }
-                if (jsar2.size() >= 12) {
-                    temp.tierStar = Byte.parseByte(jsar2.get(11).toString());
+                jsar.clear();
+                list_friend = new ArrayList<>();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("friend"));
+                if (jsar == null) {
+                    return false;
                 }
-                if (jsar2.size() >= 13) {
-                    temp.expiry_date = Long.parseLong(jsar2.get(12).toString());
+                for (int i = 0; i < jsar.size(); i++) {
+                    JSONArray js12 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
+                    Friend temp = new Friend();
+                    temp.name = js12.get(0).toString();
+                    temp.level = Short.parseShort(js12.get(1).toString());
+                    temp.head = Byte.parseByte(js12.get(2).toString());
+                    temp.hair = Byte.parseByte(js12.get(3).toString());
+                    temp.eye = Byte.parseByte(js12.get(4).toString());
+                    temp.itemwear = new ArrayList<>();
+                    JSONArray js2 = (JSONArray) JSONValue.parse(js12.get(5).toString());
+                    for (int j = 0; j < js2.size(); j++) {
+                        JSONArray js3 = (JSONArray) JSONValue.parse(js2.get(j).toString());
+                        Part_player part = new Part_player();
+                        part.type = Byte.parseByte(js3.get(0).toString());
+                        part.part = Byte.parseByte(js3.get(1).toString());
+                        temp.itemwear.add(part);
+                    }
+                    list_friend.add(temp);
                 }
-                temp.UpdateName();
-                if (temp.expiry_date == 0 || temp.expiry_date > _time) {
-                    item.box3[i] = temp;
+                jsar.clear();
+                list_enemies = new ArrayList<>();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("enemies"));
+                if (jsar == null) {
+                    return false;
                 }
-            }
-            jsar.clear();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("rms_save"));
-            if (jsar == null) {
+                for (int i = 0; i < jsar.size(); i++) {
+                    String n = jsar.get(i).toString();
+                    if (!list_enemies.contains(n)) {
+                        list_enemies.add(n);
+                    }
+                }
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rs.getString("medal_create_material"));
+                if (jsar == null) {
+                    return false;
+                }
+                medal_create_material = new short[jsar.size()];
+                for (int i = 0; i < jsar.size(); i++) {
+                    medal_create_material[i] = Short.parseShort(jsar.get(i).toString());
+                }
+                jsar.clear();
+
+                jsar = (JSONArray) JSONValue.parse(rs.getString("item_star_material"));
+                if (jsar == null) {
+                    return false;
+                }
+                MaterialItemStar = new short[jsar.size()];
+                for (int i = 0; i < jsar.size(); i++) {
+                    MaterialItemStar[i] = Short.parseShort(jsar.get(i).toString());
+                }
+                if (MaterialItemStar == null || MaterialItemStar.length < 40) {
+                    SetMaterialItemStar();
+                }
+                jsar.clear();
+
+                jsar = (JSONArray) JSONValue.parse(rs.getString("point_active"));
+                if (jsar == null) {
+                    return false;
+                }
+                point_active = new int[jsar.size()];
+                for (int i = 0; i < jsar.size(); i++) {
+                    point_active[i] = Integer.parseInt(jsar.get(i).toString());
+                }
+
+                jsar.clear();
+                myclan = Clan.get_clan_of_player(this.name);
+                //
+            } catch (SQLException e) {
+                e.printStackTrace();
                 return false;
             }
-            rms_save = new byte[jsar.size()][];
-            for (int i = 0; i < rms_save.length; i++) {
-                JSONArray js = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                rms_save[i] = new byte[js.size()];
-                for (int j = 0; j < rms_save[i].length; j++) {
-                    rms_save[i][j] = Byte.parseByte(js.get(j).toString());
-                }
-            }
-            jsar.clear();
             //
-            mypet = new ArrayList<>();
-            pet_follow = -1;
-            jsar = (JSONArray) JSONValue.parse(rs.getString("pet"));
-            long t_off = 0;
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < jsar.size(); i++) {
-                JSONArray js = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                Pet temp = new Pet();
-                temp.setup(js);
-                temp.update_grown(t_off);
-                if (temp.is_follow) {
-                    pet_follow = temp.get_id();
-                }
-                if (temp.expiry_date == 0 || _time < temp.expiry_date) {
-                    mypet.add(temp);
-                }
-            }
-            jsar.clear();
-            list_friend = new ArrayList<>();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("friend"));
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < jsar.size(); i++) {
-                JSONArray js12 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
-                Friend temp = new Friend();
-                temp.name = js12.get(0).toString();
-                temp.level = Short.parseShort(js12.get(1).toString());
-                temp.head = Byte.parseByte(js12.get(2).toString());
-                temp.hair = Byte.parseByte(js12.get(3).toString());
-                temp.eye = Byte.parseByte(js12.get(4).toString());
-                temp.itemwear = new ArrayList<>();
-                JSONArray js2 = (JSONArray) JSONValue.parse(js12.get(5).toString());
-                for (int j = 0; j < js2.size(); j++) {
-                    JSONArray js3 = (JSONArray) JSONValue.parse(js2.get(j).toString());
-                    Part_player part = new Part_player();
-                    part.type = Byte.parseByte(js3.get(0).toString());
-                    part.part = Byte.parseByte(js3.get(1).toString());
-                    temp.itemwear.add(part);
-                }
-                list_friend.add(temp);
-            }
-            jsar.clear();
-            list_enemies = new ArrayList<>();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("enemies"));
-            if (jsar == null) {
-                return false;
-            }
-            for (int i = 0; i < jsar.size(); i++) {
-                String n = jsar.get(i).toString();
-                if (!list_enemies.contains(n)) {
-                    list_enemies.add(n);
-                }
-            }
-            jsar.clear();
-            jsar = (JSONArray) JSONValue.parse(rs.getString("medal_create_material"));
-            if (jsar == null) {
-                return false;
-            }
-            medal_create_material = new short[jsar.size()];
-            for (int i = 0; i < jsar.size(); i++) {
-                medal_create_material[i] = Short.parseShort(jsar.get(i).toString());
-            }
-            jsar.clear();
-
-            jsar = (JSONArray) JSONValue.parse(rs.getString("item_star_material"));
-            if (jsar == null) {
-                return false;
-            }
-            MaterialItemStar = new short[jsar.size()];
-            for (int i = 0; i < jsar.size(); i++) {
-                MaterialItemStar[i] = Short.parseShort(jsar.get(i).toString());
-            }
-            if (MaterialItemStar == null || MaterialItemStar.length < 40) {
-                SetMaterialItemStar();
-            }
-            jsar.clear();
-
-            jsar = (JSONArray) JSONValue.parse(rs.getString("point_active"));
-            if (jsar == null) {
-                return false;
-            }
-            point_active = new int[jsar.size()];
-            for (int i = 0; i < jsar.size(); i++) {
-                point_active[i] = Integer.parseInt(jsar.get(i).toString());
-            }
-
-            jsar.clear();
-            myclan = Clan.get_clan_of_player(this.name);
-            //
-        } catch (SQLException e) {
+            already_setup = true;
+            return true;
+        } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
-        //
-        already_setup = true;
-        return true;
+        return false;
     }
 
     public void load_skill() throws IOException {
@@ -945,10 +889,11 @@ public class Player extends Body2 {
         if (!already_setup) {
             return;
         }
+        if (isSquire) {
+            return;
+        }
 
-        if (isSquire) {return;}
-
-        try ( Connection connection = SQL.gI().getConnection();  Statement ps = connection.createStatement()) {
+        try (Connection connection = SQL.gI().getConnection(); Statement ps = connection.createStatement()) {
             if (isOwner) {
                 String a = "`level` = " + level;
                 a += ",`exp` = " + exp;
@@ -1061,8 +1006,8 @@ public class Player extends Body2 {
                             jsar3.add(jsar4);
                         }
                         jsar2.add(jsar3);
-                        jsar2.add(temp.time_use);
                         jsar2.add(temp.tierStar);
+                        jsar2.add(temp.time_use);
                         jsar2.add(temp.expiry_date);
                         jsar.add(jsar2);
                     }
@@ -1182,8 +1127,8 @@ public class Player extends Body2 {
                             jsar3.add(jsar4);
                         }
                         jsar2.add(jsar3);
-                        jsar2.add(temp.time_use);
                         jsar2.add(temp.tierStar);
+                        jsar2.add(temp.time_use);
                         jsar2.add(temp.expiry_date);
                         jsar.add(jsar2);
                     }
@@ -1251,7 +1196,11 @@ public class Player extends Body2 {
                 a += ",`chucphuc` = " + chucphuc;
                 a += ",`hieuchien` = " + hieuchien;
                 a += ",`chuyencan` = " + chuyencan;
-                a += ",`chuyensinh` = " + chuyensinh;
+                a += ",`diemsukien` = " + diemsukien;
+                a += ",`banclone` = " + banclone;
+                a += ",`diemdibuon` = " + diemdibuon;
+                a += ",`diemdicuop` = " + diemdicuop;
+                a += ",`diemchiemthanh` = " + diemchiemthanh;
                 a += ",`typeexp` = " + type_exp;
                 a += ",`date` = '" + date.toString() + "'";
                 a += ",`point1` = " + point1;
@@ -1311,6 +1260,7 @@ public class Player extends Body2 {
                         jsar2.add(temp.icon);
                         jsar2.add(temp.color);
                         jsar2.add(temp.part);
+                        jsar2.add(temp.islock ? 1 : 0);
                         jsar2.add(temp.tier);
                         JSONArray jsar3 = new JSONArray();
                         for (int j = 0; j < temp.op.size(); j++) {
@@ -1320,8 +1270,8 @@ public class Player extends Body2 {
                             jsar3.add(jsar4);
                         }
                         jsar2.add(jsar3);
-                        jsar2.add(i);
                         jsar2.add(temp.tierStar);
+                        jsar2.add(temp.time_use);
                         jsar2.add(temp.expiry_date);
                         jsar.add(jsar2);
                     }
@@ -1370,6 +1320,7 @@ public class Player extends Body2 {
                         jsar2.add(temp.icon);
                         jsar2.add(temp.color);
                         jsar2.add(temp.part);
+                        jsar2.add(temp.islock ? 1 : 0);
                         jsar2.add(temp.tier);
                         JSONArray jsar3 = new JSONArray();
                         for (int j = 0; j < temp.op.size(); j++) {
@@ -1379,8 +1330,8 @@ public class Player extends Body2 {
                             jsar3.add(jsar4);
                         }
                         jsar2.add(jsar3);
-                        jsar2.add(i);
                         jsar2.add(temp.tierStar);
+                        jsar2.add(temp.time_use);
                         jsar2.add(temp.expiry_date);
                         jsar.add(jsar2);
                     }
@@ -1403,8 +1354,10 @@ public class Player extends Body2 {
 //        System.out.println("flush " + this.conn.user);
     }
 
+
+
     public void change_new_date() {
-        if (!Util.is_same_day(Date.from(Instant.now()), date)) {
+        if (!Util.is_same_day(Date.from(Instant.now()), date) && isOwner) {
             // diem danh
             diemdanh = 1;
             chucphuc = 1;
@@ -1569,6 +1522,10 @@ public class Player extends Body2 {
             dame_exp += ((dame_exp * 5) / 100);
         }
         if ((type_exp == 0 && this.typepk != 0) || this.getlevelpercent() < (-500)) {
+            return;
+        }
+        if (!isOwner && owner.level <= level) {
+            level = owner.level;
             return;
         }
         if (level >= Manager.gI().lvmax || type_exp == 0) {
@@ -2122,6 +2079,9 @@ public class Player extends Body2 {
                 if (p0 == null) {
                     Service.send_notice_box(conn, "Có lỗi xảy ra, hãy thử lại!");
                 } else {
+                    if (!p0.isOwner) {
+                        return;
+                    }
                     Message m = new Message(35);
                     m.writer().writeByte(0);
                     m.writer().writeUTF(this.name);

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import client.Player;
+import com.mysql.cj.xdevapi.Client;
 import core.Service;
 import io.Message;
 import map.ItemMap;
@@ -12,7 +13,7 @@ import map.MapService;
 
 public class Pet_di_buon extends MainObject {
 
-    public Player p;
+    public Player playerForPetDiBuon;
     public short type;
     public List<Short> item;
     public int id_map;
@@ -20,6 +21,7 @@ public class Pet_di_buon extends MainObject {
     public long time_skill;
     public int speed;
     private byte countSpeed;
+    public Level level;
 
     public Pet_di_buon(int type, int index_mob, int x, int y, int id_map, String name, Player p) {
         this.type = (short) type;
@@ -34,7 +36,7 @@ public class Pet_di_buon extends MainObject {
         this.hp_max = 1_000_000;
         this.time_skill = System.currentTimeMillis() + 15_000L;
         this.speed = 1;
-        this.p = p;
+        this.playerForPetDiBuon = p;
     }
 
     public synchronized void update_hp(Player p, int hp) throws IOException {
@@ -57,13 +59,13 @@ public class Pet_di_buon extends MainObject {
     }
 
     public synchronized void update_speed(Player p) throws IOException {
-        if (countSpeed > 10) {
-            Service.send_notice_box(p.conn, "Chỉ có thể tăng tốc 1 lần");
+        if (countSpeed > 5) {
+            Service.send_notice_box(p.conn, "Chỉ có thể tăng tốc 5 lần");
             return;
         }
         if (this.time_skill < System.currentTimeMillis()) {
             this.time_skill = System.currentTimeMillis() + 10_000L;
-            this.speed = 6;
+            this.speed = 4;
             countSpeed++;
             this.update_all(p);
             p.update_ngoc(-5);
@@ -106,20 +108,32 @@ public class Pet_di_buon extends MainObject {
             if (this.hp <= 0) {
                 this.isdie = true;
                 this.hp = 0;
-                Pet_di_buon_manager.remove(this.name);
-                this.p.pet_di_buon = null;
+
                 for (int j = 0; j < this.item.size(); j++) {
                     ItemMap it_leave = new ItemMap();
                     it_leave.id_item = (short) this.item.get(j);
                     it_leave.color = (byte) 0;
                     it_leave.quantity = 1;
                     it_leave.category = 3;
-                    it_leave.idmaster = (short) this.p.index;
+
+                    Player concac = null;
+                    for(Player pl : map.players){
+                        if(!pl.equals(playerForPetDiBuon) && pl.zone_id == playerForPetDiBuon.zone_id){
+                            concac = pl;
+                        }
+                    }
+                    assert concac != null;
+                    it_leave.idmaster = (short) concac.index;
+
                     it_leave.op = new ArrayList<>();
                     it_leave.time_exist = System.currentTimeMillis() + 60_000L;
                     it_leave.time_pick = System.currentTimeMillis() + 1_500L;
-                    map.add_item_map_leave(map, (Player)this.p, it_leave, this.index);
+                    map.add_item_map_leave(map, (Player)this.playerForPetDiBuon, it_leave, this.index);
                 }
+
+                Pet_di_buon_manager.remove(this.name);
+                this.update_all(this.playerForPetDiBuon);
+                this.playerForPetDiBuon.pet_di_buon = null;
             }
         } catch (Exception e) {
         }

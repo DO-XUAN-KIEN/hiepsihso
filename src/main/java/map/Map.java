@@ -1035,10 +1035,10 @@ public class Map implements Runnable {
         }
         if (type == 3 && item_map[id] != null
                 && (item_map[id].id_item == 3590 || item_map[id].id_item == 3591 || item_map[id].id_item == 3592)) {
-//            if (item_map[id].idmaster != -1 && conn.p.index != item_map[id].idmaster) {
-//                Service.send_notice_nobox_white(conn, "Vật phẩm của người khác");
-//                return;
-//            }
+            if (item_map[id].idmaster != -1 && item_map[id].idmaster != conn.p.index ) {
+                Service.send_notice_nobox_white(conn, "Vật phẩm của người khác");
+                return;
+            }
             if (conn.p.pet_di_buon != null && conn.p.pet_di_buon.item.size() < 12) {
                 conn.p.pet_di_buon.item.add(item_map[id].id_item);
                 //

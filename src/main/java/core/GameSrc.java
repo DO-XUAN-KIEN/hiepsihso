@@ -1204,7 +1204,7 @@ public class GameSrc {
     }
     
     public static short[] Ratio_Upgrade_Medal = new short[] {10000, 7600, 6200, 5200, 4500, 4000, 3500, 3200, 2900, 2700, 2500, 2300, 2100, 2000, 1900, 1800};
-    public static short[] Ratio_Upgrademeday = new short[] { 500, 350, 200, 150, 100, 80, 10, 10, 10, 10};
+    public static short[] Ratio_Upgrademeday = new short[] { 500, 500, 500, 500, 500, 500, 500, 350, 250, 150, 100, 80, 35, 15, 5, 5};
     public static void UpgradeMedal(Session conn, byte index)throws IOException
     {
         if(index >3)
@@ -1859,8 +1859,8 @@ public class GameSrc {
                         Service.send_notice_box(conn, "Tối đa 12 món!");
                         return;
                     }
+                    conn.p.my_store.clear();
                     for (int i = 0; i < size; i++) {
-                        conn.p.my_store.clear();
                         Player_store p_store = new Player_store();
                         p_store.it_id = m2.reader().readShort();
                         p_store.it_price = m2.reader().readInt();
@@ -1890,7 +1890,7 @@ public class GameSrc {
                                 Service.send_notice_box(conn, "Số lượng không hợp lệ!");
                                 return;
                             }
-                            if (p_store.it_type == 4 && (Helps.CheckItem.item4CanTrade(p_store.it_id) || p_store.it_id == 135 || p_store.it_id == 52 || p_store.it_id == 56 || p_store.it_id == 143 || p_store.it_id == 226 || p_store.it_id == 326 || p_store.it_id == 327 || p_store.it_id == 328)) {
+                            if (p_store.it_type == 4 && (Helps.CheckItem.item4CanTrade(p_store.it_id) || p_store.it_id == 135 || p_store.it_id == 52 || p_store.it_id == 56 || p_store.it_id == 143 || p_store.it_id == 226)) {
                                 Service.send_notice_box(conn, "Đồ bán không hợp lệ!");
                                 return;
                             }
@@ -1935,7 +1935,7 @@ public class GameSrc {
                 }
                 break;
             }
-            case 4: { // hủy bán
+            case 4: {
                 Message ms = new Message(-102);
                 ms.writer().writeByte(2);
                 ms.writer().writeShort(conn.p.index);
@@ -1985,14 +1985,14 @@ public class GameSrc {
                                 Manager.ClanThue.update_vang(thue);
 //                                Manager.ClanThue.update_vang((vang_trade * Manager.thue) / 100);
                             vang_trade -= thue;
-                            
+
                             p0.update_vang(vang_trade);
-                            
-                            
+
+
                             hist.tem3 = itTrade;
                             hist.UpdateGold(p0.get_vang(), conn.p.get_vang());
                             hist.Flus();
-                            
+
                             conn.p.item.add_item_bag3(itTrade);
                             p0.item.bag3[p0.my_store.get(i).it_id] = null;
                             p0.item.char_inventory(4);
@@ -2015,7 +2015,7 @@ public class GameSrc {
                                         Service.send_notice_box(conn, "Không đủ " + vang_trade + " vàng!");
                                         return;
                                     }
-                                    if(conn.p.item.total_item_by_id(idType, iditem) + p0.my_store.get(i).it_quant > 30_000 || 
+                                    if(conn.p.item.total_item_by_id(idType, iditem) + p0.my_store.get(i).it_quant > 30_000 ||
                                             (conn.p.item.total_item_by_id(idType, iditem) == 0 && conn.p.item.get_bag_able() < 1))
                                     {
                                         Service.send_notice_box(conn, "Hành trang đầy!");
@@ -2025,18 +2025,18 @@ public class GameSrc {
                                     long thue = (vang_trade / 100) * Manager.thue;
                                     if(Manager.ClanThue!=null)
                                         Manager.ClanThue.update_vang(thue);
-        //                                Manager.ClanThue.update_vang((vang_trade * Manager.thue) / 100);
+                                    //                                Manager.ClanThue.update_vang((vang_trade * Manager.thue) / 100);
                                     vang_trade -= thue;
                                     p0.update_vang(vang_trade);
                                     Item47 it_b_add = new Item47();
                                     it_b_add.category = idType;
                                     it_b_add.id = iditem;
                                     it_b_add.quantity = p0.my_store.get(i).it_quant;
-                                    
+
                                     hist.tem47 = it_b_add;
                                     hist.UpdateGold(p0.get_vang(), conn.p.get_vang());
                                     hist.Flus();
-                                    
+
                                     conn.p.item.add_item_bag47(idType, it_b_add);
                                     p0.item.remove(idType, iditem, p0.my_store.get(i).it_quant);
                                     p0.item.char_inventory(4);

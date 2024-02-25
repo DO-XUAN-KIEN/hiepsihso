@@ -184,6 +184,9 @@ public class TextFromClient {
                 break;
             }
             case 0: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 if (size != 1) {
                     return;
                 }
@@ -236,7 +239,7 @@ public class TextFromClient {
                                 itbag.part = ItemTemplate3.item.get(it).getPart();
                                 itbag.tier = 0;
                                 itbag.time_use = 0;
-                                itbag.islock = false;
+                                itbag.islock = true;
                                 IDs.add(it);
                                 Quants.add((int) 1);
                                 Types.add((short) 3);
@@ -466,6 +469,9 @@ public class TextFromClient {
                 break;
             }
             case 3: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
 
                 if (size != 1) {
                     return;

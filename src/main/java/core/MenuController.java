@@ -127,7 +127,7 @@ public class MenuController {
                 break;
             }
             case -32: {
-                menu = new String[]{"Xem BXH Level", "Xem BXH bang","Xem BXH chiến trường","Xem BXH chiếm thành", "Đổi Áo Choàng"};
+                menu = new String[]{"Xem BXH Level", "Xem BXH bang","Xem BXH chiến trường", "Đổi Áo Choàng"};
                 break;
             }
             case -21: { // blackeye
@@ -623,6 +623,9 @@ public class MenuController {
         }
     }
     private static void Menu_Mr_Ballard(Session conn, int idNPC, byte idmenu, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (idmenu) {
             case 0: {
                 switch (index) {
@@ -1667,6 +1670,9 @@ public class MenuController {
     }
 
     private static void Menu_Mrs_Oda(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (conn.p.point_active.length < 3) {
             int a0 = conn.p.point_active[0];
             int a1 = conn.p.point_active[1];
@@ -1759,8 +1765,7 @@ public class MenuController {
 //                if (conn.p.squire != null) {
 //                    conn.p.squire.switchToSquire(conn.p);
 //                } else {
-//                    Service.send_box_input_yesno(conn, -127, "Bạn có muốn nhận đệ tử với giá 1tr coin?");
-//                }
+//                    Service.send_box_input_yesno(conn, -127, "Bạn có muốn nhận đệ tử với giá 1,5tr coin?");
                 break;
             }
             case 8: {
@@ -1781,6 +1786,9 @@ public class MenuController {
     }
 
     private static void Menu_Pet_di_buon(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 String notice = null;
@@ -1832,6 +1840,9 @@ public class MenuController {
     }
 
     private static void Menu_Mr_Frank(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (conn.p.map.map_id != 17) {
             Service.send_notice_box(conn, "Nhầm rồi e ơi!");
             return;
@@ -1882,6 +1893,7 @@ public class MenuController {
                 break;
             }
             case 2: {
+                if(conn.p.diemdicuop == 0){
                 Item3 itbag = new Item3();
                 itbag.id = 3593;
                 itbag.clazz = ItemTemplate3.item.get(3593).getClazz();
@@ -1911,6 +1923,9 @@ public class MenuController {
                 conn.p.fashion = Part_fashion.get_part(conn.p);
                 conn.p.change_map_di_buon(conn.p);
                 Service.send_notice_box(conn, "Nhận thành công");
+            }else {
+                    Service.send_box_input_yesno(conn, -20, "Bạn sẽ mất hết điểm buôn, bạn chắc muốn đổi?");
+                }
                 break;
             }
             default: {
@@ -1921,6 +1936,9 @@ public class MenuController {
     }
 
     private static void Menu_Graham(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (conn.p.map.map_id != 8) {
             return;
         }
@@ -1970,45 +1988,52 @@ public class MenuController {
                 break;
             }
             case 2: {
-                Item3 itbag = new Item3();
-                itbag.id = 3599;
-                itbag.clazz = ItemTemplate3.item.get(3599).getClazz();
-                itbag.type = ItemTemplate3.item.get(3599).getType();
-                itbag.level = ItemTemplate3.item.get(3599).getLevel();
-                itbag.icon = ItemTemplate3.item.get(3599).getIcon();
-                itbag.op = new ArrayList<>();
-                itbag.op.addAll(ItemTemplate3.item.get(3599).getOp());
-                itbag.color = 5;
-                itbag.part = ItemTemplate3.item.get(3599).getPart();
-                itbag.tier = 0;
-                itbag.islock = true;
-                itbag.time_use = 0;
-                // thao do
-                if (conn.p.item.wear[11] != null && conn.p.item.wear[11].id != 3593 && conn.p.item.wear[11].id != 3599
-                        && conn.p.item.wear[11].id != 3596) {
-                    Item3 buffer = conn.p.item.wear[11];
-                    conn.p.item.wear[11] = null;
-                    conn.p.item.add_item_bag3(buffer);
+                if (conn.p.diemdibuon == 0) {
+                    Item3 itbag = new Item3();
+                    itbag.id = 3599;
+                    itbag.clazz = ItemTemplate3.item.get(3599).getClazz();
+                    itbag.type = ItemTemplate3.item.get(3599).getType();
+                    itbag.level = ItemTemplate3.item.get(3599).getLevel();
+                    itbag.icon = ItemTemplate3.item.get(3599).getIcon();
+                    itbag.op = new ArrayList<>();
+                    itbag.op.addAll(ItemTemplate3.item.get(3599).getOp());
+                    itbag.color = 5;
+                    itbag.part = ItemTemplate3.item.get(3599).getPart();
+                    itbag.tier = 0;
+                    itbag.islock = true;
+                    itbag.time_use = 0;
+                    // thao do
+                    if (conn.p.item.wear[11] != null && conn.p.item.wear[11].id != 3593 && conn.p.item.wear[11].id != 3599
+                            && conn.p.item.wear[11].id != 3596) {
+                        Item3 buffer = conn.p.item.wear[11];
+                        conn.p.item.wear[11] = null;
+                        conn.p.item.add_item_bag3(buffer);
+                    }
+                    itbag.name = ItemTemplate3.item.get(3599).getName() + " [Khóa]";
+                    itbag.UpdateName();
+                    conn.p.item.wear[11] = itbag;
+                    conn.p.item.char_inventory(4);
+                    conn.p.item.char_inventory(7);
+                    conn.p.item.char_inventory(3);
+                    conn.p.fashion = Part_fashion.get_part(conn.p);
+                    conn.p.change_map_di_buon(conn.p);
+                    Service.send_notice_box(conn, "Nhận thành công");
+                }else {
+                    Service.send_box_input_yesno(conn, -19, "Bạn sẽ mất hết điểm cướp, bạn chắc muốn đổi?");
                 }
-                itbag.name = ItemTemplate3.item.get(3599).getName() + " [Khóa]";
-                itbag.UpdateName();
-                conn.p.item.wear[11] = itbag;
-                conn.p.item.char_inventory(4);
-                conn.p.item.char_inventory(7);
-                conn.p.item.char_inventory(3);
-                conn.p.fashion = Part_fashion.get_part(conn.p);
-                conn.p.change_map_di_buon(conn.p);
-                Service.send_notice_box(conn, "Nhận thành công");
                 break;
             }
             default: {
-                Service.send_notice_box(conn, "Chưa có chức năng");
+                Service.send_notice_box(conn, "====Chưa có chức năng");
                 break;
             }
         }
     }
 
     private static void Menu_Mr_Dylan(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (conn.p.map.map_id != 52) {
             return;
         }
@@ -2268,6 +2293,9 @@ public class MenuController {
     }
 
     private static void Menu_top(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 if (conn.p.chucphuc == 1) {
@@ -2604,6 +2632,9 @@ public class MenuController {
     }
 
     private static void Menu_Clan_Manager(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (conn.p.myclan.mems.get(0).name.equals(conn.p.name)) {
             switch (index) {
                 case 0: {
@@ -2753,6 +2784,9 @@ public class MenuController {
                 break;
             }
             case 4: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 if (ChiemThanhManager.timeAttack < System.currentTimeMillis()) {
                     Service.send_notice_box(conn, "Chiếm thành đã kết thúc.");
                 } else if (!ChiemThanhManager.joinMap(conn.p)) {
@@ -2934,6 +2968,9 @@ public class MenuController {
     }
 
     private static void Menu_Zoro(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (conn.p.myclan != null) {
             if (conn.p.myclan.mems.get(0).name.equals(conn.p.name)) {
                 switch (index) {
@@ -3136,6 +3173,9 @@ public class MenuController {
     }
 
     private static void Menu_VXMM(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 Manager.gI().vxmm.send_in4(conn.p);
@@ -3191,6 +3231,9 @@ public class MenuController {
     }
 
     private static void Menu_CuopBien(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 send_menu_select(conn, 125, new String[]{"Xem thông tin", "Tham gia"});
@@ -3429,11 +3472,19 @@ public class MenuController {
                 BXH.send2(conn, 0);
                 break;
             }
+//            case 3: {
+//                BXH.send2(conn, 2);
+//                break;
+//            }
+//            case 4: {
+//                BXH.send2(conn, 1);
+//                break;
+//            }
+//            case 5: {
+//                BXH.send2(conn, 3);
+//                break;
+//            }
             case 3: {
-                BXH.send2(conn, 2);
-                break;
-            }
-            case 4: {
                 if (conn.status != 0) {
                     Service.send_notice_box(conn, "Tài khoản chưa được kích hoạt,");
                     return;

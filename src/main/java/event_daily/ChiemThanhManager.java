@@ -163,10 +163,10 @@ public class ChiemThanhManager {
                 m.mobs[i] = new Mob_in_map();
                 if (i == 4) {
                     m.mobs[i] = truChinh;
-                    m.mobs[i].Set_Dame(100_000);
+                    m.mobs[i].Set_Dame(300_000);
                 }
                 else{
-                    m.mobs[i].Set_Dame(50_000);
+                    m.mobs[i].Set_Dame(150_000);
                 }
                 m.mobs[i].template = Mob.entrys.get(i < 4 ? 151 : 152);
                 m.mobs[i].index = i + 10;
@@ -416,6 +416,7 @@ public class ChiemThanhManager {
         NameClan = p.myclan.name_clan;
         
         System.out.println("Người giữ đá: " + NamePlayerOwner);
+        p.diemchiemthanh += 1;
         for (Player p0 : p.map.players) {
             try {
                 SenDataTime(p0.conn);
@@ -607,7 +608,7 @@ public class ChiemThanhManager {
                 case 151: { 
                     id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
-                    if(Util.random(100)<15)
+                    if(Util.random(100)<20)
                         id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
                     sizeRandomMedal = (short) (50);
                     p.diemchiemthanh += 1;
@@ -619,7 +620,6 @@ public class ChiemThanhManager {
 //                    if(Util.random(100)<10)
 //                        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
                     sizeRandomMedal = (short) (60);
-                    p.diemchiemthanh += 1;
                     break;
                 }
             }

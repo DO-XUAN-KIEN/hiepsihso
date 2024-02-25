@@ -1177,6 +1177,9 @@ public class UseItem {
             }
             case 219: {
                 if (conn.p.squire != null) {
+                    if (conn.p.isLiveSquire) {
+                        return;
+                    }
                     conn.p.item.remove(4, 219, 1);
                     Squire.callSquire(conn);
                 } else {

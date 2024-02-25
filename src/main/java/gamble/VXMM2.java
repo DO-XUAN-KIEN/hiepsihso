@@ -226,6 +226,9 @@ public class VXMM2 implements Runnable {
     }
 
     public synchronized void join_vxmm(Player p, int vang_join_vxmm) throws IOException {
+        if (!p.isOwner) {
+            return;
+        }
         if (time > 10) {
             if (Manager.isLockVX) {
                 Service.send_notice_box(p.conn, "Tôi cần nghỉ ngơi, hãy quay lại sau!");

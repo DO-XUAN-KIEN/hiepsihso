@@ -343,17 +343,17 @@ public class SaveData {
                 BXH.BXH_Chiemthanh.add(temp);
             }
             rn.close();
-            // bxh Mở rương
-            BXH.BXH_Ruongsk.clear();
+            // bxh đi buôn
+            BXH.BXH_Dibuon.clear();
             ps = conn.prepareStatement(
-                    "SELECT `level`, `name`, `body`, `itemwear`, `diemsukien` FROM `player` WHERE `diemsukien` > 20 ORDER BY  diemsukien DESC LIMIT 10;");
+                    "SELECT `level`, `name`, `body`, `itemwear`, `diemdibuon` FROM `player` WHERE `diemdibuon` > 20 ORDER BY  diemdibuon DESC LIMIT 10;");
             ResultSet ri = ps.executeQuery();
             while (ri.next()) {
 
 
                 Memin4 temp = new Memin4();
                 temp.level = ri.getShort("level");
-                temp.diemsukien= ri.getInt("diemsukien");
+                temp.diemdibuon= ri.getInt("diemdibuon");
                 temp.name = ri.getString("name");
                 JSONArray jsar = (JSONArray) JSONValue.parse(ri.getString("body"));
                 if (jsar == null) {
@@ -379,12 +379,51 @@ public class SaveData {
                     temp2.part = Byte.parseByte(jsar2.get(6).toString());
                     temp.itemwear.add(temp2);
                 }
-                String percents
-                        = String.format("%.0f", (((float) temp.diemsukien)));
-                temp.info = "Level : " + (temp.level) + "\t-\t" + percents +" Điểm";
-                BXH.BXH_Ruongsk.add(temp);
+                String percents = "Số điểm: "+temp.diemdibuon;
+                temp.info = "Level : " + (temp.level) + "\t-\t" + percents +" ";
+                BXH.BXH_Dibuon.add(temp);
             }
             ri.close();
+            BXH.BXH_Dicuop.clear();
+            ps = conn.prepareStatement(
+                    "SELECT `level`, `name`, `body`, `itemwear`, `diemdicuop` FROM `player` WHERE `diemdicuop` > 20 ORDER BY  diemdicuop DESC LIMIT 10;");
+            ResultSet rH = ps.executeQuery();
+            while (rH.next()) {
+
+
+                Memin4 temp = new Memin4();
+                temp.level = rH.getShort("level");
+                temp.diemdicuop= rH.getInt("diemdibuon");
+                temp.name = rH.getString("name");
+                JSONArray jsar = (JSONArray) JSONValue.parse(rH.getString("body"));
+                if (jsar == null) {
+                    return;
+                }
+                temp.head = Byte.parseByte(jsar.get(0).toString());
+                temp.hair = Byte.parseByte(jsar.get(2).toString());
+                temp.eye = Byte.parseByte(jsar.get(1).toString());
+                jsar.clear();
+                jsar = (JSONArray) JSONValue.parse(rH.getString("itemwear"));
+                if (jsar == null) {
+                    return;
+                }
+                temp.itemwear = new ArrayList<>();
+                for (int i3 = 0; i3 < jsar.size(); i3++) {
+                    JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i3).toString());
+                    byte index_wear = Byte.parseByte(jsar2.get(9).toString());
+                    if (index_wear != 0 && index_wear != 1 && index_wear != 6 && index_wear != 7 && index_wear != 10) {
+                        continue;
+                    }
+                    Part_player temp2 = new Part_player();
+                    temp2.type = Byte.parseByte(jsar2.get(2).toString());
+                    temp2.part = Byte.parseByte(jsar2.get(6).toString());
+                    temp.itemwear.add(temp2);
+                }
+                String percents = "Số điểm: "+temp.diemdicuop;
+                temp.info = "Level : " + (temp.level) + "\t-\t" + percents +" ";
+                BXH.BXH_Dicuop.add(temp);
+            }
+            rH.close();
             // bxh level
             BXH.BXH_level.clear();
             ps = conn.prepareStatement(

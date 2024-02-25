@@ -397,7 +397,7 @@ public class ChienTruong {
 		if (this.status == 0) {
 			Manager.gI().chatKTGprocess("Chiến trường mở đăng ký, mau mau đến ");
 			this.status = 1;
-			this.time = 60*1;
+			this.time = 60*30;
 		}
 	}
 
