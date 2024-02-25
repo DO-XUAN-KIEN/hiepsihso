@@ -662,7 +662,7 @@ public class MainObject {
             }
         }
         if (xuyengiap) {
-            dame += dame * (ptxuyengiap + 0.65);
+            dame += dame * (ptxuyengiap + 0.4);
             if (dame > 2_000_000_000) {
                 dame = 2_000_000_000;
             }
