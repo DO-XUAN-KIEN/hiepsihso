@@ -405,8 +405,8 @@ public class UseItem {
                 break;
             }
             case 326 :{ // rương danh hieu
-                if (conn.p.item.get_bag_able() < 1) {
-                    Service.send_notice_nobox_white(conn, "Hành trang đầy!");
+                if (conn.p.item.get_bag_able() < 5) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 5 ô trống");
                     return;
                 }
                 //conn.p.diemsukien += 10;
@@ -439,8 +439,8 @@ public class UseItem {
                 break;
             }
             case 327 :{ // rương huy hieu
-                if (conn.p.item.get_bag_able() < 1) {
-                    Service.send_notice_nobox_white(conn, "Hành trang đầy!");
+                if (conn.p.item.get_bag_able() < 5) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 5 ô trống");
                     return;
                 }
               //  conn.p.diemsukien += 10;
@@ -473,8 +473,8 @@ public class UseItem {
                 break;
             }
             case 328 :{ // rương huy chuong
-                if (conn.p.item.get_bag_able() < 1) {
-                    Service.send_notice_nobox_white(conn, "Hành trang đầy!");
+                if (conn.p.item.get_bag_able() < 5) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 5 ô trống");
                     return;
                 }
               //  conn.p.diemsukien += 10;
@@ -508,8 +508,8 @@ public class UseItem {
                 break;
             }
             case 329: {
-                if (conn.p.item.get_bag_able() < 1) {
-                    Service.send_notice_nobox_white(conn, "Hành trang đầy!");
+                if (conn.p.item.get_bag_able() < 5) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 5 ô trống");
                     return;
                 }
                 ItemTemplate4 iditem = ItemTemplate4.item.get(Util.random(254, 259));
@@ -547,8 +547,8 @@ public class UseItem {
             }
             case 207: // ruong tim
             case 205: { // ruong do
-                if (conn.p.item.get_bag_able() < 1) {
-                    Service.send_notice_nobox_white(conn, "Hành trang đầy!");
+                if (conn.p.item.get_bag_able() < 5) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 5 ô trống");
                     return;
                 }
                 List<Short> it_ = new ArrayList<>();
@@ -671,6 +671,10 @@ public class UseItem {
                 break;
             }
             case 206: {
+                    if (conn.p.item.get_bag_able() < 5) {
+                        Service.send_notice_box(conn, "Cần tối thiểu 5 ô trống");
+                        return;
+                    }
                     ItemTemplate7 item1 = ItemTemplate7.item.get(Util.random(8, 12));
                     ItemTemplate7 item2 = ItemTemplate7.item.get((50 > Util.random(0, 100)) ? 0 : 3);
                     int quant1_ = Util.random(1, 6);
@@ -727,6 +731,10 @@ public class UseItem {
                     break;
             }
             case 273: {
+                if (conn.p.item.get_bag_able() < 5) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 5 ô trống");
+                    return;
+                }
                 ItemTemplate7 item1 = ItemTemplate7.item.get(Util.random(246, 335));
                 ItemTemplate7 item2 = ItemTemplate7.item.get((50 > Util.random(0, 100)) ? 0 : 3);
                 int quant1_ = Util.random(1, 2);
@@ -783,6 +791,10 @@ public class UseItem {
                 break;
             }
             case 274: {
+                if (conn.p.item.get_bag_able() < 5) {
+                    Service.send_notice_box(conn, "Cần tối thiểu 5 ô trống");
+                    return;
+                }
                 ItemTemplate7 item1 = ItemTemplate7.item.get(Util.random(417, 456));
                 ItemTemplate7 item2 = ItemTemplate7.item.get(Util.random(457, 463));
                 ItemTemplate7 item3 = ItemTemplate7.item.get(Util.random(246, 345));

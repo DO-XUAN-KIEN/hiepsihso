@@ -348,7 +348,7 @@ public class Pet {
                     break;
                 }
             }
-            int dame_pet = Util.random(a1, Math.max((a2 + 1), (a1 + 1))) - (focus.level * 15);
+            int dame_pet = Util.random(a1, Math.max((a2 + 1), (a1 + 1))) - (focus.level * 1500);
             if (dame_pet <= 0) {
                 dame_pet = 1;
             }

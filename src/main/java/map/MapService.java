@@ -502,6 +502,8 @@ public class MapService {
             int sizelv = p_target.level - mob.level;
             if (mob.template.mob_id == 174 || mob.level >= 120) {
                 sizelv = 0;
+            }else if (mob.template.mob_id == 192 || mob.level >= 120) {
+                sizelv = 0;
             } else if (Map.is_map_cant_save_site(mob.map_id)) {
                 sizelv = 0;
             }

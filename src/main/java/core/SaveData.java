@@ -379,21 +379,20 @@ public class SaveData {
                     temp2.part = Byte.parseByte(jsar2.get(6).toString());
                     temp.itemwear.add(temp2);
                 }
-                String percents = "Số điểm: "+temp.diemdibuon;
+                String percents = temp.diemdibuon + " vàng";
                 temp.info = "Level : " + (temp.level) + "\t-\t" + percents +" ";
                 BXH.BXH_Dibuon.add(temp);
             }
             ri.close();
+            // bxh đi cướp
             BXH.BXH_Dicuop.clear();
             ps = conn.prepareStatement(
                     "SELECT `level`, `name`, `body`, `itemwear`, `diemdicuop` FROM `player` WHERE `diemdicuop` > 20 ORDER BY  diemdicuop DESC LIMIT 10;");
             ResultSet rH = ps.executeQuery();
             while (rH.next()) {
-
-
                 Memin4 temp = new Memin4();
                 temp.level = rH.getShort("level");
-                temp.diemdicuop= rH.getInt("diemdibuon");
+                temp.diemdicuop= rH.getInt("diemdicuop");
                 temp.name = rH.getString("name");
                 JSONArray jsar = (JSONArray) JSONValue.parse(rH.getString("body"));
                 if (jsar == null) {
@@ -419,7 +418,7 @@ public class SaveData {
                     temp2.part = Byte.parseByte(jsar2.get(6).toString());
                     temp.itemwear.add(temp2);
                 }
-                String percents = "Số điểm: "+temp.diemdicuop;
+                String percents = temp.diemdicuop + " vàng";
                 temp.info = "Level : " + (temp.level) + "\t-\t" + percents +" ";
                 BXH.BXH_Dicuop.add(temp);
             }

@@ -59,8 +59,8 @@ public class Pet_di_buon extends MainObject {
     }
 
     public synchronized void update_speed(Player p) throws IOException {
-        if (countSpeed > 5) {
-            Service.send_notice_box(p.conn, "Chỉ có thể tăng tốc 5 lần");
+        if (countSpeed > 3) {
+            Service.send_notice_box(p.conn, "Chỉ có thể tăng tốc 3 lần");
             return;
         }
         if (this.time_skill < System.currentTimeMillis()) {

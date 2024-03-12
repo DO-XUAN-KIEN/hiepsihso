@@ -1894,7 +1894,8 @@ public class GameSrc {
                                 Service.send_notice_box(conn, "Đồ bán không hợp lệ!");
                                 return;
                             }
-                            if (p_store.it_type == 7 && template.ItemTemplate7.item.get(p_store.it_id).getTrade() == 1) {
+                            if (p_store.it_type == 7 && template.ItemTemplate7.item.get(p_store.it_id).getTrade() == 1 || p_store.it_id == 464|| p_store.it_id == 465|| p_store.it_id == 466|| p_store.it_id == 467
+                                    || p_store.it_id == 468|| p_store.it_id == 469|| p_store.it_id == 470) {
                                 Service.send_notice_box(conn, "Đồ bán không hợp lệ!");
                                 return;
                             }

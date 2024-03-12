@@ -784,6 +784,7 @@ public class Squire extends Player {
         float ptCrit = 0;
         float DamePlus = 0;
         float GiamDame = 0;
+        float ptxuyengiap = 0;
         boolean xuyengiap = ObjAtk.get_Pierce() > Util.random(10_000);
 
         //<editor-fold defaultstate="collapsed" desc="Get Dame default...">
@@ -1027,6 +1028,10 @@ public class Squire extends Player {
             }
         }
         if (xuyengiap) {
+            dame += dame * (ptxuyengiap + 0.4);
+            if (dame > 2_000_000_000) {
+                dame = 2_000_000_000;
+            }
             ListEf.add(new Eff_TextFire(1, (int) dame));
         } else if (ObjAtk.get_Crit() > Util.random(10_000)) {
             //       dame *= 2;

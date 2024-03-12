@@ -625,10 +625,13 @@ public class MainObject {
                 }
             }
             boolean check = dame < 0
-                    || (focus.isBoss() && Math.abs(focus.level - ObjAtk.level) >= 5 && focus.level < 120 && focus.template.mob_id != 174 && !Map.is_map_cant_save_site(focus.map_id))
-                    || (focus.isBoss() && focus.template.mob_id == 174 && map.zone_id == 0 && ObjAtk.level > 89)
-                    || (focus.isBoss() && focus.template.mob_id == 174 && map.zone_id == 2 && !(ObjAtk.level >= 90 && ObjAtk.level < 110))
-                    || (focus.isBoss() && focus.template.mob_id == 174 && map.zone_id == 3 && ObjAtk.level < 110);
+                    || (focus.isBoss() && Math.abs(focus.level - ObjAtk.level) >= 5 && focus.level <= 139 && focus.template.mob_id != 192 && !Map.is_map_cant_save_site(focus.map_id))
+                    || (focus.isBoss() && focus.template.mob_id == 192 && map.zone_id == 0 && ObjAtk.level > 74)
+                    || (focus.isBoss() && focus.template.mob_id == 192 && map.zone_id == 2 && !(ObjAtk.level >= 75 && ObjAtk.level <= 99))
+                    || (focus.isBoss() && focus.template.mob_id == 192 && map.zone_id == 3 && ObjAtk.level < 100);
+//                    || (focus.isBoss() && focus.template.mob_id == 192 && map.zone_id == 0 && ObjAtk.level > 74)
+//                    || (focus.isBoss() && focus.template.mob_id == 192 && map.zone_id == 2 && !(ObjAtk.level >= 75 && ObjAtk.level <= 99))
+//                    || (focus.isBoss() && focus.template.mob_id == 192 && map.zone_id == 3 && ObjAtk.level < 100);
             if (check) {
                 dame = 0;
             }

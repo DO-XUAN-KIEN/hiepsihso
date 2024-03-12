@@ -507,6 +507,7 @@ public class ChienTruong {
             short[] id_item_leave3 = new short[]{};
             short[] id_item_leave4 = new short[]{};
             short[] id_item_leave7 = new short[]{};
+			short[] id_item_leave = new short[]{};
             //short id_medal_material = -1;
             short sizeRandomMedal = 0;
             switch (mob.template.mob_id) {
@@ -514,6 +515,9 @@ public class ChienTruong {
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
+					}
+					if(Util.random(1000) < 1 ){
+						id_item_leave = new short[]{(short) Util.random(464, 470)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
@@ -524,6 +528,9 @@ public class ChienTruong {
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
+					if(Util.random(1000) < 1 ){
+						id_item_leave = new short[]{(short) Util.random(464, 470)};
+					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
 					break;
@@ -532,6 +539,9 @@ public class ChienTruong {
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
+					}
+					if(Util.random(1000) < 1 ){
+						id_item_leave = new short[]{(short) Util.random(464, 470)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
@@ -542,6 +552,9 @@ public class ChienTruong {
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
+					if(Util.random(1000) < 1 ){
+						id_item_leave = new short[]{(short) Util.random(464, 470)};
+					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
 					break;
@@ -550,6 +563,9 @@ public class ChienTruong {
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
+					}
+					if(Util.random(1000) < 1 ){
+						id_item_leave = new short[]{(short) Util.random(464, 470)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
@@ -560,6 +576,9 @@ public class ChienTruong {
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
+					if(Util.random(1000) < 1 ){
+						id_item_leave = new short[]{(short) Util.random(464, 470)};
+					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
 					break;
@@ -569,6 +588,9 @@ public class ChienTruong {
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
+					if(Util.random(1000) < 1 ){
+						id_item_leave = new short[]{(short) Util.random(464, 470)};
+					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
 					break;
@@ -577,6 +599,9 @@ public class ChienTruong {
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
+					}
+					if(Util.random(1000) < 1 ){
+						id_item_leave = new short[]{(short) Util.random(464, 470)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
@@ -601,6 +626,11 @@ public class ChienTruong {
                     LeaveItemMap.leave_item_by_type7(map, id, p, mob.index,p.index);
                 }
             }
+			for (int i = 0; i < 1; i++) {
+				for (short id : id_item_leave) {
+					LeaveItemMap.leave_item_by_type7(map, id, p, mob.index,p.index);
+				}
+			}
             for (int l = 0; l < sizeRandomMedal; l++) {
                 LeaveItemMap.leave_item_by_type7(map, (short) Util.random(136, 146), p, mob.index,p.index);
             }

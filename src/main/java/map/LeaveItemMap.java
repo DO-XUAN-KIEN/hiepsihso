@@ -259,6 +259,10 @@ public class LeaveItemMap {
             //
             leave_item_by_type7(map, index_real, p, mob.index);
         }
+        if(Util.random(100) > 99.99){
+            short id = (short) Util.random(464, 470);
+            leave_item_by_type7(map, id, p, mob.index);
+        }
     }
 
     private static void leave_item_by_type7(Map map, short id_it, Player p_master, int indexmob) throws IOException {
@@ -300,7 +304,7 @@ public class LeaveItemMap {
             short[] id_item_leave3 = new short[]{};
             short[] id_item_leave4 = new short[]{};
             short[] id_item_leave7 = new short[]{};
-            //short id_medal_material = -1;
+            short[] id_medal_boss = new short[]{};
             short sizeRandomMedal = 0;
             switch (mob.template.mob_id) {
                 case 101: { // xa nu
@@ -385,6 +389,13 @@ public class LeaveItemMap {
                 //        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
                     }
                     sizeRandomMedal = (short) (60);
+                    break;
+                }
+                case 192: { // boss sk
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18, 273, 274, 251, 319, 320, 321, 322};
+                    id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
+                    id_medal_boss = new short[]{(short) Util.random(464, 470)};
+                    sizeRandomMedal = (short) (100);
                     break;
                 }
                 case 195: { // Godzila
@@ -473,6 +484,11 @@ public class LeaveItemMap {
             }
             for (int i = 0; i < 3; i++) {
                 for (short id : id_item_leave7) {
+                    leave_item_by_type7(map, id, p, mob.index, p.index);
+                }
+            }
+            for (int i = 0; i < 2; i++) {
+                for (short id : id_medal_boss) {
                     leave_item_by_type7(map, id, p, mob.index, p.index);
                 }
             }

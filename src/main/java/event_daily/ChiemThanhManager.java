@@ -1,4 +1,7 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package event_daily;
 
 import client.Clan;
@@ -30,7 +33,10 @@ import template.Medal_Material;
 import template.Mob;
 import template.box_item_template;
 
-
+/**
+ *
+ * @author chien
+ */
 public class ChiemThanhManager {
 
     public static final ConcurrentHashMap<String, List<String>> Clan_entrys = new ConcurrentHashMap<>();
@@ -81,7 +87,7 @@ public class ChiemThanhManager {
             Service.send_notice_box(p.conn, "Không đủ "+Util.number_format(vang)+" vàng để thực hiện");
         }
     }
-    
+
     public static int GetVangHoiSinh(Player p){
         int counths = player_HoiSinh.getOrDefault(p.index, (byte)1);
         if(counths < 100)
@@ -89,7 +95,7 @@ public class ChiemThanhManager {
         else
             return 100 * 5_000;
     }
-    
+
     public static int GetVang() {
         return Vang;
     }
@@ -121,7 +127,7 @@ public class ChiemThanhManager {
                 mob.index = 1;
                 mob.ishs = false;
                 mob.isATK = false;
-                
+
                 mob.hp = mob.Set_hpMax(1_000_000);
                 mob.x = 324;
                 mob.y = 216;
@@ -163,10 +169,10 @@ public class ChiemThanhManager {
                 m.mobs[i] = new Mob_in_map();
                 if (i == 4) {
                     m.mobs[i] = truChinh;
-                    m.mobs[i].Set_Dame(300_000);
+                    m.mobs[i].Set_Dame(500_000);
                 }
                 else{
-                    m.mobs[i].Set_Dame(150_000);
+                    m.mobs[i].Set_Dame(200_000);
                 }
                 m.mobs[i].template = Mob.entrys.get(i < 4 ? 151 : 152);
                 m.mobs[i].index = i + 10;
@@ -310,7 +316,7 @@ public class ChiemThanhManager {
                         try{
                             p.conn.close();
                         }catch(Exception ee){}
-                    }   
+                    }
                 }
             }
         }
@@ -414,9 +420,8 @@ public class ChiemThanhManager {
         NamePlayerOwner = l.get(Util.random(l.size()));
         idIconClan = p.myclan.icon;
         NameClan = p.myclan.name_clan;
-        
+
         System.out.println("Người giữ đá: " + NamePlayerOwner);
-        p.diemchiemthanh += 1;
         for (Player p0 : p.map.players) {
             try {
                 SenDataTime(p0.conn);
@@ -482,7 +487,7 @@ public class ChiemThanhManager {
             m.cleanup();
         }
     }
-    
+
     public static void EndChiemThanh(){
         System.out.println("event_daily.ChiemThanhManager.EndChiemThanh()");
         Manager.ResetCThanh();
@@ -514,7 +519,7 @@ public class ChiemThanhManager {
             Manager.ClanThue.update_vang(GetVang());
             Vang = 0;
         }
-            
+
         timeAttack = 0;
         Manager.thue =5;
         CloseMap();
@@ -523,11 +528,11 @@ public class ChiemThanhManager {
         }
         catch(IOException e){}
     }
-    
+
     public static void update() {
         if(timeAttack == 0)
             return;
-        
+
         long time = System.currentTimeMillis();
         if (timeDa > 0 && timeDa < time && NameClan != null && !NameClan.isEmpty()) {
             EndChiemThanh();
@@ -535,7 +540,7 @@ public class ChiemThanhManager {
         else if(timeAttack < time)
             EndChiemThanh();
     }
-    
+
     public static void SaveData(PreparedStatement ps){
         try{
             ps.clearParameters();
@@ -559,7 +564,7 @@ public class ChiemThanhManager {
             e.printStackTrace();
         }
     }
-    
+
     public static void LoadData(ResultSet rs){
         try{
             Manager.ResetCThanh();
@@ -571,7 +576,7 @@ public class ChiemThanhManager {
                 }
                 else if(name.equals("chiem_thanh")){
                     if(rs.getString("data1") != null){
-                        
+
                         JSONArray jsar = (JSONArray) JSONValue.parse(rs.getString("data1"));
                         if(jsar!=null){
                             for(int i=0; i< jsar.size(); i++){
@@ -592,7 +597,7 @@ public class ChiemThanhManager {
             System.exit(0);
         }
     }
-    
+
     public static void Obj_Die(Map map, MainObject mainAtk, MainObject focus)throws IOException{
         if(!mainAtk.isPlayer() || !focus.isMob())return;
         Player p = (Player)mainAtk;
@@ -602,24 +607,28 @@ public class ChiemThanhManager {
             short[] id_item_leave3 = new short[]{};
             short[] id_item_leave4 = new short[]{};
             short[] id_item_leave7 = new short[]{};
+            short[] id_item_leave = new short[]{};
             //short id_medal_material = -1;
             short sizeRandomMedal = 0;
             switch (mob.template.mob_id) {
-                case 151: { 
+                case 151: {
                     id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
-                    if(Util.random(100)<20)
+                    if(Util.random(100)<10)
                         id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
+                    if(Util.random(100) < 1 ){
+                        id_item_leave = new short[]{(short) Util.random(464, 470)};
+                    }
                     sizeRandomMedal = (short) (50);
                     p.diemchiemthanh += 1;
                     break;
                 }
-                case 152: { 
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
-                    id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
-//                    if(Util.random(100)<10)
+                case 152: {
+//                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
+//                    id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
+//                    if(Util.random(100)<20)
 //                        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
-                    sizeRandomMedal = (short) (60);
+//                    sizeRandomMedal = (short) (60);
                     break;
                 }
             }
@@ -641,12 +650,17 @@ public class ChiemThanhManager {
                     LeaveItemMap.leave_item_by_type7(map, id, p, mob.index,p.index);
                 }
             }
+            for (int i = 0; i < 1; i++) {
+                for (short id : id_item_leave) {
+                    LeaveItemMap.leave_item_by_type7(map, id, p, mob.index,p.index);
+                }
+            }
             for (int l = 0; l < sizeRandomMedal; l++) {
                 LeaveItemMap.leave_item_by_type7(map, (short) Util.random(136, 146), p, mob.index,p.index);
             }
         }
     }
-    
+
     public static void NhanQua(Player p)throws IOException{
         if(!Manager.PlayersWinCThanh.contains(p.name)){
             Service.send_notice_box(p.conn, "Bạn không phải người tham gia chiếm thành, hoặc đã nhận quà trước đó.");
@@ -654,7 +668,7 @@ public class ChiemThanhManager {
         }
         List<box_item_template> ids = new ArrayList<>();
         String text = "Phần quà của bạn: ";
-        
+
         if(Manager.PlayersWinCThanh.contains(p.name)){
             int size = Util.random(5, 15);
             for(int i=0; i<size; i++){
@@ -690,6 +704,7 @@ public class ChiemThanhManager {
                     p.item.add_item_bag47(it.id, it.quantity, it.catagory);
                 }
             }
+            p.diemchiemthanh += 5;
             Service.Show_open_box_notice_item(p, text, ids);
         }
     }
