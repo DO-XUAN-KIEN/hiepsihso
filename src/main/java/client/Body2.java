@@ -317,6 +317,10 @@ public class Body2 extends MainObject{
         if (ef != null) {
             def += ef.param;
         }
+        EffTemplate temp2 = p.get_EffDefault(StrucEff.PowerWing);
+        if (temp2 != null) {
+            def += 3000;
+        }
         return def;
     }
 
@@ -389,6 +393,10 @@ public class Body2 extends MainObject{
             EffTemplate eff = get_EffDefault(StrucEff.BuffSTVL);
             if(eff!=null)
                 percent += eff.param;
+            EffTemplate temp2 = p.get_EffDefault(StrucEff.PowerWing);
+            if (temp2 != null) {
+                percent += 3000;
+            }
             return percent;
         }
         int perct = 0;
@@ -465,6 +473,10 @@ public class Body2 extends MainObject{
                     perct += eff.param;
                 break;
             }
+        }
+        EffTemplate temp2 = p.get_EffDefault(StrucEff.PowerWing);
+        if (temp2 != null) {
+            perct += 3000;
         }
         return perct;
     }

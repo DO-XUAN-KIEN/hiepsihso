@@ -454,7 +454,7 @@ public class MainObject {
 
         //<editor-fold defaultstate="collapsed" desc="Nộ cánh...">
         if (ObjAtk.isPlayer()) {
-            EffTemplate temp2 = ObjAtk.get_EffDefault(StrucEff.PowerWing);
+            EffTemplate temp2 = p.get_EffDefault(StrucEff.PowerWing);
             if (temp2 == null) {
                 Item3 it = p.item.wear[10];
                 if (it != null) {
@@ -470,7 +470,7 @@ public class MainObject {
                     }
                     if (percent > Util.random(10_000)) {
                         //
-                        ObjAtk.add_EffDefault(StrucEff.PowerWing, 1000, time);
+                        p.add_EffDefault(StrucEff.PowerWing, 1000, time);
                         //
                         Message mw = new Message(40);
                         mw.writer().writeByte(0);
@@ -482,10 +482,10 @@ public class MainObject {
                         mw.writer().writeByte(0);
                         mw.writer().writeByte(30);
                         byte[] id__ = new byte[]{7, 8, 9, 10, 11, 15, 0, 1, 2, 3, 4, 14};
-                        int[] par__ = new int[]{2000, 2000, 2000, 2000, 2000, 2000,
-                                2 * (ObjAtk.get_param_view_in4(0) / 10), 2 * (ObjAtk.get_param_view_in4(1) / 10),
-                                2 * (ObjAtk.get_param_view_in4(2) / 10), 2 * (ObjAtk.get_param_view_in4(3) / 10),
-                                2 * (ObjAtk.get_param_view_in4(4) / 10), 2 * (ObjAtk.get_param_view_in4(14) / 10)};
+                        int[] par__ = new int[]{3000, 3000, 3000, 3000, 3000, 3000,
+                                3 * (ObjAtk.get_param_view_in4(0) / 10), 3 * (ObjAtk.get_param_view_in4(1) / 10),
+                                3 * (ObjAtk.get_param_view_in4(2) / 10), 3 * (ObjAtk.get_param_view_in4(3) / 10),
+                                3 * (ObjAtk.get_param_view_in4(4) / 10), 3 * (ObjAtk.get_param_view_in4(14) / 10)};
                         mw.writer().writeByte(id__.length);
                         //
                         for (int i = 0; i < id__.length; i++) {
