@@ -89,7 +89,7 @@ public class BossManager {
                 temp.y = GetSite(id)[1];
                 temp.level = id == 192? 150: m.level;
                 temp.Set_isBoss(true);
-                temp.hp = temp.Set_hpMax(id == 192? (1_000_000_000 + (i+1)) : m.hpmax );
+                temp.hp = temp.Set_hpMax(id == 192? (700_000_000 + (i*200_000_000)) : m.hpmax );
                 if(id == 192)
                     temp.timeBossRecive = 1000 * 60 * 60 * 8;
                 else

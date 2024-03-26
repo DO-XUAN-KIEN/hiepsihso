@@ -186,10 +186,12 @@ public class Player extends Body2 {
 //    public Kham_template kham;
     //create item star
     public boolean isCreateItemStar = false;
+    public boolean nangcaptb = false;
     public byte ClazzItemStar = -1;
     public byte TypeItemStarCreate = -1;
     public short[] MaterialItemStar;
     public int id_Upgrade_Medal_Star = -1;
+    public int id_nangtb = -1;
 
     //biến heo chiến trường
     public long timeBienHeo;
@@ -417,6 +419,9 @@ public class Player extends Body2 {
                     JSONArray jsar2 = (JSONArray) JSONValue.parse(jsar.get(i).toString());
                     Item47 temp = new Item47();
                     temp.id = Short.parseShort(jsar2.get(0).toString());
+                    if (temp.id > ItemTemplate4.item.size()) {
+                        continue;
+                    }
                     temp.quantity = Short.parseShort(jsar2.get(1).toString());
                     temp.category = 4;
                     if (temp.quantity > 0) {
@@ -844,8 +849,8 @@ public class Player extends Body2 {
     }
 
     public synchronized void update_vang(long i) {
-        if ((i + vang) > 5_000_000_000L) {
-            vang = 5_000_000_000L;
+        if ((i + vang) > 20_000_000_000L) {
+            vang = 20_000_000_000L;
         } else {
             vang += i;
         }
@@ -1135,6 +1140,7 @@ public class Player extends Body2 {
                 }
                 a += ",`itembox3` = '" + jsar.toJSONString() + "'";
                 jsar.clear();
+
                 //
                 for (int i = 0; i < mypet.size(); i++) {
                     JSONArray js1 = new JSONArray();

@@ -336,7 +336,7 @@ public class LeaveItemMap {
                 }
                 case 104: { // quy 1 mat
                     id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 10, 10};
-                    id_item_leave7 = new short[]{2, 3, 2, 3, 12, 12, 8, 9, 10, 8, 9, 10};
+                    id_item_leave7 = new short[]{2, 3, 2, 3, 12, 12, 8, 9, 10, 8, 9, 10,14};
                     sizeRandomMedal = (short) (25);
                     break;
                 }

@@ -1195,7 +1195,7 @@ public class UseItem {
                     conn.p.item.remove(4, 219, 1);
                     Squire.callSquire(conn);
                 } else {
-                    Service.send_notice_box(conn, "Chưa co de tu");
+                    Service.send_notice_box(conn, "Chưa có đệ tử");
                 }
             }
             default: {

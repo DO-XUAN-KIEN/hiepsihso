@@ -1369,4 +1369,7 @@ public class Map implements Runnable {
     public boolean isMapChienTruong() {
         return map_id >= 53 && map_id <= 61;
     }
+    public boolean isMapChiemthanh() {
+        return map_id >= 83 && map_id <= 87;
+    }
 }

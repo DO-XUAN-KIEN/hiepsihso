@@ -127,9 +127,9 @@ public class LoiDaiManager {
             Service.send_notice_box(p.conn, "Không trong thời gian đăng kí lôi đài, hãy quay lại sau!");
             return;
         }
-        if(p.level <35)
+        if(p.level <74)
         {
-            Service.send_notice_box(p.conn, "Cần tối thiểu level 35 mới có thể tham gia!");
+            Service.send_notice_box(p.conn, "Cần tối thiểu level 74 mới có thể tham gia!");
             return;
         }
         if(idx_gr<0 || idx_gr >= Group_entrys.length ){

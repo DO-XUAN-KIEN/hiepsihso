@@ -2293,9 +2293,6 @@ public class MenuController {
     }
 
     private static void Menu_top(Session conn, byte index) throws IOException {
-        if (!conn.p.isOwner) {
-            return;
-        }
         switch (index) {
             case 0: {
                 if (conn.p.chucphuc == 1) {
@@ -2315,10 +2312,16 @@ public class MenuController {
                 break;
             }
             case 1: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_box_UI(conn, 37);
                 break;
             }
             case 2: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_notice_box(conn,"Sắp ra mắt");
               //  Service.send_box_UI(conn,48);
                 break;
@@ -2354,6 +2357,9 @@ public class MenuController {
             }
 
             case 4: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 send_menu_select(conn, 115, new String[]{"Chest Thông Tin Tài Khoản", "Thông Tin Bản Thân"});
                 break;
             }
@@ -2363,6 +2369,9 @@ public class MenuController {
             //        break;
             //      }
             case 5: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 if (conn.p.hieuchien < 1000) {
                     Service.send_notice_box(conn, "Chưa đủ 1000 điểm pk");
                     return;
@@ -2384,7 +2393,7 @@ public class MenuController {
 //                    itbag.tier = 0;
 //                    itbag.islock = false;
 //                    itbag.time_use = 0;
-//                    conn.p.item.add_item_bag3(itbag);
+//                    conn.p.item.add_item_bag3(itbag);ủa
 //                    conn.p.item.char_inventory(3);
 //                    Service.send_notice_box(conn, "Nhận được " + itbag.name);
 //                    return;
@@ -2471,6 +2480,11 @@ public class MenuController {
                 send_menu_select(conn, 601, new String[]{"Khu Boss Even 1x", "Khu Boss Even 2x", "Khu Boss Even 3x", "Khu Boss Even 7x", "Khu Boss Even 8x", "Khu Boss Even 11x", "Khu Boss Even 13x","Khu Boss Sự kiện"});
                 break;
             }
+//            case 8: {
+//                conn.p.ResetCreateItemStar();
+//                Service.send_box_UI(conn, 333);
+//                break;
+//            }
 
             default: {
                 Service.send_notice_box(conn, "chức năng đang bảo trì!!");

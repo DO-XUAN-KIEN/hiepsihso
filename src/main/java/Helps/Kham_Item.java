@@ -9,7 +9,7 @@ import template.Option;
 public class Kham_Item {
 
     public static boolean CheckNgocTinhLuyen(short id) {
-        if ((id >= 23 && id <= 27) || (id >= 28 && id <= 32) || (id >= 382 && id <= 386) || (id >= 387 && id <= 391) ||(id >= 392 && id <= 396) || (id >= 397 && id <= 401) || (id >= 402 && id <= 406) ||(id >= 407 && id <= 411))// hỗn nguyên tinh luyện
+        if ((id >= 382 && id <= 386) || (id >= 387 && id <= 391) ||(id >= 392 && id <= 396) || (id >= 397 && id <= 401) || (id >= 402 && id <= 406) ||(id >= 407 && id <= 411))// hỗn nguyên tinh luyện
             return true;
         return false;
     }
@@ -42,20 +42,6 @@ public class Kham_Item {
         {
             int pr = (357 - id) * 5;
             re = new Option(100, pr, idItem);
-            //re.add(new Option(100, pr, idItem));
-        }
-        else if (id >= 23 && id <= 27)// ngoc anh sang
-        {
-            int idx = (28 - id);
-            int pr = idx == 1 ? 1600 : (idx == 2 ? 800 : (idx == 3 ? 400 : (idx == 4 ? 200 : 100)));
-            re = new Option(6, pr, idItem);
-            //re.add(new Option(100, pr, idItem));
-        }
-        else if (id >= 28 && id <= 32)// ngoc bong toi
-        {
-            int idx = (33 - id);
-            int pr = idx == 1 ? 1600 : (idx == 2 ? 800 : (idx == 3 ? 400 : (idx == 4 ? 200 : 100)));
-            re = new Option(5, pr, idItem);
             //re.add(new Option(100, pr, idItem));
         }
         else if (id >= 382 && id <= 386)// hỗn nguyên tinh luyện

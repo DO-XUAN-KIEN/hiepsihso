@@ -522,6 +522,7 @@ public class ChiemThanhManager {
 
         timeAttack = 0;
         Manager.thue =5;
+        NameClan = null;
         CloseMap();
         try{
             Manager.gI().chatKTGprocess("Chiếm thành đã kết thúc "+ (NameClan != null && !NameClan.isEmpty() ? " bang "+NameClan : " không bang nào") +" chiếm được thành");

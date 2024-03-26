@@ -13,25 +13,7 @@ import map.Eff_player_in_map;
 import map.Map;
 import map.MapService;
 import map.Mob_in_map;
-import template.Clan_mems;
-import template.EffTemplate;
-import template.Item3;
-import template.Item47;
-import template.ItemSell3;
-import template.Itemsellcoin;
-import template.itemselldosieupham;
-import template.ItemTemplate3;
-import template.ItemTemplate4;
-import template.ItemTemplate7;
-import template.Level;
-import template.LvSkill;
-import template.Mob_MoTaiNguyen;
-import template.Option;
-import template.OptionItem;
-import template.Option_pet;
-import template.Pet_di_buon;
-import template.Pet_di_buon_manager;
-import template.box_item_template;
+import template.*;
 
 public class Service {
 
@@ -957,6 +939,12 @@ public static int idxDame;
                 m.writer().writeShort(0);
                 break;
             }
+            case 333:{
+                m.writer().writeUTF("Nâng cấp trang bị");
+                m.writer().writeByte(20);
+                m.writer().writeShort(0);
+                break;
+            }
             case 0: { // cua hang poition
                 m.writer().writeUTF("Cửa hàng Poition");
                 m.writer().writeByte(0);
@@ -1297,8 +1285,9 @@ public static int idxDame;
         if (p0 == null) {
             send_notice_box(conn, "Kẻ thù đang offline");
         } else {
+
             EffTemplate ef = p0.get_EffDefault(-125);
-            if (p0.map.map_id != 0 && !p0.map.ismaplang) {
+            if (p0.map.map_id != 0 && !p0.map.ismaplang && !p0.map.isMapChienTruong()&& !p0.map.isMapChiemthanh()) {
                 conn.p.update_ngoc(-2);
                 conn.p.item.char_inventory(5);
                 conn.p.is_changemap = false;

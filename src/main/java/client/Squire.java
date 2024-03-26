@@ -511,7 +511,6 @@ public class Squire extends Player {
                 }
                 if (connection != null) {
                     ps.close();
-                    connection.close();
                 }
             }
         } catch (SQLException e) {
@@ -744,9 +743,9 @@ public class Squire extends Player {
         if (focus.isMob() && focus.template.mob_id == 152 && !ChiemThanhManager.isDameTruChinh(map)) {
             return;
         }
-        if (focus.isMob() && focus.isBoss() && Math.abs(focus.level - ObjAtk.level) > 5) {
-            return;
-        }
+//        if (focus.isMob() && focus.isBoss() && Math.abs(focus.level - ObjAtk.level) > 5) {
+//            return;
+//        }
         if (ObjAtk.isStunes(true)) {
             return;
         }
@@ -779,7 +778,7 @@ public class Squire extends Player {
         //</editor-fold>
         Player p = ObjAtk.isPlayer() ? (Player) ObjAtk : null;
         EffTemplate ef;
-        long dame = ObjAtk.get_DameBase()*3L;
+        long dame = ObjAtk.get_DameBase() * 3L;
         int hutHP = 0;
         float ptCrit = 0;
         float DamePlus = 0;
@@ -1089,6 +1088,7 @@ public class Squire extends Player {
         if (focus.isMobDiBuon()) {
             dame = focus.get_HpMax() * 5L / 100;
         }
+
         focus.hp -= (int) dame;
 
         if (focus.hp <= 0) {

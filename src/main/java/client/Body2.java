@@ -481,7 +481,6 @@ public class Body2 extends MainObject{
         return perct;
     }
 
-    
     @Override
     public int get_DameBase(){
         return get_param_view_in4(40);

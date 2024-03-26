@@ -30,7 +30,7 @@ public class CheckItem {
     
     public static boolean isDaKham(short id)
     {
-        return  (id >= 23 && id<= 27)   || (id >= 28 && id<= 32)   ||
+        return
                 (id >= 352 && id<= 356) || (id >= 382 && id<= 386) || //hỗn nguyễn
                 (id >= 357 && id<= 361) || (id >= 387 && id<= 391) || //khải hoàn
                 (id >= 362 && id<= 366) || (id >= 392 && id<= 396) || //lục bảo

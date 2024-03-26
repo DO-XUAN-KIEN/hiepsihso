@@ -61,7 +61,7 @@ public class MessageHandler {
             case -105: {
                 if (conn.p.isCreateItemStar) {
                     GameSrc.ActionsItemStar(conn, m);
-                } else {
+                }else {
                     GameSrc.Create_Medal(conn, m);
                 }
                 break;
