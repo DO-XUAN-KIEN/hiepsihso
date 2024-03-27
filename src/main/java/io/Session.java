@@ -134,9 +134,11 @@ public class Session implements Runnable {
         }
     }
 
+
     public void SaveIP() {
         String sql = "UPDATE `account` SET `last_ip` = '" + this.ip + "' WHERE id = " + this.id + ";";
-        try ( Connection connection = SQL.gI().getConnection();  Statement ps = connection.createStatement()) {
+        try ( Connection connection = SQL.gI().getConnection();
+              Statement ps = connection.createStatement()) {
             if (ps.executeUpdate(sql) > 0) {
                 connection.commit();
             }
@@ -151,7 +153,7 @@ public class Session implements Runnable {
     private void disconnect() {
         Manager.gI().time_login_client.put(this.user, (System.currentTimeMillis() + Manager.gI().time_login));
         //
-        //CheckDDOS.removeIp(ip);
+//        CheckDDOS.removeIp(ip);
         this.connected = false;
         this.sendd.interrupt();
         this.receiv.interrupt();
@@ -572,7 +574,19 @@ public class Session implements Runnable {
         }).start();
     }
 
-    private void noticelogin(String s) throws IOException {
+
+    public void concac(String s) throws IOException {
+      try{
+          Message m = new Message(2);
+          m.writer().writeUTF(s);
+          m.writer().writeByte(0);
+          addmsg(m);
+          m.cleanup();
+      }catch (Exception e){
+
+      }
+    }
+    public void noticelogin(String s) throws IOException {
         Message m = new Message(2);
         m.writer().writeUTF(s);
         m.writer().writeByte(0);

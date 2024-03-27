@@ -51,6 +51,7 @@ import template.Part_player;
 
 public class Manager {
 
+    public List<String> LIST_IP_BAN = new ArrayList<>();
     public int size_mob;
     private static Manager instance;
     public final HashMap<String, Integer> ip_create_char = new HashMap<>();
@@ -247,12 +248,31 @@ public class Manager {
             System.exit(0);
         }
     }
+    public void initBan() {
+        try (Connection connection = SQL.gI().getConnection();
+             Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery("SELECT `ip` FROM `list_ip_ban` ;")) {
+            while (rs.next()) {
+                String ip = rs.getString("ip");
+                LIST_IP_BAN.add(ip);
+            }
+            System.out.println("add ip ban thành công :" + LIST_IP_BAN.size());
+        }catch (Exception e){
 
+        }
+    }
     private boolean load_database() throws SQLException {
+        initBan();
+
         // load item3
         Connection conn = SQL.gI().getConnection();
         Statement ps = conn.createStatement();
         ResultSet rs;
+
+
+
+
+
         String query = "SELECT * FROM `item3`;";
         rs = ps.executeQuery(query);
         while (rs.next()) {

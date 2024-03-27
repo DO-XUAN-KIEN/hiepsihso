@@ -2,6 +2,7 @@ package core;
 
 import History.His_DelItem;
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import client.Clan;
@@ -17,6 +18,13 @@ import template.*;
 
 public class Service {
 
+    public static boolean checktime(int min){
+        LocalTime localTime = LocalTime.now();
+        if (localTime.getSecond() == min){
+            return true;
+        }
+        return false;
+    }
     public static void send_msg_data(Session conn, int cmd, String name) throws IOException {
         Message m = new Message(cmd);
         m.writer().write(Util.loadfile("data/msg/" + name));

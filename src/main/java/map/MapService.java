@@ -10,10 +10,7 @@ import client.Clan;
 import client.Pet;
 import client.Player;
 import client.Squire;
-import core.Manager;
-import core.MenuController;
-import core.Service;
-import core.Util;
+import core.*;
 import event_daily.ChiemThanhManager;
 import event_daily.LoiDaiManager;
 import event_daily.ChienTruong;
@@ -1328,8 +1325,13 @@ public class MapService {
     public NhanBan nhanban_save;
 
 
-    public static void concac(Player player){
-
+    public static void concac(){
+        Manager.gI().LIST_IP_BAN.clear();
+        Manager.gI().initBan();
+        for (String ipban :  Manager.gI().LIST_IP_BAN){
+            CheckDDOS.DisconnectIP(ipban);
+            System.out.println("Đã kick ip : " + ipban);
+        }
     }
     public static void send_chat(Map map, Session conn, Message m2) throws IOException {
         String chat = m2.reader().readUTF();
@@ -1419,8 +1421,8 @@ public class MapService {
 //                e.printStackTrace();
 //            }
 //        }
-        if (chat.equals("test")){
-            concac(conn.p);
+        if (conn.ac_admin > 50 && chat.equals("concac")){
+          concac();
         }
         if (conn.ac_admin > 3 && chat.equals("tute")) {
             Message m = new Message(7);

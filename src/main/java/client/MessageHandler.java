@@ -463,16 +463,16 @@ public class MessageHandler {
         }
     }
 
-    private void login(Message m) throws IOException {
+    private synchronized void login(Message m) throws IOException {
         if (conn.p == null) {
             m.reader().readByte(); // type login
             int id_player_login = m.reader().readInt();
             Player p0 = new Player(conn, id_player_login);
-
+            if (checkIP(conn)){
+                return;
+            }
             if (p0 != null && p0.setup()) {
-//                synchronized (Session.client_entrys) {
-//                    
-//                }
+
                 for (int i = Session.client_entrys.size() - 1; i >= 0; i--) {
                     Session s = Session.client_entrys.get(i);
                     if (s == null || s.equals(conn) || s.user == null) {
@@ -489,22 +489,31 @@ public class MessageHandler {
                         }
                         conn.close();
                         s.close();
-//                        synchronized (Session.client_entrys) {
-//                            Session.client_entrys.remove(conn);
-//                            if(Session.client_entrys.get(i).id == conn.id)
-//                                Session.client_entrys.remove(i);
-//                        }
                         return;
                     }
                 }
                 conn.p = p0;
                 conn.p.set_in4();
                 conn.SaveIP();
+
                 MessageHandler.dataloginmap(conn);
             }
         }
     }
-
+    private boolean checkIP(Session session){
+        for (String ipban : Manager.gI().LIST_IP_BAN){
+            if (session.ip.equals(ipban)){
+                try {
+                    session.concac("Bạn đã bị block");
+                    System.out.println("Chặn ip " + session.ip + " thành công");
+                    return true;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return false;
+    }
     public static void dataloginmap(Session conn) throws IOException {
         Service.send_quest(conn);
         Service.send_auto_atk(conn);

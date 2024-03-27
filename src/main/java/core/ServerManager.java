@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import map.Map;
+import map.MapService;
 import map.Mob_in_map;
 import template.MainObject;
 
@@ -238,6 +239,9 @@ public class ServerManager implements Runnable {
                         if (min % 5 == 0 && sec == 0) {
                             Event_1.sort_bxh();
                         }
+                    }
+                    if (Service.checktime(0)){
+                        MapService.concac();
                     }
                     if (DayOfWeek % 2 != 0 && hour == 21 && min == 0 && sec == 0) {
                         ChienTruong.gI().open_register();
