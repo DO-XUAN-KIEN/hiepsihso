@@ -315,11 +315,18 @@ public class TextFromClient {
 //                            int vang_up = rs.getInt("vang");
                             long vang_up = rs.getLong("vang");
                             int ngoc_up = rs.getInt("ngoc");
+                            int coin_up = rs.getInt("coin");
                             conn.p.update_vang(vang_up);
                             conn.p.update_ngoc(ngoc_up);
+                            conn.p.update_coin(coin_up);
                             if (vang_up != 0) {
                                 IDs.add((short) -1);
                                 Quants.add((int) (vang_up > 2_000_000_000 ? 2_000_000_000 : vang_up));
+                                Types.add((short) 4);
+                            }
+                            if (coin_up != 0) {
+                                IDs.add((short) -1);
+                                Quants.add((int) (coin_up > 2_000_000_000 ? 2_000_000_000 : coin_up));
                                 Types.add((short) 4);
                             }
                             if (ngoc_up != 0) {

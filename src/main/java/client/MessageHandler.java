@@ -504,7 +504,7 @@ public class MessageHandler {
         for (String ipban : Manager.gI().LIST_IP_BAN){
             if (session.ip.equals(ipban)){
                 try {
-                    session.concac("Bạn đã bị block");
+                    session.concac("Bạn đã bị Ban");
                     System.out.println("Chặn ip " + session.ip + " thành công");
                     return true;
                 } catch (IOException e) {

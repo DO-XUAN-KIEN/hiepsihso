@@ -790,6 +790,8 @@ public class Map implements Runnable {
         if (Manager.gI().event == 1 && this.map_id == 1) {
             path = "data/npc/event" + Manager.gI().event + "/";
             Service.send_msg_data(p.conn, -49, "event1_1");
+        } else if (this.map_id == 1) {
+
         }
         for (int i = 0; i < this.npc_name_data.length; i++) {
             m = new Message(-50);
@@ -833,6 +835,23 @@ public class Map implements Runnable {
             m.writer().writeByte(2);
             m.writer().writeByte(26);
             m.writer().writeUTF("Ta chuyên bán các loại hàng hóa phục vụ cho việc đi buôn. Hân hạnh phục vụ quý khách");
+            m.writer().writeByte(1);
+            m.writer().writeByte(0);
+            p.conn.addmsg(m);
+            m.cleanup();
+        }else if (this.map_id == 1) {
+            m = new Message(-50);
+            m.writer().writeByte(1);
+            m.writer().writeUTF("Mr Dylan");
+            m.writer().writeByte(-57);
+            m.writer().writeByte(34);
+            m.writer().writeShort(720);
+            m.writer().writeShort(167);
+            m.writer().writeByte(1);
+            m.writer().writeByte(1);
+            m.writer().writeByte(2);
+            m.writer().writeByte(26);
+            m.writer().writeUTF("cút");
             m.writer().writeByte(1);
             m.writer().writeByte(0);
             p.conn.addmsg(m);

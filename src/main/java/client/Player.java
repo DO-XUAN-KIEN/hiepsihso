@@ -191,6 +191,7 @@ public class Player extends Body2 {
     public byte TypeItemStarCreate = -1;
     public short[] MaterialItemStar;
     public int id_Upgrade_Medal_Star = -1;
+    public int nangcap = -1;
     public int id_nangtb = -1;
 
     //biến heo chiến trường
@@ -891,6 +892,7 @@ public class Player extends Body2 {
 
     @SuppressWarnings("unchecked")
     public void flush() {
+        try{
         if (!already_setup) {
             return;
         }
@@ -1356,6 +1358,8 @@ public class Player extends Body2 {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        } catch (Exception e) {
         }
 //        System.out.println("flush " + this.conn.user);
     }

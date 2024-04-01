@@ -2212,6 +2212,9 @@ public static int idxDame;
             switch (cat) {
                 case 3: {
                     Item3 it = conn.p.item.bag3[iditem];
+                    Item3 ngu = conn.p.item.wear[0];
+                    ngu = conn.p.item.wear[13]; ngu = conn.p.item.wear[14]; ngu = conn.p.item.wear[15]; ngu = conn.p.item.wear[16];ngu = conn.p.item.wear[17];
+                    ngu = conn.p.item.wear[18]; ngu = conn.p.item.wear[19]; ngu = conn.p.item.wear[20]; ngu = conn.p.item.wear[21]; ngu = conn.p.item.wear[22];
                     if (it != null && it.time_use > 0) {
                         int ngoc_ = conn.p.get_ngoc();
                         if (ngoc_ > 4) {
@@ -2227,6 +2230,53 @@ public static int idxDame;
                         } else {
                             send_notice_box(conn, "Tối thiểu 5 ngọc!");
                         }
+                    }else if(it != null && it.id >= 5000){
+                        try {
+                                if (conn.p.item.total_item_by_id(4, 22) <= 0) {
+                                    Service.send_notice_box(conn, "Không đủ vật phẩm nâng cấp");
+                                    return;
+                                }
+                                if (it.tierStar >=15){
+                                    Service.send_notice_box(conn,"Vật phẩm đã được nâng cấp tối đa");
+                                    return;
+                                }
+                                conn.p.item.remove(4, 22, 1);
+                                it.tierStar++;
+                                it.UpdateName();
+                                it = Helps.medal.nangcap(it);
+                                conn.p.item.char_inventory(4);
+                                conn.p.item.char_inventory(7);
+                                conn.p.item.char_inventory(3);
+                                Service.send_notice_box(conn, "Nâng cấp thành công " + it.name);
+                            for (int i = 0; i < it.op.size(); i++) {
+                                m2.writer().writeByte(it.op.get(i).id);
+                                if (it.op.get(i).id == 96) {
+                                    m2.writer().writeInt(it.op.get(i).getParam(0));
+                                } else {
+                                    m2.writer().writeInt(it.op.get(i).getParam(it.tier));
+                                }
+                            }
+                        }catch (Exception e){}
+                    } else if ((it.type >= 21 && it.type <= 28) || it.type == 55 || it.type == 102) {
+                        try {
+                            if (conn.p.item.total_item_by_id(4, 262) < 100) {
+                                Service.send_notice_box(conn, "Không đủ vật phẩm nâng cấp");
+                                return;
+                            }
+                            if (it.tier >=15){
+                                Service.send_notice_box(conn,"Vật phẩm đã được nâng cấp tối đa");
+                                return;
+                            }
+                            conn.p.item.remove(4, 262, 100);
+                            it.tier++;
+                            it.UpdateName();
+                            conn.p.item.char_inventory(4);
+                            conn.p.item.char_inventory(7);
+                            conn.p.item.char_inventory(3);
+                            Service.send_notice_box(conn, "Nâng cấp thành công " + it.name);
+                        }catch (Exception e){}
+                    } else {
+                        Service.send_notice_box(conn,"Vật phẩm nâng cấp không phù hợp");
                     }
                     break;
                 }

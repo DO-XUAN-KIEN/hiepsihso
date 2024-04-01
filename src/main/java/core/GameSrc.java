@@ -1353,103 +1353,7 @@ public class GameSrc {
             Service.send_notice_box(conn, "Lỗi hãy thử lại!");
         }
     }
-    public static void Ngoaituyen(Session conn, byte index)throws IOException
-    {
-        if(index >3)
-        {
-            Service.send_notice_box(conn, "bug tao đá chết cha m giờ!");
-            return;
-        }
-        int id = conn.p.id_Upgrade_Medal_Star;
-        if(id<0)
-        {
-            Service.send_notice_box(conn, "Hãy chọn lại vật phẩm muốn nâng cấp!");
-            return;
-        }
-        if (System.currentTimeMillis() < conn.p.time_speed_rebuild) {
-            Service.send_notice_box(conn, "Chậm thôi!");
-            return;
-        }
-        if (id >= conn.p.item.bag3.length) {
-            return;
-        }
-        Item3 temp = conn.p.item.bag3[id];
-        if (temp != null && temp.id == 4814 && temp.tier < 15) {
-            if (conn.p.item.total_item_by_id(7, 469) < 1) {
-                Service.send_notice_box(conn, "Không đủ vật phẩm nâng cấp");
-                return;
-            }
-            conn.p.item.remove(7, 469, 1);
-            temp.tier++;
-            conn.p.item.bag3[id] = temp;
-            // change material
-            int material_type_1st = Util.random(0, 7);
-            int material_type_2nd = Util.random(0, 7);
-            while (material_type_1st == material_type_2nd) {
-                material_type_2nd = Util.random(0, 7);
-            }
-            int id_material = 5 * (temp.id - 4587);
-            conn.p.medal_create_material[id_material]
-                    = (short) (Medal_Material.m_white[material_type_1st][Util.random(0, 10)] + 200);
-            conn.p.medal_create_material[id_material + 1]
-                    = (short) (Medal_Material.m_white[material_type_2nd][Util.random(0, 10)] + 200);
-            conn.p.medal_create_material[id_material + 2]
-                    = (short) (Medal_Material.m_blue[Util.random(0, 10)] + 200);
-            conn.p.medal_create_material[id_material + 3]
-                    = (short) (Medal_Material.m_yellow[Util.random(0, 10)] + 200);
-            conn.p.medal_create_material[id_material + 4]
-                    = (short) (Medal_Material.m_violet[Util.random(0, 10)] + 200);
-            //
-            Message m = new Message(-105);
-            m.writer().writeByte(3);
-                m.writer().writeByte(3);
-            ItemTemplate3 templ = ItemTemplate3.item.get(temp.id);
-                m.writer().writeUTF("-Thành công!");
-            m.writer().writeByte(3);
-            m.writer().writeUTF(temp.name);
-            m.writer().writeByte(templ.getClazz());
-            m.writer().writeShort(templ.getId());
-            m.writer().writeByte(templ.getType());
-            m.writer().writeShort(templ.getIcon());
-            m.writer().writeByte(temp.tier); // tier
-            m.writer().writeShort(1); // level required
-            m.writer().writeByte(temp.color); // color
-            m.writer().writeByte(0); // can sell
-            m.writer().writeByte(0); // can trade
-            m.writer().writeByte(temp.op.size());
-            for (int i = 0; i < temp.op.size(); i++) {
-                m.writer().writeByte(temp.op.get(i).id);
-                if (temp.op.get(i).id == 96) {
-                    m.writer().writeInt(temp.op.get(i).getParam(0));
-                } else {
-                    m.writer().writeInt(temp.op.get(i).getParam(temp.tier));
-                }
-            }
-            m.writer().writeInt(0); // time use
-            m.writer().writeByte(0);
-            m.writer().writeByte(0);
-            m.writer().writeByte(0);
-            conn.addmsg(m);
-            m.cleanup();
-            //
-            conn.p.item.char_inventory(4);
-            conn.p.item.char_inventory(7);
-            conn.p.item.char_inventory(3);
-            //
-            if (temp.tier < 15) {
-                m = new Message(-105);
-                m.writer().writeByte(5);
-                    m.writer().writeByte(3);
-                    m.writer().writeUTF("+Thành công!");
-                m.writer().writeShort(id);
-                conn.addmsg(m);
-                m.cleanup();
-            }
-            //
-        } else {
-            Service.send_notice_box(conn, "ngu ngu!");
-        }
-    }
+
 
     public static void ChangeCS_Medal(Session conn, int actions) throws IOException {
         if (System.currentTimeMillis() < conn.p.time_speed_rebuild) {
@@ -1803,7 +1707,6 @@ public class GameSrc {
                             break;
                         }
                        case 11: {
-                            it.part++;
                             op_new = new Option(1, 1, it.id);
                             switch (it.id) {
                                 case 2894:{

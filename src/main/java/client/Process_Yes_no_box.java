@@ -18,14 +18,15 @@ import template.*;
 
 public class Process_Yes_no_box {
 
-    public static void process(Session conn, Message m) throws IOException {
-        short id = m.reader().readShort(); // id
+    public static void process(Session conn, Message m2) throws IOException {
+        short id = m2.reader().readShort(); // id
         if (id != conn.p.index) {
+            Service.send_notice_box(conn,"không phù hợp");
             return;
-        
+
         }
-        byte type = m.reader().readByte(); // type
-        byte value = m.reader().readByte(); // value
+        byte type = m2.reader().readByte(); // type
+        byte value = m2.reader().readByte(); // value
         if (value != 1) {
             switch (type) {
                case 110: {

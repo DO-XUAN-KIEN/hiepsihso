@@ -39,6 +39,27 @@ public class ItemStar {
 //        re.addAll(t.get(Util.random(t.size())).getOp());
         return re;
     }
+    public static List<Option> nangcap(byte clazz, byte typeItem, int tier2)
+    {
+        //System.out.println("Helps.ItemStar.GetOpsItemStar()"+typeItem);
+        short level= GetLevelItemStar(tier2);
+
+        List<Option> re = new ArrayList<>();
+        List<ItemTemplate3> t = new ArrayList<>();
+        for(ItemTemplate3 tem : ItemTemplate3.item)
+        {
+            if(tem == null)continue;
+            if((tem.getClazz() != clazz && tem.getClazz() != 4) || tem.getType() != typeItem || Math.abs(tem.getLevel() - level) > 9 || tem.getColor() != 4)continue;
+            t.add(tem);
+        }
+        if(t==null || t.size()<1)return null;
+        for(Option o: t.get(Util.random(t.size())).getOp()){
+            if(o.id == 71)continue;
+            re.add(o);
+        }
+//        re.addAll(t.get(Util.random(t.size())).getOp());
+        return re;
+    }
     
     public static List<Option> GetOpsItemStarUpgrade(byte clazz, byte typeItem,short idItem, int tier2, List<Option> LastOps)
     {

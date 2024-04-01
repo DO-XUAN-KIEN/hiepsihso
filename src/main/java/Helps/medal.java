@@ -231,4 +231,79 @@ public class medal {
         }
         return tem;
     }
+    public static Item3 nangcap(Item3 tem)
+    {
+        List<Integer> id_PTST = new ArrayList<>(java.util.Arrays.asList(7,8,9,10,11));
+        List<Integer> id_khang = new ArrayList<>(java.util.Arrays.asList(14,15,16,17,18,19,20,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38));
+        List<Integer> ops = new ArrayList<>();
+        byte countOP = 0;
+        int count = 0;
+        boolean isnext =false;
+        for(int i=0; i<tem.op.size(); i++)
+        {
+            Option op = tem.op.get(i);
+            if(op==null)continue;
+            ops.add(Integer.valueOf(op.id));
+            if(op.id >=0 && op.id<=4) continue;
+            if((op.id >= 58 && op.id <=60) || (op.id >= 100 && op.id <=107) ){
+                continue;
+            }
+            if(op.id == 96)
+            {
+                countOP = (byte)op.getParam(0);
+                continue;
+            }
+            if(!isnext)
+                count++;
+            else
+                isnext =false;
+        }
+        if(count<countOP){
+            Integer id_add = null;
+            int r = Util.random(0, 101);
+            if(r <= 25) // %st
+            {
+                id_add = Util.random(id_PTST, ops);
+            }
+            else // cs default
+            {
+                id_add = Util.random(id_khang, ops);
+            }
+            if(id_add==null)
+            {
+                return tem;
+            }
+
+            int param_add = 1;
+            int param_add2 = 1;
+            if(id_add == 38 || id_add == 37)
+                param_add =1;
+            else if (id_add >= 23 && id_add <= 26) {
+                param_add = Util.random(22, 55);
+            }
+            else if (id_add >= 7 && id_add <= 13) {
+                param_add = Util.random(1000, 2000);
+            }
+            else {
+                param_add = Util.random(500,1000);
+            }
+            tem.op.add(new Option(id_add, param_add ,tem.id));
+
+            ops.add(id_add);
+        }
+        if(countOP <= count)
+        {
+            for(int i=0; i<tem.op.size(); i++)
+            {
+                Option op = tem.op.get(i);
+                if(op==null)continue;
+                if(op.id == 96)
+                {
+                    tem.op.remove(op);
+                    break;
+                }
+            }
+        }
+        return tem;
+    }
 }
