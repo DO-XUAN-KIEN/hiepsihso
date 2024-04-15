@@ -1424,7 +1424,7 @@ public class MapService {
         if (conn.ac_admin > 50 && chat.equals("concac")){
           concac();
         }
-        if (conn.ac_admin > 3 && chat.equals("tute")) {
+        if (conn.ac_admin > 3 && chat.equals("hoinon")) {
             Message m = new Message(7);
             m.writer().writeShort(30109);
             m.writer().writeShort(40);

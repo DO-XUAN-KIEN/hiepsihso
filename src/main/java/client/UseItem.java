@@ -10,6 +10,8 @@ import core.Util;
 import io.Message;
 import io.Session;
 import map.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONValue;
 import template.*;
 public class UseItem {
     int diemtest = 50;
@@ -76,6 +78,79 @@ public class UseItem {
     }
     private static void use_item4_default(Session conn, short id_potion) throws IOException {
         switch (id_potion) {
+            case 53: {
+                conn.p.item.remove(4,53,1);
+                conn.p.point_active[0]++;
+                break;
+            }
+            case 193: {
+                conn.p.item.remove(4, 193, 1);
+                int vang_ = Util.random(1_000_000,10_000_000);
+                int ngoc_ = Util.random(10_000, 30_000);
+                int coin_ = Util.random(10_000, 50_000);
+                List<Short> IDs = new ArrayList<>();
+                List<Integer> Quants = new ArrayList<>();
+                List<Short> Types = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    int ran = Util.random(100);
+                    if (ran < 10) {
+                        IDs.add((short) -1);
+                        Quants.add(vang_);
+                        Types.add((short) 4);
+                        conn.p.update_vang(vang_);
+                        conn.p.item.char_inventory(5);
+                    } else if (ran < 20) {
+                        IDs.add((short) -2);
+                        Quants.add(ngoc_);
+                        Types.add((short) 4);
+                        conn.p.update_ngoc(ngoc_);
+                        conn.p.item.char_inventory(5);
+                    } else if (ran < 30) {
+                        IDs.add((short) -3);
+                        Quants.add(coin_);
+                        Types.add((short) 4);
+                        conn.p.update_coin(coin_);
+                        conn.p.item.char_inventory(5);
+                    } else if (ran < 40) {
+                        short iditem = 1000;
+                        Item3 itbag = new Item3();
+                        itbag.id = iditem;
+                        itbag.name = ItemTemplate3.item.get(iditem).getName();
+                        itbag.clazz = ItemTemplate3.item.get(iditem).getClazz();
+                        itbag.type = ItemTemplate3.item.get(iditem).getType();
+                        itbag.level = ItemTemplate3.item.get(iditem).getLevel();
+                        itbag.icon = ItemTemplate3.item.get(iditem).getIcon();
+                        itbag.op = new ArrayList<>();
+                        itbag.op.addAll(ItemTemplate3.item.get(iditem).getOp());
+                        itbag.color = ItemTemplate3.item.get(iditem).getColor();
+                        itbag.part = ItemTemplate3.item.get(iditem).getPart();
+                        itbag.op = ItemTemplate3.item.get(iditem).getOp();
+                        itbag.tier = 0;
+                        itbag.islock = false;
+                        Quants.add(1);
+                        Types.add((short) 3);
+                        conn.p.item.add_item_bag3(itbag);
+                        conn.p.item.char_inventory(5);
+                    } else if (ran < 99) {
+                        Item47 itbag = new Item47();
+                        itbag.id = 53;
+                        itbag.quantity = (short) Util.random(2, 5);
+                        IDs.add(itbag.id);
+                        Quants.add((int) itbag.quantity);
+                        Types.add((short) 4);
+                    }
+                }
+                    short[] ar_id = new short[IDs.size()];
+                    int[] ar_quant = new int[Quants.size()];
+                    short[] ar_type = new short[Types.size()];
+                    for (int j = 0; j < ar_id.length; j++) {
+                        ar_id[j] = IDs.get(j);
+                        ar_quant[j] = Quants.get(j);
+                        ar_type[j] = Types.get(j);
+                    }
+                    Service.Show_open_box_notice_item(conn.p, "Bạn nhận được", ar_id, ar_quant, ar_type);
+                break;
+            }
             case 57:
             case 58:
             case 59:

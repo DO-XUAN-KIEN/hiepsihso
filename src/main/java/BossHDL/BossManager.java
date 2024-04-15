@@ -30,7 +30,7 @@ public class BossManager {
             case 149: return 76;
             case 155: return 79;
             case 174: return 26;
-            case 173: return 113;
+            case 173: return 7;
             case 190: return 124;
             case 195: return 123;
             case 196: return 126;
@@ -58,7 +58,7 @@ public class BossManager {
             case 149: return new short[]{ 204,762};
             case 155: return new short[]{ 534,732};
             case 174: return new short[]{ 550,250};
-            case 173: return new short[]{ 450,432};
+            case 173: return new short[]{ 432,512};
             case 190: return new short[]{ 450,432};
             case 195: return new short[]{ 450,432};
             case 196: return new short[]{ 450,432};
@@ -92,6 +92,8 @@ public class BossManager {
                 temp.hp = temp.Set_hpMax(id == 192? (700_000_000 + (i*200_000_000)) : m.hpmax );
                 if(id == 192)
                     temp.timeBossRecive = 1000 * 60 * 60 * 8;
+                else if(id == 173)
+                    temp.timeBossRecive = 1000 * 60 * 60 * 12;
                 else
                     temp.timeBossRecive = 1000 * 60 * 60 * 6;
                 temp.map_id = GetIdMap(id);

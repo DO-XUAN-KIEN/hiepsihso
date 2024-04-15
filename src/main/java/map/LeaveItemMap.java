@@ -220,13 +220,11 @@ public class LeaveItemMap {
             //
             leave_item_by_type4(map, index_real, p, mob.index);
         }
+        if(Util.random(100) > 1){
+            short id = (short) Util.random(184, 186);
+            leave_item_by_type4(map, id, p, mob.index);
+        }
     }
-//    public static void leave_item_8(Map map, Mob_in_map mob, Player p) throws IOException {
-//        if (map.map_id == 61) {
-//            p.update_point_arena(1);
-//        }
-//    }
-
     public static void leave_item_by_type4(Map map, short id_item, Player p_master, int index_mob) throws IOException {
         int index_item_map = map.get_item_map_index_able();
         if (index_item_map > -1) {
@@ -259,10 +257,10 @@ public class LeaveItemMap {
             //
             leave_item_by_type7(map, index_real, p, mob.index);
         }
-        if(Util.random(100) > 99.99){
-            short id = (short) Util.random(464, 470);
-            leave_item_by_type7(map, id, p, mob.index);
-        }
+//        if(Util.random(100) > 99.99){
+//            short id = (short) Util.random(464, 470);
+//            leave_item_by_type7(map, id, p, mob.index);
+//        }
     }
 
     private static void leave_item_by_type7(Map map, short id_it, Player p_master, int indexmob) throws IOException {
@@ -305,49 +303,50 @@ public class LeaveItemMap {
             short[] id_item_leave4 = new short[]{};
             short[] id_item_leave7 = new short[]{};
             short[] id_medal_boss = new short[]{};
+            short[] id_medal_boss_sk = new short[]{};
             short sizeRandomMedal = 0;
             switch (mob.template.mob_id) {
                 case 101: { // xa nu
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 53};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 53,187,188};
                     id_item_leave7 = new short[]{0, 4, 14, 0, 4, 12, 2, 2, 1, 1, 10, 10};
                     sizeRandomMedal = (short) (30);
 
                     break;
                 }
                 case 84: { // de vang
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 27, 27};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 27, 27,187,188};
                     id_item_leave7 = new short[]{8, 9, 10, 13, 14, 0, 4, 0, 4};
                     sizeRandomMedal = (short) (35);
 
                     break;
                 }
                 case 83: { // de bac
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 53};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 53,187,188};
                     id_item_leave7 = new short[]{0, 4, 0, 4, 11, 12, 14, 2, 3, 2, 3};
                     sizeRandomMedal = (short) (45);
                     break;
                 }
                 case 103: { // bo cap chua
                     id_item_leave4
-                            = new short[]{-1, -1, -1, -1, -1, -1, 48, 50, 18, 9, 48, 50, 18, 9, 2, 5, 2, 5, 2, 5, 2, 5};
+                            = new short[]{-1, -1, -1, -1, -1, -1, 48, 50, 18, 9, 48, 50, 18, 9, 2, 5, 2, 5, 2, 5, 2, 5,187,188};
                     id_item_leave7 = new short[]{0, 0, 0};
                     sizeRandomMedal = (short) (20);
                     break;
                 }
                 case 104: { // quy 1 mat
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 10, 10};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 10, 10,187,188};
                     id_item_leave7 = new short[]{2, 3, 2, 3, 12, 12, 8, 9, 10, 8, 9, 10,14};
                     sizeRandomMedal = (short) (25);
                     break;
                 }
                 case 105: { // quy dau bo
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 49, 49};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 49, 49,187,188};
                     id_item_leave7 = new short[]{11, 0, 4, 0, 4, 13, 14, 2, 3, 2, 3};
                     sizeRandomMedal = (short) (40);
                     break;
                 }
                 case 106: { // ky sy dia nguc
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18,187,188};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
                     if (Util.random(100) < 10) {
                   //      id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -356,7 +355,7 @@ public class LeaveItemMap {
                     break;
                 }
                 case 149: { // nhen chua
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18,187,188};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
                     if (Util.random(100) < 15) {
                 //        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -365,7 +364,7 @@ public class LeaveItemMap {
                     break;
                 }
                 case 155: { // giant skeleton
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18,187,188};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
                     if (Util.random(100) < 20) {
                 //        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -373,17 +372,17 @@ public class LeaveItemMap {
                     sizeRandomMedal = (short) (60);
                     break;
                 }
-                case 173: { //tho tuyet
-                   id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322};
-                    id_item_leave7 = new short[]{14};
-                    if (Util.random(1) < 1) {
-                   //     id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
-                    }
-                   // sizeRandomMedal = (short) (60);
-                    break;
-                }
+//                case 173: { //tho tuyet
+//                   id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322,187,188};
+//                    id_item_leave7 = new short[]{14};
+//                    if (Util.random(1) < 1) {
+//                   //     id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
+//                    }
+//                   // sizeRandomMedal = (short) (60);
+//                    break;
+//                }
                 case 174: { // giant skeleton
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18,187,188};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
                     if (Util.random(100) < 20) {
                 //        id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -392,14 +391,14 @@ public class LeaveItemMap {
                     break;
                 }
                 case 192: { // boss sk
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18, 273, 274, 251, 319, 320, 321, 322};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 54, 53, 18, 273, 274, 251, 319, 320, 321, 322,187,188};
                     id_item_leave7 = new short[]{11, 13, 2, 3, 2, 3, 14};
                     id_medal_boss = new short[]{(short) Util.random(464, 470)};
                     sizeRandomMedal = (short) (100);
                     break;
                 }
                 case 195: { // Godzila
-                 id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322};
+                 id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322,187,188};
                     id_item_leave7 = new short[]{14};
                     if (Util.random(1) < 1) {
                    //     id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -408,7 +407,7 @@ public class LeaveItemMap {
                     break;
                 }
                 case 196: { // King kong
-                 id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322};
+                 id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322,187,188};
                     id_item_leave7 = new short[]{14};
                     if (Util.random(1) < 1) {
                    //     id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -417,7 +416,7 @@ public class LeaveItemMap {
                     break;
                 }
                 case 197: { // ga trong
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322,187,188};
                     id_item_leave7 = new short[]{14};
                     if (Util.random(1) < 1) {
                    //     id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -426,7 +425,7 @@ public class LeaveItemMap {
                     break;
                 }
                 case 186: { // Người tuyết nhỏ
-                     id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322};
+                     id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322,187,188};
                     id_item_leave7 = new short[]{14};
                     if (Util.random(1) < 1) {
                    //     id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -435,7 +434,7 @@ public class LeaveItemMap {
                     break;
                 }
                 case 187: { // Lính rìu nhỏ
-                      id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322};
+                      id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322,187,188};
                     id_item_leave7 = new short[]{14};
                     if (Util.random(1) < 1) {
                    //     id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -445,7 +444,7 @@ public class LeaveItemMap {
                 }
 
                 case 188: { //Lão trọc
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322,187,188};
                     id_item_leave7 = new short[]{14};
                     if (Util.random(1) < 1) {
                    //     id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -454,10 +453,20 @@ public class LeaveItemMap {
                     break;
                 }
                 case 190: { //boss event 8x
-                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322};
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322,187,188};
                     id_item_leave7 = new short[]{14};
                     if (Util.random(1) < 1) {
                         //     id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
+                    }
+                    sizeRandomMedal = (short) (60);
+                    break;
+                }
+                case 173: { //boss sk 30/4-1/5
+                    id_item_leave4 = new short[]{-1, -1, -1, -1, -1, -1, 273, 274, 251, 319, 320, 321, 322};
+                    id_item_leave7 = new short[]{14};
+                    id_medal_boss_sk = new short[]{184, 185 , 186, 187, 188};
+                    if (Util.random(100) < 1) {
+                             id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
                     }
                     sizeRandomMedal = (short) (60);
                     break;
@@ -480,6 +489,11 @@ public class LeaveItemMap {
                     }else {
                         leave_item_by_type4(map, id, p, mob.index, p.index);
                     }
+                }
+            }
+            for (int i = 0; i < Util.random(1,4); i++) {
+                for (short id : id_medal_boss_sk) {
+                    leave_item_by_type4(map, id, p, mob.index, p.index);
                 }
             }
             for (int i = 0; i < 3; i++) {

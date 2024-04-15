@@ -13,13 +13,7 @@ import core.Service;
 import core.Util;
 import io.Message;
 import io.Session;
-import template.EffTemplate;
-import template.ItemTemplate3;
-import template.ItemTemplate7;
-import template.Mob;
-import template.Mob_Dungeon;
-import template.Option;
-import template.Option_pet;
+import template.*;
 
 public class Dungeon {
 
@@ -740,7 +734,31 @@ public class Dungeon {
             mi.cleanup();
         }
     }
-    
+    public static void leave_item_by_type4(Map map, short id_item, Player p_master, int index) throws IOException {
+        int index_item_map = map.get_item_map_index_able();
+        if (index_item_map > -1) {
+            //
+            map.item_map[index_item_map] = new ItemMap();
+            map.item_map[index_item_map].id_item = id_item;
+            map.item_map[index_item_map].color = 0;
+            map.item_map[index_item_map].quantity = 1;
+            map.item_map[index_item_map].category = 4;
+            map.item_map[index_item_map].idmaster = (short) p_master.index;
+            map.item_map[index_item_map].time_exist = System.currentTimeMillis() + 60_000L;
+            map.item_map[index_item_map].time_pick = System.currentTimeMillis() + 1_500L;
+            // add in4 game scr
+            Message mi = new Message(19);
+            mi.writer().writeByte(4);
+            mi.writer().writeShort(index); // id mob die
+            mi.writer().writeShort(ItemTemplate4.item.get(map.item_map[index_item_map].id_item).getIcon());
+            mi.writer().writeShort(index_item_map); //
+            mi.writer().writeUTF(ItemTemplate4.item.get(map.item_map[index_item_map].id_item).getName());
+            mi.writer().writeByte(0); // color
+            mi.writer().writeShort(-1); // id player
+            MapService.send_msg_player_inside(map, p_master, mi, true);
+            mi.cleanup();
+        }
+    }
     public static void leave_item_by_type7(Map map, short idItem, Player p_master, int index) throws IOException {
         int index_item_map = map.get_item_map_index_able();
         if (index_item_map > -1) {

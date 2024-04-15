@@ -992,7 +992,7 @@ public class GameSrc {
                 } else if (tem == 3) {
                     Item3 it_temp = conn.p.item.bag3[id];
                     if (it_temp != null
-                            && (it_temp.id == 4587 || it_temp.id == 4588 || it_temp.id == 4589 || it_temp.id == 4590)
+                            && (it_temp.id == 4587 || it_temp.id == 4588 || it_temp.id == 4589 || it_temp.id == 4590 || it_temp.id == 4591)
                             && it_temp.tier < 15) {
                         Message m_send = new Message(-105);
                         m_send.writer().writeByte(4);
@@ -1004,7 +1004,7 @@ public class GameSrc {
                         conn.addmsg(m_send);
                         m_send.cleanup();
                     } else {
-                        Service.send_notice_box(conn, "Lỗi hãy thử lại!");
+                        Service.send_notice_box(conn, "Không phải mề đay!");
                     }
                 }
                 break;
@@ -1255,15 +1255,15 @@ public class GameSrc {
             conn.p.time_speed_rebuild = System.currentTimeMillis() + 2000;
             if(index >0)
                 conn.p.item.remove(7, 348 + index, 1);
-            
-            
+
+
             float[] plus_rate = new float[] {(float)0, (float)0.5, (float)0.1, (float)0.3};
 //            boolean suc = (it_temp.tier < 6) ? true : (100 > Util.random(100 + it_temp.tier * 28));//cũ là 25
             boolean suc = (it_temp.tier < 6) ? true : ((Ratio_Upgrademeday[it_temp.tier] + Ratio_Upgrademeday[it_temp.tier] * plus_rate[index]) > Util.random(1000));
             if (conn.ac_admin > 10 && Manager.BuffAdmin) {
                 suc = true;
             }
-            
+
             if (suc) {
                 it_temp.tier++;
                 it_temp = Helps.medal.Upgare_Medal(it_temp);

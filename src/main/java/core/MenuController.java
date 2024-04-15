@@ -229,6 +229,10 @@ public class MenuController {
                     return;
                     //menu = new String[]{"Coming soon", infoServer.Website};
 
+                } else if (Manager.gI().event == 5) {
+                    menu = new String[]{"Ghép chữ 30-4 end 1-5","Xem BXH đổi quà"};
+                    send_menu_select(conn, -69, menu, (byte) Manager.gI().event);
+                    return;
                 } else {
                     Service.send_notice_box(conn, "Chưa có chức năng :(.");
                     return;
@@ -581,6 +585,9 @@ public class MenuController {
                     Menu_MissSophia(conn, idnpc, idmenu, index);
                 }
                 if (Manager.gI().event == 3) {
+                    Menu_MissSophia(conn, idnpc, idmenu, index);
+                }
+                if (Manager.gI().event == 5) {
                     Menu_MissSophia(conn, idnpc, idmenu, index);
                 }
                 break;
@@ -1490,7 +1497,21 @@ public class MenuController {
                     Service.send_notice_box(conn, "Chưa có chức năng ev3!");
                     break;
             }
-        } else {
+        }else if (Manager.gI().event==5){
+            switch (index){
+                case 0:{
+                    Service.send_box_input_text(conn,43,"Ghép chữ 30-4 end 1-5",new String[]{"Bộ chữ 30-4 1-5 + 100k coin"});
+                    break;
+                }
+                case 1: {
+                    BXH.send1(conn, 1);
+                    break;
+                }
+                default:
+                    Service.send_notice_box(conn, "Chưa có chức năng ev5!");
+                    break;
+            }
+        }else {
             Service.send_notice_box(conn, "menu: " + idmenu + "  ev: " + Manager.gI().event);
         }
 
@@ -2299,7 +2320,7 @@ public class MenuController {
                     conn.p.chucphuc = 0;
                     int ngoc_ = Util.random(1000, 2000);
                     int vang_ = Util.random(10000, 100000);
-                    int coin_ = Util.random(10000, 30000);
+                    int coin_ = Util.random(10000, 50000);
                     conn.p.update_ngoc(ngoc_);
                     conn.p.update_vang(vang_);
                     conn.p.update_coin(coin_);
@@ -5868,7 +5889,7 @@ public class MenuController {
                 if (conn.p.diemdanh == 1) {
                     conn.p.diemdanh = 0;
                     int ngoc_ = Util.random(100, 1000);
-                    int coin_ = Util.random(10000, 30000);
+                    int coin_ = Util.random(10000, 50000);
                     conn.p.update_ngoc(ngoc_);
                     conn.p.update_coin(coin_);
                     Log.gI().add_log(conn.p.name, "Điểm danh ngày được " + Util.number_format(ngoc_) + " ngọc");

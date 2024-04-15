@@ -2230,9 +2230,9 @@ public static int idxDame;
                         } else {
                             send_notice_box(conn, "Tối thiểu 5 ngọc!");
                         }
-                    }else if(it != null && it.id >= 5000){
+                    }else if(it != null && it.id >= 4850){
                         try {
-                                if (conn.p.item.total_item_by_id(4, 22) <= 0) {
+                                if (conn.p.item.total_item_by_id(4, 244) <= 0) {
                                     Service.send_notice_box(conn, "Không đủ vật phẩm nâng cấp");
                                     return;
                                 }
@@ -2240,7 +2240,7 @@ public static int idxDame;
                                     Service.send_notice_box(conn,"Vật phẩm đã được nâng cấp tối đa");
                                     return;
                                 }
-                                conn.p.item.remove(4, 22, 1);
+                                conn.p.item.remove(4, 244, 1);
                                 it.tierStar++;
                                 it.UpdateName();
                                 it = Helps.medal.nangcap(it);

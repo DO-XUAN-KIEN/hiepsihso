@@ -58,6 +58,7 @@ public class Player extends Body2 {
     public byte diemdanh;
     public byte banclone;
     public byte chucphuc;
+    public int doiqua;
     public int diemsukien;
     public int diemchiemthanh;
     public int diemdibuon;
@@ -350,6 +351,7 @@ public class Player extends Body2 {
                 diemdibuon = rs.getInt("diemdibuon");
                 diemdicuop = rs.getInt("diemdicuop");
                 chucphuc = rs.getByte("chucphuc");
+                doiqua = rs.getInt("doiqua");
                 hieuchien = rs.getInt("hieuchien");
                 chuyencan = rs.getInt("chuyencan");
                 chuyensinh = rs.getInt("chuyensinh");
@@ -1202,6 +1204,7 @@ public class Player extends Body2 {
                 a += ",`kynang` = " + kynang;
                 a += ",`diemdanh` = " + diemdanh;
                 a += ",`chucphuc` = " + chucphuc;
+                a += ",`doiqua` = " + doiqua;
                 a += ",`hieuchien` = " + hieuchien;
                 a += ",`chuyencan` = " + chuyencan;
                 a += ",`diemsukien` = " + diemsukien;

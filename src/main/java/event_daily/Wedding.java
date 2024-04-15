@@ -21,6 +21,7 @@ public class Wedding {
 	public String name_2;
 	public Item3 it;
 	public long exp;
+	public Player p;
 
 	@SuppressWarnings("unchecked")
 	public synchronized static void add_new(int quant, Player p, Player p0) throws IOException {

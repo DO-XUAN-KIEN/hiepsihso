@@ -501,8 +501,8 @@ public class Session implements Runnable {
                 return;
             }
         }
-        if (Manager.gI().isServerAdmin && this.ac_admin <= 0) {
-            noticelogin("Server này chỉ admin mới có thể truy cập!");
+        if (Manager.gI().isServerAdmin && this.ac_admin <= 10) {
+            noticelogin("Hiện tại Sever đang bảo trì.");
             return;
         }
         if (indexCharPar != Manager.gI().indexCharPar) {

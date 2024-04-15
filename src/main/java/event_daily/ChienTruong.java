@@ -512,6 +512,7 @@ public class ChienTruong {
             short sizeRandomMedal = 0;
             switch (mob.template.mob_id) {
                 case 93: {
+					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -524,6 +525,7 @@ public class ChienTruong {
                     break;
                 }
                 case 94: {
+					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -536,6 +538,7 @@ public class ChienTruong {
 					break;
                 }
                 case 95: {
+					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -548,6 +551,7 @@ public class ChienTruong {
 					break;
                 }
                 case 96: {
+					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -560,6 +564,7 @@ public class ChienTruong {
 					break;
                 }
                 case 97: {
+					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -572,6 +577,7 @@ public class ChienTruong {
 					break;
                 }
                 case 98: {
+					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -584,6 +590,7 @@ public class ChienTruong {
 					break;
                 }
                 case 99: {
+					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -596,6 +603,7 @@ public class ChienTruong {
 					break;
                 }
                 case 100: {
+					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
@@ -612,7 +620,7 @@ public class ChienTruong {
                 ItemTemplate3 temp = ItemTemplate3.item.get(id);
                 LeaveItemMap.leave_item_by_type3(map, id, temp.getColor(), p, temp.getName(), mob.index);
             }
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 2; i++) {
                 for (short id : id_item_leave4) {
                     if (id == -1) {
                         leave_vang(map, mob, p);
