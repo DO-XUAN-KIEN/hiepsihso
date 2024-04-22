@@ -1446,7 +1446,7 @@ public class MapService {
                     "Cộng ngọc x1.000.000", "Update data", "Lấy item", "Up level", "Set Xp", "Khóa mõm", "Gỡ khóa mõm", "Khóa vòng quay", "Khóa GD", "Khóa KMB", "Mở đổi vàng sang coin", "Ấp trứng nhanh",
                     "Buff Admin", "Buff Nguyên liệu", "Mở chiếm mỏ", "Đóng chiếm mỏ", (LoiDaiManager.isRegister ? "Đóng" : "Mở") + " đăng kí Lôi Đài", "Reset mob events",
                     (ChiemThanhManager.isRegister ? "Đóng" : "Mở") + " đăng kí chiếm thành", "Mở đăng kí chiến trường", "Dịch map", "loadconfig",
-                    (Manager.logErrorLogin ? "tắt" : "bật") + " log bug", "disconnect client", "check bug", "fix bug", "đăng kí chiến trường"});
+                    (Manager.logErrorLogin ? "tắt" : "bật") + " log bug", "disconnect client", "check bug", "fix bug", "đăng kí chiến trường","đăng kí up ngọc"});
         } //        else if (conn.ac_admin >=10 && chat.equals("xoa")){
         //            //tools.loadacc();
         //        }

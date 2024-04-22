@@ -17,22 +17,12 @@ import core.Service;
 import core.Util;
 import ev_he.MobCay;
 //import event_daily.LoiDai;
-import event_daily.LoiDai2;
-import event_daily.UseItemArena;
-import event_daily.ChienTruong;
+import event_daily.*;
 import io.Message;
 import io.Session;
 import java.util.concurrent.CopyOnWriteArrayList;
 import template.EffTemplate;
-import template.Item3;
-import template.Item47;
-import template.ItemTemplate3;
-import template.ItemTemplate4;
-import template.ItemTemplate7;
-import template.MainObject;
-import template.Mob_MoTaiNguyen;
-import template.Option_pet;
-import template.StrucEff;
+import template.*;
 
 public class Map implements Runnable {
 
@@ -135,6 +125,16 @@ public class Map implements Runnable {
                         for (int i = 0; i < this.players.size(); i++) {
                             Player p0 = players.get(i);
                             ChienTruong.gI().send_info(p0);
+                        }
+                    }
+                    Player_Nhan_Ban.update(this);
+                }
+                if (upngocrong.gI().getStatus() == 2 && Map.is_map_up_ngoc(this.map_id)) {
+                    if (this.time_ct < System.currentTimeMillis()) {
+                        this.time_ct = System.currentTimeMillis() + 5000L;
+                        for (int i = 0; i < this.players.size(); i++) {
+                            Player p0 = players.get(i);
+                            upngocrong.gI().send_info(p0);
                         }
                     }
                     Player_Nhan_Ban.update(this);
@@ -567,6 +567,23 @@ public class Map implements Runnable {
                                         eff_ = 7;
                                     } else if (it.tier >= 3) {
                                         eff_ = 6;
+                                    }
+                                    m.writer().writeByte(eff_);
+                                    break;
+                                }
+                                case 4591: {
+                                    byte eff_ = 78;//65,54,60,64
+                                                   //81,78,79,80
+                                    if (it.tier == 15) {
+                                        eff_ = 82;
+                                    } else if (it.tier >= 12) {
+                                        eff_ = 80;
+                                    } else if (it.tier >= 9) {
+                                        eff_ = 79;
+                                    } else if (it.tier >= 6) {
+                                        eff_ = 78;
+                                    } else if (it.tier >= 3) {
+                                        eff_ = 81;
                                     }
                                     m.writer().writeByte(eff_);
                                     break;
@@ -1325,7 +1342,7 @@ public class Map implements Runnable {
 
     public static boolean is_map_cant_save_site(byte id) {
         return id == 48 || id == 88 || id == 89 || id == 90 || id == 91 || id == 82 || id == 102 || id == 100 || (id >= 83 && id <= 87) || (id >= 53 && id <= 61)
-                || Map.is_map_chien_truong(id);
+                || Map.is_map_chien_truong(id) || id == 99 || Map.is_map_up_ngoc(id);
     }
 
     public synchronized void add_item_map_leave(Map map, Player p_master, ItemMap temp, int mob_index)
@@ -1383,6 +1400,12 @@ public class Map implements Runnable {
 
     public static boolean is_map_chien_truong(byte id) {
         return id >= 53 && id <= 61;
+    }
+    public static boolean is_map_up_ngoc(byte id) {
+        return id == 99;
+    }
+    public boolean ismapupngoc() {
+        return map_id == 99;
     }
 
     public boolean isMapChienTruong() {

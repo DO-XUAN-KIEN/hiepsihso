@@ -705,7 +705,7 @@ public class Session implements Runnable {
             notice_create_char("tên không hợp lệ, nhập lại đi!!");
             return;
         }
-        if (name != null && (name.indexOf("ad") >= 0 || name.indexOf("server") >= 0 || name.indexOf("sever") >= 0 || name.indexOf("thongbao") >= 0)) {
+        if (name != null && (name.indexOf("ad") >= 0 || name.indexOf("server") >= 0 || name.indexOf("thongbao") >= 0)) {
             notice_create_char("tên không hợp lệ, nhập lại đi!!");
             return;
         }

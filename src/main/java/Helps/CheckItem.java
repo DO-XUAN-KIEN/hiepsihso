@@ -27,6 +27,11 @@ public class CheckItem {
         List<Short> itemcoin = new ArrayList<>(java.util.Arrays.asList((short)4587, (short)4588, (short)4589, (short)4590, (short)4672, (short)4675, (short)4673, (short)4674, (short)4718, (short)4779));
         return itemcoin.contains(id);
     }
+    public static boolean isBuyItemSieupham(short id)
+    {
+        List<Short> itemsieupham = new ArrayList<>(java.util.Arrays.asList((short)4591,(short)4855));
+        return itemsieupham.contains(id);
+    }
     
     public static boolean isDaKham(short id)
     {

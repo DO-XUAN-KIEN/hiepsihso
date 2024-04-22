@@ -35,14 +35,14 @@ public class Mob_Dungeon extends MainObject {
             if (!this.isdie) {
                 this.isdie = true;
                 // send p outside
-                if(30>Util.random(0,100))
+                if(20>Util.random(0,100))
                     Dungeon.leave_item_by_type7(map, (short)Util.random(417,464), (Player)mainAtk, this.index);
                 if(5>Util.random(0,100))
                     Dungeon.leave_item_by_type7(map, Medal_Material.m_blue[Util.random(Medal_Material.m_blue.length)], (Player)mainAtk, this.index);
                 if(Manager.gI().event == 5 && 0.1>Util.random(0,100)){
                     Dungeon.leave_item_by_type4(map, (short) 193,(Player) mainAtk, this.index);
                 }
-                if(Manager.gI().event == 5 && 80>Util.random(0,100)){
+                if(Manager.gI().event == 5 && 10>Util.random(0,100)){
                     Dungeon.leave_item_by_type4(map, (short) 186,(Player) mainAtk, this.index);
                 }
 //                Message m2 = new Message(17);

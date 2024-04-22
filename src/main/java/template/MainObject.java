@@ -7,8 +7,7 @@ import client.Player;
 import core.Manager;
 import core.Service;
 import core.Util;
-import event_daily.ChiemThanhManager;
-import event_daily.ChienTruong;
+import event_daily.*;
 import io.Message;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -726,7 +725,8 @@ public class MainObject {
         if (focus.isMobDiBuon()) {
             dame = focus.hp_max * 5 / 100;
         }
-        if(focus.template.mob_id == 173 && focus.level <= 139 && focus.level >= 5){
+        if(focus != null && focus.template != null
+                && !focus.isMobDiBuon() && !focus.isPlayer() && focus.template.mob_id == 173 && (focus.level <= 139 && focus.level >= 5)){
             dame = 100_000;
         }
         focus.hp -= dame;
@@ -749,6 +749,9 @@ public class MainObject {
                 }
             if (map.isMapChienTruong()) {
                 ChienTruong.Obj_Die(map, ObjAtk, focus);
+            }
+            if (map.ismapupngoc()) {
+                upngocrong.Obj_Die(map, ObjAtk, focus);
             }
             focus.SetDie(map, ObjAtk);
             if (focus != null && focus.template != null

@@ -9,10 +9,7 @@ import java.net.Socket;
 import java.util.Calendar;
 import client.Clan;
 import client.Player;
-import event_daily.ChiemThanhManager;
-import event_daily.ChienTruong;
-import event_daily.LoiDai;
-import event_daily.LoiDaiManager;
+import event_daily.*;
 import io.Session;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -247,9 +244,14 @@ public class ServerManager implements Runnable {
                         ChienTruong.gI().open_register();
                       //   Manager.gI().chatKTGprocess("Chiến Trường Đã Bắt Đầu mở đăng ký");
                     }
+                    if (sec == 3 && min == 0 && (hour == 8 || hour == 20)) {
+                        upngocrong.gI().open_register();
+                    }
                     if (sec % 1 == 0) {
                         LoiDaiManager.gI().Update();
                         ChienTruong.gI().update();
+                        upngocrong.gI().update();
+
                     }
                     if(DayOfWeek % 2 == 0 && hour >= 20 && hour <= 23){
                         checkError = 16;

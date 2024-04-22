@@ -1,5 +1,6 @@
 package client;
 
+import Helps.medal;
 import core.*;
 
 import java.io.IOException;
@@ -538,9 +539,10 @@ public class Process_Yes_no_box {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        if(conn.p.point_active[0] <=0)
-                            Service.send_notice_box(conn, "Hãy quay lại vào ngày hôm sau!");
-                        else if (d != null) {
+                        if ( conn.p.point_active[0] <= 0) {
+                            Service.send_notice_box(conn, "Hôm nay đã hết lượt đi mua thêm vé hoặc quay lại ngày mai");
+                        } else if (d != null) {
+                            conn.p.phoban++;
                             conn.p.point_active[0]--;
                             //
                             d.name_party = conn.p.name;
@@ -554,6 +556,7 @@ public class Process_Yes_no_box {
                             d.send_map_data(conn.p);
                             //
                             DungeonManager.add_list(d);
+                            conn.p.item.char_inventory(5);
                         } else {
                             Service.send_notice_box(conn, "Lỗi, hãy thử lại sau!");
                         }
@@ -607,7 +610,7 @@ public class Process_Yes_no_box {
 //                    break;
 //                }
                 case 122: {
-//                    if((conn.p.item.bag3[conn.p.item_replace].id >= 4587 && conn.p.item.bag3[conn.p.item_replace].id<= 4590) || 
+//                    if((conn.p.item.bag3[conn.p.item_replace].id >= 4587 && conn.p.item.bag3[conn.p.item_replace].id<= 4590) ||
 //                            (conn.p.item.bag3[conn.p.item_replace2].id >= 4587 && conn.p.item.bag3[conn.p.item_replace2].id<= 4590))
 //                    {
 //                        Service.send_notice_box(conn, "Trang bị không phù hợp!");

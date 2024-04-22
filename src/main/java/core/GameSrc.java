@@ -94,7 +94,7 @@ public class GameSrc {
                 switch (type) {
                     case 0: {
                         Item3 checkit = conn.p.item.bag3[id];
-                        if (checkit.id >= 4587 && checkit.id <= 4590) {
+                        if (checkit.id >= 4587 && checkit.id <= 4591) {
                             Service.send_notice_box(conn, "Không hợp lệ!");
                             return;
                         }
@@ -992,7 +992,7 @@ public class GameSrc {
                 } else if (tem == 3) {
                     Item3 it_temp = conn.p.item.bag3[id];
                     if (it_temp != null
-                            && (it_temp.id == 4587 || it_temp.id == 4588 || it_temp.id == 4589 || it_temp.id == 4590 || it_temp.id == 4591)
+                            && (it_temp.id == 4587 || it_temp.id == 4588 || it_temp.id == 4589 || it_temp.id == 4590)
                             && it_temp.tier < 15) {
                         Message m_send = new Message(-105);
                         m_send.writer().writeByte(4);
@@ -1255,8 +1255,6 @@ public class GameSrc {
             conn.p.time_speed_rebuild = System.currentTimeMillis() + 2000;
             if(index >0)
                 conn.p.item.remove(7, 348 + index, 1);
-
-
             float[] plus_rate = new float[] {(float)0, (float)0.5, (float)0.1, (float)0.3};
 //            boolean suc = (it_temp.tier < 6) ? true : (100 > Util.random(100 + it_temp.tier * 28));//cũ là 25
             boolean suc = (it_temp.tier < 6) ? true : ((Ratio_Upgrademeday[it_temp.tier] + Ratio_Upgrademeday[it_temp.tier] * plus_rate[index]) > Util.random(1000));
@@ -1891,7 +1889,8 @@ public class GameSrc {
                                 Service.send_notice_box(conn, "Số lượng không hợp lệ!");
                                 return;
                             }
-                            if (p_store.it_type == 4 && (Helps.CheckItem.item4CanTrade(p_store.it_id) || p_store.it_id == 135 || p_store.it_id == 52 || p_store.it_id == 56 || p_store.it_id == 143 || p_store.it_id == 226)) {
+                            if (p_store.it_type == 4 && (Helps.CheckItem.item4CanTrade(p_store.it_id) || p_store.it_id == 135 || p_store.it_id == 52 || p_store.it_id == 56 || p_store.it_id == 143 || p_store.it_id == 226 ||
+                                    p_store.it_id == 184 || p_store.it_id == 185 || p_store.it_id == 186 || p_store.it_id == 187 || p_store.it_id == 188 || p_store.it_id == 173 || p_store.it_id == 174 || p_store.it_id == 330)) {
                                 Service.send_notice_box(conn, "Đồ bán không hợp lệ!");
                                 return;
                             }

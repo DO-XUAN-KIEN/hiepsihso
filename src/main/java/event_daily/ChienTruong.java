@@ -85,7 +85,6 @@ public class ChienTruong {
 		} catch (IOException e) {
 		}
 	}
-
 	private void create_boss(int i) {
 //		if (i == 20) {
 //			Mob_in_map m = null;
@@ -413,7 +412,6 @@ public class ChienTruong {
 			m.cleanup();
 		}
 	}
-
 	private int total_p_of_house(int i) {
 		int result = 0;
 		for (Entry<String, Member_ChienTruong> en : this.list.entrySet()) {
@@ -512,104 +510,120 @@ public class ChienTruong {
             short sizeRandomMedal = 0;
             switch (mob.template.mob_id) {
                 case 93: {
-					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
-					if(Util.random(1000) < 1 ){
-						id_item_leave = new short[]{(short) Util.random(464, 470)};
+					if(Util.random(2000) < 1 ){
+						id_item_leave = new short[]{(short) Util.random(464, 471)};
+					}
+					if(Util.random(1000) < 1){
+						id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
                     break;
                 }
                 case 94: {
-					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					if(Util.random(1000) < 1 ){
-						id_item_leave = new short[]{(short) Util.random(464, 470)};
+						id_item_leave = new short[]{(short) Util.random(464, 471)};
+					}
+					if(Util.random(1000) < 1){
+						id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
 					break;
                 }
                 case 95: {
-					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					if(Util.random(1000) < 1 ){
-						id_item_leave = new short[]{(short) Util.random(464, 470)};
+						id_item_leave = new short[]{(short) Util.random(464, 471)};
+					}
+					if(Util.random(1000) < 1){
+						id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
 					break;
                 }
                 case 96: {
-					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					if(Util.random(1000) < 1 ){
-						id_item_leave = new short[]{(short) Util.random(464, 470)};
+						id_item_leave = new short[]{(short) Util.random(464, 471)};
+					}
+					if(Util.random(1000) < 1){
+						id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
 					break;
                 }
                 case 97: {
-					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					if(Util.random(1000) < 1 ){
-						id_item_leave = new short[]{(short) Util.random(464, 470)};
+						id_item_leave = new short[]{(short) Util.random(464, 471)};
+					}
+					if(Util.random(1000) < 1){
+						id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
 					break;
                 }
                 case 98: {
-					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					if(Util.random(1000) < 1 ){
-						id_item_leave = new short[]{(short) Util.random(464, 470)};
+						id_item_leave = new short[]{(short) Util.random(464, 471)};
+					}
+					if(Util.random(1000) < 1){
+						id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
 					break;
                 }
                 case 99: {
-					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					if(Util.random(1000) < 1 ){
-						id_item_leave = new short[]{(short) Util.random(464, 470)};
+						id_item_leave = new short[]{(short) Util.random(464, 471)};
+					}
+					if(Util.random(1000) < 1){
+						id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
 					break;
                 }
                 case 100: {
-					id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					id_item_leave7 = new short[]{(short) Util.random(126, 136)};
 					if(Util.random(10000) < 1 ){
 						id_item_leave3 = new short[]{(short) Util.random(4577, 4585)};
 					}
 					if(Util.random(1000) < 1 ){
-						id_item_leave = new short[]{(short) Util.random(464, 470)};
+						id_item_leave = new short[]{(short) Util.random(464, 471)};
+					}
+					if(Util.random(1000) < 1){
+						id_item_leave4 = new short[]{(short) Util.random(187,189)};
 					}
 					p.update_point_arena(1);
 					p.item.char_inventory(5);
