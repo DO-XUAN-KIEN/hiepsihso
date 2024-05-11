@@ -954,11 +954,15 @@ public class MainObject {
                             p.update_vang(vangjoin);
                             Service.send_notice_nobox_white(p.conn, "+ " + vangjoin + " vàng");
                         }
-                        if (focus.isMob() && (my_pet.get_id() == 4626 || my_pet.name.equals("Đại Bàng"))) {
-                            int vangjoin = Util.random(1666, 2292);
-                            p.update_vang(vangjoin);
-
-                            Service.send_notice_nobox_white(p.conn, "+ " + vangjoin + " vàng");
+                        if (focus.isPlayer() && my_pet.get_id() == 4614 && Util.nextInt(100) < 5) {
+                            Player p_focus = (Player) focus;
+                            p_focus.add_EffDefault(StrucEff.VET_THUONG_SAU, 1, 5000);
+                            Service.send_notice_nobox_white(p_focus.conn, "Bạn bị vết thương sâu");
+                        }
+                        if (focus.isPlayer() && my_pet.get_id() == 4626 && Util.nextInt(100) < 5) {
+                            Player p_focus = (Player) focus;
+                            p_focus.add_EffDefault(StrucEff.TE_CONG, 1, 5000);
+                            Service.send_notice_nobox_white(p_focus.conn, "Bạn bị tê cóng");
                         }
                         p.pet_atk_speed = System.currentTimeMillis() + 1500L;
                         Message m = new Message(84);

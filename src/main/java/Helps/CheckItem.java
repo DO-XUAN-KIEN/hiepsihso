@@ -9,7 +9,13 @@ import java.util.Set;
 public class CheckItem {
     public static boolean isMeDay(short id)
     {
-        if(id >= 4587 && id <= 4591)
+        if(id >= 4587 && id <= 4590)
+            return true;
+        return false;
+    }
+    public static boolean isMeDaysieucap(short id)
+    {
+        if(id == 4591)
             return true;
         return false;
     }
@@ -29,7 +35,7 @@ public class CheckItem {
     }
     public static boolean isBuyItemSieupham(short id)
     {
-        List<Short> itemsieupham = new ArrayList<>(java.util.Arrays.asList((short)4591,(short)4855));
+        List<Short> itemsieupham = new ArrayList<>(java.util.Arrays.asList((short)4591,(short)4850,(short)4851,(short)4852,(short)4853,(short)4854,(short)4855,(short)4856,(short)4857,(short)4858,(short)4859,(short)4860,(short)4861,(short)4862));
         return itemsieupham.contains(id);
     }
     

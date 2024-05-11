@@ -1581,7 +1581,11 @@ public class MapService {
         m.writer().writeShort(Service.get_id_mat_na(p0)); // mat na
         m.writer().writeByte(1); // paint mat na trc sau
         m.writer().writeShort(Service.get_id_phiphong(p0)); // phi phong
-        m.writer().writeShort(Service.get_id_weapon(p0)); // weapon
+        if(p.item.wear[0].id >= 4850 && p.item.wear[0] != null) {
+            m.writer().writeShort(Service.get_id_eff(p0));
+        }else {
+            m.writer().writeShort(Service.get_id_weapon(p0)); // weapon
+        }
         m.writer().writeShort(p0.id_horse);
         m.writer().writeShort(Service.get_id_hair(p0)); // hair
         m.writer().writeShort(Service.get_id_wing(p0)); // wing
@@ -1682,7 +1686,11 @@ public class MapService {
         m.writer().writeShort(Service.get_id_mat_na(p0)); // mat na
         m.writer().writeByte(1); // paint mat na trc sau
         m.writer().writeShort(Service.get_id_phiphong(p0)); // phi phong
-        m.writer().writeShort(Service.get_id_weapon(p0)); // weapon
+        if(p.item.wear[0].id >= 4850 && p.item.wear[0] != null) {
+            m.writer().writeShort(Service.get_id_eff(p0));
+        }else {
+            m.writer().writeShort(Service.get_id_weapon(p0)); // weapon
+        }
         m.writer().writeShort(p0.id_horse);
         m.writer().writeShort(Service.get_id_hair(p0)); // hair
         m.writer().writeShort(Service.get_id_wing(p0)); // wing

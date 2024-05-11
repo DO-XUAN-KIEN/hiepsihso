@@ -24,9 +24,7 @@ import map.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 import template.*;
-
 public class MenuController {
-
     public static void request_menu(Session conn, Message m) throws IOException {
         byte idnpc = m.reader().readByte();
         //System.out.println("core.MenuController.request_menu()"+idnpc);
@@ -172,7 +170,7 @@ public class MenuController {
             }
             case -37: {
                 menu = new String[]{"Vào Ngã Tư Tử Thần", "Giới thiệu", "BXH phó bản", "Đăng ký chiếm thành", "Vào chiếm thành",
-                    "Xem Điểm Hiện Tại", "Nhận phần thưởng", "Trở thành hiệp sĩ"};
+                    "Xem Điểm Hiện Tại", "Nhận phần thưởng", "Trở thành hiệp sĩ","Hoàn thành phó bản trong 1 nốt nhạc"};
                 break;
             }
             case -38:
@@ -738,6 +736,9 @@ public class MenuController {
 
     }
     private static void Qua_chientruong(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 if (conn.p.pointarena < 44444) {
@@ -795,6 +796,9 @@ public class MenuController {
         }
     }
     private static void Sach_skill(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 if (conn.p.pointarena < 44444) {
@@ -1170,6 +1174,9 @@ public class MenuController {
         }
     }
     private static void Menu_MissSophia(Session conn, int idNPC, byte idmenu, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
 //        System.out.println("core.MenuController.Menu_MissSophia() id: "+idmenu);
 //        System.out.println("core.MenuController.Menu_MissSophia() idx: "+index);
 //        System.out.println("core.MenuController.Menu_MissSophia() ev: "+Manager.gI().event);
@@ -1476,6 +1483,9 @@ public class MenuController {
     }
 
     private static void Menu_MobEvent(Session conn, int idmob, byte idmenu, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (idmenu == 2) {
             if (index != 0) {
                 return;
@@ -1521,6 +1531,9 @@ public class MenuController {
     }
 
     private static void Menu_Krypton(Session conn, byte idmenu, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (idmenu == 0)//nâng mề dùng đá Krypton
         {
             GameSrc.UpgradeMedal(conn, index);
@@ -1534,6 +1547,9 @@ public class MenuController {
         if (idmenu == 0) {
             switch (index) {
                 case 0: {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
                     if (conn.p.item.total_item_by_id(4, 52) > 0) {
                         MoLy.show_table_to_choose_item(conn.p);
                     } else {
@@ -1542,6 +1558,9 @@ public class MenuController {
                     break;
                 }
                 case 1: {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
                     String[] menu = new String[]{"Vòng xoay Vàng", "Vòng xoay ngọc", "Lịch sử","Tài Xĩu"};
                     MenuController.send_menu_select(conn, -34, menu);
                     break;
@@ -1555,6 +1574,9 @@ public class MenuController {
                     break;
                 }
                 case 4: {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
                     if (conn.p.map.ld2 != null) {
                         Menu_Mrs_Oda_trong_LoiDai(conn, (byte) 0);
                     } else {
@@ -1595,11 +1617,17 @@ public class MenuController {
     }
 
     private static void Menu_View_LoiDai(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
        // Service.send_notice_box(conn, "Chức năng chưa hoàn thiện");
         LoiDaiManager.gI().JoinMap(conn.p, index);
     }
 
     private static void Menu_Mrs_Oda_trong_LoiDai(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (conn.p.map.ld2 == null) {
             return;
         }
@@ -2039,6 +2067,9 @@ public class MenuController {
     }
 
     private static void Menu_NauKeo(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (Manager.gI().event == 1) {
             switch (index) {
                 case 0: {
@@ -2086,6 +2117,9 @@ public class MenuController {
     }
 
     private static void Menu_Event(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (Manager.gI().event == 1) {
             switch (index) {
                 case 0: {
@@ -2235,6 +2269,9 @@ public class MenuController {
 //        }
 //    }
     private static void Menu_MissAnwen(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         Vgo vgo = null;
         switch (index) {
             case 0: {
@@ -2253,6 +2290,9 @@ public class MenuController {
     }
 
     private static void Menu_Thongtincanhan(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 Service.send_notice_box(conn, "Thông tin:\n Hiệp Sĩ Chicken \n Địa Chỉ Ip:" + conn.ip + "\nTài Khoản:" + conn.user + "\nMật Khẩu Là:" + conn.pass + "\n Số Coin Còn Lại \n:" + conn.p.checkcoin() + "\n(Ghi Chú 0 = Đã Kích hoạt, 1 = Chưa Kích hoạt) \n :" + conn.status);
@@ -2274,6 +2314,9 @@ public class MenuController {
     private static void Menu_top(Session conn, byte index) throws IOException {
         switch (index) {
             case 0: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 if (conn.p.chucphuc == 1) {
                     conn.p.chucphuc = 0;
                     int ngoc_ = Util.random(1000, 2000);
@@ -2307,6 +2350,9 @@ public class MenuController {
             }
 
             case 3: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 if (conn.p.level < 60) {
                     Service.send_notice_box(conn, "Yêu cầu level trên 60");
                     return;
@@ -2349,7 +2395,7 @@ public class MenuController {
             //      }
             case 5: {
                 if (!conn.p.isOwner) {
-                    return;
+                return;
                 }
                 if (conn.p.hieuchien < 1000) {
                     Service.send_notice_box(conn, "Chưa đủ 1000 điểm pk");
@@ -2511,6 +2557,9 @@ public class MenuController {
     }
 
     private static void Menu_TienCanh(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 // Service.send_box_UI(conn, index);
@@ -2579,6 +2628,9 @@ public class MenuController {
     }
 
     private static void Menu_ThayDongCanh_percent(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (conn.p.get_ngoc() < 300) {
             Service.send_notice_box(conn, "Không đủ 300 ngọc");
             return;
@@ -2729,8 +2781,10 @@ public class MenuController {
 //            }
 //        }
     }
-
     private static void Menu_PhoChiHuy(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 if (conn.p.level < 30) {
@@ -2741,14 +2795,22 @@ public class MenuController {
                     Service.send_notice_box(conn, "Hôm nay đã hết lượt đi mua thêm vé hoặc quay lại ngày mai");
                     return;
                 }
+                if(conn.p.isLiveSquire == true){
+                    Service.send_notice_box(conn, "Không thể mang đệ tử vào phó bản");
+                    return;
+                }
                 String notice = "Danh sách người chơi vào phó bản :\n1) " + conn.p.name + " : level " + conn.p.level;
                 if (conn.p.party != null) {
                     Service.send_notice_box(conn, "Phó bản hiện tại chỉ hỗ trợ chế độ solo");
                     return;
                 }
-                notice += "\nĐộ khó: ??? \nHãy xác nhận." + (conn.p.point_active[0] != 10 ? " phí vào là 30 ngọc." : "");
+                notice += "\nCấm mang đệ tử vào phó bản \nHãy xác nhận." + (conn.p.point_active[0] != 10 ? " phí vào là 30 ngọc." : "");
 //                conn.p.dungeon = null;
                 Service.send_box_input_yesno(conn, 119, notice);
+                break;
+            }
+            case 8: {
+                Service.send_box_input_yesno(conn, -1, "Bạn có chắc chắn bỏ 1 lượt đi phó bản để hoàn thành phó bản ngay và luôn");
                 break;
             }
             case 1: {
@@ -2933,6 +2995,9 @@ public class MenuController {
 
 
     private static void Menu_Mr_Edgar(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 if (conn.p.list_enemies.size() > 0) {
@@ -3065,6 +3130,9 @@ public class MenuController {
     }
 
     private static void Menu_Benjamin(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (conn.p.myclan != null) {
             if (conn.p.myclan.mems.get(0).name.equals(conn.p.name)) {
                 switch (index) {
@@ -3207,6 +3275,9 @@ public class MenuController {
 
 
     private static void Menu_VXKC(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 Manager.gI().vxkc.send_in4(conn.p);
@@ -3295,6 +3366,9 @@ public class MenuController {
     }
 
     private static void Menu_Aman(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 Message m = new Message(23);
@@ -3446,6 +3520,9 @@ public class MenuController {
     }
 
     private static void Menu_Black_Eye(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 Service.send_box_UI(conn, 13);
@@ -3593,6 +3670,9 @@ public class MenuController {
     private static void Menu_Miss_Anna(Session conn, byte index) throws IOException {
         switch (index) {
             case 0: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_box_input_text(conn, 0, "Nhập mã code", new String[]{"Code"});
                 break;
             }
@@ -3640,6 +3720,9 @@ public class MenuController {
                 break;
             }
             case 10: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 // nhận quà top lv
                 try ( Connection connection = SQL.gI().getConnection();  Statement st = connection.createStatement();  Statement ps = connection.createStatement();  ResultSet rs = st.executeQuery("SELECT * FROM `giftcode2` WHERE `name_player` = '" + conn.p.name + "' AND `type_gift` = '2' AND `status` = '0';")) {
                     byte empty_box = (byte) 0;
@@ -3767,6 +3850,9 @@ public class MenuController {
                 break;
             }
             case 11: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 // nhận quà top lv
                 try ( Connection connection = SQL.gI().getConnection();  Statement st = connection.createStatement();  Statement ps = connection.createStatement();  ResultSet rs = st.executeQuery("SELECT * FROM `giftcode2` WHERE `name_player` = '" + conn.p.name + "' AND `type_gift` = '1' AND `status` = '0';")) {
                     byte empty_box = (byte) 0;
@@ -3897,6 +3983,9 @@ public class MenuController {
     }
 
     private static void Menu_Doiaochoang(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 if(conn.p.item.total_item_by_id(7, 464) < 1){
@@ -5374,6 +5463,9 @@ public class MenuController {
     }
 
     private static void Menu_PhapSu(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         conn.p.ResetCreateItemStar();
         switch (index) {
             case 0: {
@@ -5436,7 +5528,7 @@ public class MenuController {
                     Service.send_notice_box(conn, "Lỗi hành trang hoặc trang bị!");
                     return;
                 }
-                if (itemw.length > 12 && itemw[12] != null && Helps.CheckItem.isMeDay(itemw[12].id)) {
+                if (itemw.length > 12 && itemw[12] != null && (Helps.CheckItem.isMeDay(itemw[12].id) || Helps.CheckItem.isMeDaysieucap(itemw[12].id))) {
                     myList.add(itemw[12].name + " (1000 ngọc)");
                 }
                 if (myList == null || myList.size() <= 0) {
@@ -5854,6 +5946,9 @@ public class MenuController {
     private static void Menu_Zulu(Session conn, byte index) throws IOException {
         switch (index) {
             case 0: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 switch (conn.p.clazz) {
                     case 0: {
                         Service.send_msg_data(conn, 23, "tocchienbinh");
@@ -5872,6 +5967,9 @@ public class MenuController {
                 break;
             }
             case 1: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 if (conn.p.diemdanh == 1) {
                     conn.p.diemdanh = 0;
                     int ngoc_ = Util.random(100, 1000);
@@ -5887,14 +5985,23 @@ public class MenuController {
                 break;
             }
             case 2: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_box_input_text(conn, 5, "Đổi coin sang ngọc", new String[]{"Tỷ lệ 1000 coin = 500 ngọc"});
                 break;
             }
             case 3: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_box_input_text(conn, 14, "Đổi coin sang vàng", new String[]{"Tỷ lệ 1000 coin = 5tr vàng"});
                 break;
             }
             case 4: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 if (!Manager.doicoin) {
                     Service.send_notice_box(conn, "Đổi Vàng sang coin đang tạm khóa!");
                     return;
@@ -5930,6 +6037,9 @@ public class MenuController {
                 break;
             }
             case 6: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_box_input_text(conn, 30, "Đổi mật khẩu", new String[]{"nhập mật khẩu cũ",
                     "nhập mật khẩu mới", "nhập lại mật khẩu mới"});
                 break;
@@ -5983,6 +6093,9 @@ public class MenuController {
     }
 
     private static void Menu_Alisama(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 Service.send_box_UI(conn, 9);
@@ -6498,28 +6611,46 @@ public class MenuController {
         if (idmenu == 0) {
             switch (index) {
                 case 0: {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
                     Service.send_box_UI(conn, 5);
                     break;
                 }
                 case 1: {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
                     Service.send_box_UI(conn, 6);
                     break;
                 }
                 case 2: {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
                     Service.send_box_UI(conn, 7);
                     break;
                 }
                 case 3: {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
                     Service.send_box_UI(conn, 8);
                     break;
                 }
                 case 4: // chế tạo tinh tú
                 {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
                     send_menu_select(conn, -5, new String[]{"Chiến binh", "Sát thủ", "Pháp sư", "Xạ thủ"}, (byte) 1);
                     break;
                 }
                 case 5:// nâng cấp tinh tú
                 {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
                     conn.p.isCreateItemStar = true;
                     Service.send_box_UI(conn, 33);
                     //send_menu_select(conn,-5100,new String[]{"Chiến binh","Sát thủ","Pháp sư","Xạ thủ"});
@@ -6590,6 +6721,9 @@ public class MenuController {
                     break;
                 }
                 case 10: {
+                    if (!conn.p.isOwner) {
+                        return;
+                    }
                     send_menu_select(conn, 1000, new String[]{"Giáp Siêu Nhân Bạc(ngày)  ", "Giáp Siêu Nhan Tím(ngày) ", " Giáp Siêu Nhan Xanh(ngày)  ", "Giáp Siêu Nhân Vàng(ngày)"});
                     break;
                 }
@@ -6610,6 +6744,9 @@ public class MenuController {
     }
 
     private static void Menu_Alisama(Session conn, byte index, byte idmenu) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (idmenu == 0) {
             switch (index) {
                 case 0: {
@@ -6636,6 +6773,9 @@ public class MenuController {
     }
 
     private static void Menu_GiapSieuNhan(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 if (conn.p.get_ngoc() < 20000 || conn.p.item.total_item_by_id(4, 319) < 200) {
@@ -6836,18 +6976,30 @@ public class MenuController {
         // cua hang item wear
         switch (index) {
             case 0: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_box_UI(conn, 1);
                 break;
             }
             case 1: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_box_UI(conn, 2);
                 break;
             }
             case 2: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_box_UI(conn, 3);
                 break;
             }
             case 3: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_box_UI(conn, 4);
                 break;
             }
@@ -6876,6 +7028,9 @@ public class MenuController {
                 break;
             }
             case 5: {
+                if (!conn.p.isOwner) {
+                    return;
+                }
                 Service.send_box_UI(conn, 37);
                 break;
             }
@@ -6887,6 +7042,9 @@ public class MenuController {
     }
 
     private static void Menu_keva(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: { // cua hang potion
                 Service.send_box_UI(conn, 0);
@@ -6969,6 +7127,9 @@ public class MenuController {
     }
 
     private static void Menu_Mr_Haku(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 if (conn.status != 0) {
@@ -7277,6 +7438,9 @@ public class MenuController {
     }
 
     private static void Menu_Lisa(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: { // cua hang potion
                 Service.send_box_UI(conn, 0);
@@ -7359,6 +7523,9 @@ public class MenuController {
     }
 
     private static void Menu_Emma(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: { // cua hang potion
                 Service.send_box_UI(conn, 0);
@@ -7441,6 +7608,9 @@ public class MenuController {
     }
 
     private static void Menu_CayThong(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         if (Manager.gI().event == 1) {
             switch (index) {
                 case 0:
@@ -7581,7 +7751,10 @@ public class MenuController {
     }
 
     private static void Menu_DoiDongMeDaySTG(Session conn, byte index) throws IOException {
-        if (conn.p.item.wear != null && conn.p.item.wear.length > 12 && Helps.CheckItem.isMeDay(conn.p.item.wear[12].id)) {
+        if (!conn.p.isOwner) {
+            return;
+        }
+        if (conn.p.item.wear != null && conn.p.item.wear.length > 12 && (Helps.CheckItem.isMeDay(conn.p.item.wear[12].id) || Helps.CheckItem.isMeDaysieucap(conn.p.item.wear[12].id))) {
             Service.send_box_input_yesno(conn, 94, "Thực hiện này sẽ tiêu tốn 1000 ngọc, bạn có chắc chắn?");
         } else {
             Service.send_notice_box(conn, "Không có vật phẩm phù hợp!");
@@ -7589,7 +7762,10 @@ public class MenuController {
     }
 
     private static void Menu_DoiDongMeDaySTPT(Session conn, byte index) throws IOException {
-        if (conn.p.item.wear != null && conn.p.item.wear.length > 12 && Helps.CheckItem.isMeDay(conn.p.item.wear[12].id)) {
+        if (!conn.p.isOwner) {
+            return;
+        }
+        if (conn.p.item.wear != null && conn.p.item.wear.length > 12 && (Helps.CheckItem.isMeDay(conn.p.item.wear[12].id) || Helps.CheckItem.isMeDaysieucap(conn.p.item.wear[12].id))) {
             Service.send_box_input_yesno(conn, 98, "Thực hiện này sẽ tiêu tốn 1000 ngọc, bạn có chắc chắn?");
         } else {
             Service.send_notice_box(conn, "Không có vật phẩm phù hợp!");
@@ -7597,6 +7773,9 @@ public class MenuController {
     }
 
     private static void Menu_Quest_Daily(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 String notice
@@ -7644,6 +7823,9 @@ public class MenuController {
     // }
     // }
     private static void Menu_Wedding(Session conn, byte index) throws IOException {
+        if (!conn.p.isOwner) {
+            return;
+        }
         switch (index) {
             case 0: {
                 if (conn.p.item.wear[23] == null) {

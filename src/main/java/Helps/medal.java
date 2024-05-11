@@ -110,7 +110,7 @@ public class medal {
     {
         List<Integer> id_PTST = new ArrayList<>(java.util.Arrays.asList(7,8,9,10,11));
         List<Integer> id_khang = new ArrayList<>(java.util.Arrays.asList(14,15,16,17,18,19,20,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38));
-        List<Integer> id_CSVIP = new ArrayList<>(java.util.Arrays.asList(77,79,82,86,88,    80));
+        List<Integer> id_CSVIP = new ArrayList<>(java.util.Arrays.asList(77,79,82,86,88,80));
         List<Integer> ops = new ArrayList<>();
         byte countOP = 0;
         int count = 0;
@@ -192,6 +192,11 @@ public class medal {
                     param_add = Util.random(1200, 1500);
                     param_add2 = Util.random(1200, 1500);
                 }
+                else if(tem.color ==5)
+                {
+                    param_add = Util.random(1400, 1800);
+                    param_add2 = Util.random(1400, 1800);
+                }
             }
             else if (id_add >= 7 && id_add <= 13) {
                 if(tem.color ==0)
@@ -204,6 +209,8 @@ public class medal {
                     param_add = Util.random(253, 300);
                 else if(tem.color == 4)
                     param_add = Util.random(300, 347);
+                else if (tem.color == 5)
+                    param_add = Util.random(500, 550);
             }
             else {
                 param_add = Util.random(50,200);

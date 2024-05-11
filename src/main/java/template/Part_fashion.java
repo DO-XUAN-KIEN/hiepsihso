@@ -11,17 +11,42 @@ public class Part_fashion {
     public byte[] part;
 
     public static byte[] get_part(Player p) {
-        if (p.item.wear[11] != null) {
+        if (p.item.wear[0] != null) {
             for (Part_fashion temp : entrys) {
-                if (temp.id == p.item.wear[11].id) {
+                if (temp.id == p.item.wear[0].id) {
                     return temp.part;
                 }
             }
         }
-        if (p.item.wear[20] != null) {
-            for (Part_fashion temp : entrys) {
-                if (temp.id == p.item.wear[20].id) {
-                    return temp.part;
+        if((p.item.wear[1] != null && p.item.wear[6] != null && p.item.wear[7] != null) &&
+                (p.item.wear[1].id >= 4850 || p.item.wear[6].id >= 4850 || p.item.wear[7].id >= 4850)) {
+            if (p.item.wear[1] != null && p.item.wear[1].id >= 4850) {
+                for (Part_fashion temp : entrys) {
+                    if (temp.id == p.item.wear[1].id) {
+                        return temp.part;
+                    }
+                }
+            }
+            if (p.item.wear[7] != null && p.item.wear[7].id >= 4850) {
+                for (Part_fashion temp : entrys) {
+                    if (temp.id == p.item.wear[7].id) {
+                        return temp.part;
+                    }
+                }
+            }
+            if (p.item.wear[6] != null && p.item.wear[1].id >= 4850) {
+                for (Part_fashion temp : entrys) {
+                    if (temp.id == p.item.wear[6].id) {
+                        return temp.part;
+                    }
+                }
+            }
+        }else {
+            if (p.item.wear[11] != null) {
+                for (Part_fashion temp : entrys) {
+                    if (temp.id == p.item.wear[11].id) {
+                        return temp.part;
+                    }
                 }
             }
         }

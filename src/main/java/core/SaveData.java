@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import ai.NhanBan;
+import io.Session;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 import client.Clan;
@@ -37,7 +38,7 @@ import map.MapService;
 import org.json.simple.JSONObject;
 
 public class SaveData {
-
+    public static Player p;
     @SuppressWarnings("unchecked")
     public synchronized static void process() {
         if(Manager.isServerTest)
@@ -595,6 +596,7 @@ public class SaveData {
             Map.eye = -1;
             Map.hair = -1;
             Map.weapon = -1;
+            Map.eff = -1;
             Map.body = -1;
             Map.leg = -1;
             Map.hat = -1;

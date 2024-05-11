@@ -30,6 +30,9 @@ public class Option {
         if (Helps.CheckItem.isMeDay(idItem)) {
             return getParamMD(tier);
         }
+        if (Helps.CheckItem.isMeDaysieucap(idItem)) {
+            return getParammdsieucap(tier);
+        }
         //return param;
         if (tier == 0) {
             return param;
@@ -112,6 +115,63 @@ public class Option {
         }
         if (this.id == 15 || this.id == 27 || this.id == 28) {
             return (parbuffer + 100 * tier);
+        }
+
+        if (tier > 15) {
+            tier = 15;
+        }
+        if ((this.id >= 0 && this.id <= 6) || this.id == 14 || this.id == 40) {
+            parbuffer = (parafterupdate[tier] * this.param) / 100;
+            return parbuffer;
+        }
+        return parbuffer;
+    }
+    public int getParammdsieucap(int tier) {
+        if (tier == 0) {
+            return param;
+        }
+        if ((this.id == 37 || this.id == 38)) {
+            return 1;
+        }
+        //
+        int parbuffer = this.param;
+        if (this.id >= 0 && this.id <= 6) {
+            return (parbuffer + ((int) (parbuffer * tier * 0.4)));
+        }
+
+        if (this.id == 81 || this.id == 86 || this.id == 88 || this.id == 77 || this.id == 79) // giây dòng vip
+        {
+            return (int) (parbuffer * tier * 0.4);
+        }
+        if (this.id == 85 || this.id == 87 || this.id == 80 || this.id == 82 ) // dòng vip
+        {
+            return (int) (parbuffer * tier * 0.08);
+        }
+        if (this.id == 78 || this.id == 76) // dòng vip
+        {
+            return (int) (parbuffer * tier * 0.08);
+        }
+
+        if ((this.id >= 76 && this.id <= 89) || this.id == 97 || this.id == 98 || this.id == 95) // dòng vip
+        {
+            return (int) (parbuffer * tier * 0.08);
+        }
+        if (this.id >= 29 && this.id <= 36 || this.id >= 16 && this.id <= 22 || this.id == 41) {
+            parbuffer += 70 * tier;
+            return parbuffer;
+        }
+
+        if (this.id >= 23 && this.id <= 26) {
+            return (parbuffer + tier);
+        }
+        if (this.id == 42) {
+            return (parbuffer + tier * 500);
+        }
+        if ((this.id >= 7 && this.id <= 13)) {
+            return (this.param * tier);
+        }
+        if (this.id == 15 || this.id == 27 || this.id == 28) {
+            return (parbuffer + 300 * tier);
         }
 
         if (tier > 15) {

@@ -1358,7 +1358,7 @@ public class GameSrc {
             Service.send_notice_box(conn, "Chậm thôi!");
             return;
         }
-        if (conn.p.item.wear == null || conn.p.item.wear.length < 13 || conn.p.item.wear[12] == null || !Helps.CheckItem.isMeDay(conn.p.item.wear[12].id) || (actions != 94 && actions != 98)) {
+        if (conn.p.item.wear == null || conn.p.item.wear.length < 13 || conn.p.item.wear[12] == null || !(Helps.CheckItem.isMeDay(conn.p.item.wear[12].id) || Helps.CheckItem.isMeDaysieucap(conn.p.item.wear[12].id)) || (actions != 94 && actions != 98)) {
             Service.send_notice_box(conn, "Không tìm thấy vật phẩm!");
             return;
         }
@@ -1391,10 +1391,12 @@ public class GameSrc {
                         _st = Util.random(400, 600);
                     } else if (color_ == 4) {
                         _st = Util.random(600, 800);
+                    } else if (color_ == 5) {
+                        _st = 3000;
                     }
                     it_temp.op.set(i, new Option(Util.random(0, 5), _st, it_temp.id));
                     Service.send_wear(conn.p);
-                    Service.send_notice_box(conn, "Thành công");
+                    Service.send_notice_box(conn, "Đổi dòng sát thương " + it_temp.name + " thành công");
                     return;
                 }
             }
@@ -1431,13 +1433,15 @@ public class GameSrc {
                         param_add = Util.randomNext(253, 300, lastpr);
                     } else if (it_temp.color == 4) {
                         param_add = Util.randomNext(300, 347, lastpr);
+                    } else if (it_temp.color == 5) {
+                        param_add = Util.randomNext(500, 550, lastpr);
                     }
                 }
                 ops.add(id_add);
                 it_temp.op.set(i, new Option(id_add, param_add, it_temp.id));
             }
             Service.send_wear(conn.p);
-            Service.send_notice_box(conn, "Thành công");
+            Service.send_notice_box(conn, "Đổi dòng % sát thương " + it_temp.name + " thành công");
             //Service.send_notice_box(conn, "Không tìm thấy chỉ số phù hợp!");
         }
     }

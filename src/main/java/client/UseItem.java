@@ -79,6 +79,10 @@ public class UseItem {
     private static void use_item4_default(Session conn, short id_potion) throws IOException {
         switch (id_potion) {
             case 193: {// rương coin
+                if(conn.p.item.get_bag_able() <= 1){
+                    Service.send_notice_box(conn, "Hành trang đầy");
+                    return;
+                }
                 conn.p.item.remove(4, 193, 1);
                 int vang_ = Util.random(100_000, 5_000_000);
                 int ngoc_ = Util.random(1_000, 5_000);
@@ -170,6 +174,10 @@ public class UseItem {
                 break;
             }
             case 194: {// rương đổi = vàng
+                if(conn.p.item.get_bag_able() <= 1){
+                    Service.send_notice_box(conn, "Hành trang đầy");
+                    return;
+                }
                 conn.p.item.remove(4, 194, 1);
                 int vang_ = Util.random(100_000,500_000);
                 int ngoc_ = Util.random(1_000, 5_000);
@@ -343,7 +351,9 @@ public class UseItem {
             case 1:
             case 25:
             case 2: {
-                if (conn.p.time_use_poition_hp < System.currentTimeMillis()) {
+                EffTemplate vet_thuong_sau = conn.p.get_EffDefault(StrucEff.VET_THUONG_SAU);
+                EffTemplate te_cong = conn.p.get_EffDefault(StrucEff.TE_CONG);
+                if (conn.p.time_use_poition_hp < System.currentTimeMillis() && vet_thuong_sau == null && te_cong == null) {
                     conn.p.time_use_poition_hp = System.currentTimeMillis() + 2000L;
                     conn.p.item.remove(4, id_potion, 1);
                     int param = ItemTemplate4.item.get(id_potion).getValue();
@@ -1364,6 +1374,10 @@ public class UseItem {
                 break;
             }
             case 219: {
+                if(conn.p.map.map_id == 48){
+                    Service.send_notice_box(conn, "Không thể gọi đệ tử trong phó bản");
+                    return;
+                }
                 if (conn.p.squire != null) {
                     if (conn.p.isLiveSquire) {
                         return;

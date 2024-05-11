@@ -38,6 +38,7 @@ public class Map implements Runnable {
     public static short eye;
     public static short hair;
     public static short weapon;
+    public static short eff;
     public static short body;
     public static short leg;
     public static short hat;
@@ -856,19 +857,21 @@ public class Map implements Runnable {
             m.writer().writeByte(0);
             p.conn.addmsg(m);
             m.cleanup();
-        }else if (this.map_id == 1) {
+        }
+        if (this.map_id == 1 && !(p.isOwner)){
             m = new Message(-50);
             m.writer().writeByte(1);
-            m.writer().writeUTF("Mr Dylan");
-            m.writer().writeByte(-57);
-            m.writer().writeByte(34);
-            m.writer().writeShort(720);
-            m.writer().writeShort(167);
+            m.writer().writeUTF("Mr Đệ tử");
+            m.writer().writeUTF("Giao Tiếp");
+            m.writer().writeByte(-1);// id npc
+            m.writer().writeByte(38);   // icon
+            m.writer().writeShort(690); // x
+            m.writer().writeShort(360); // y
             m.writer().writeByte(1);
             m.writer().writeByte(1);
             m.writer().writeByte(2);
-            m.writer().writeByte(26);
-            m.writer().writeUTF("cút");
+            m.writer().writeByte(40); // icon 2
+            m.writer().writeUTF("Ta là sự phụ của thế giới");
             m.writer().writeByte(1);
             m.writer().writeByte(0);
             p.conn.addmsg(m);
@@ -892,7 +895,11 @@ public class Map implements Runnable {
             m.writer().writeByte(-49);
             m.writer().writeByte(15);
             //
-            m.writer().writeShort(Map.weapon); // weapon
+            if(p.item.wear[0].id >= 4850) {
+                m.writer().writeShort(Map.eff); // weapon
+            }else {
+                m.writer().writeShort(Map.weapon); // weapon
+            }
             m.writer().writeShort(Map.body); // body
             m.writer().writeShort(-1);
             m.writer().writeShort(-1);

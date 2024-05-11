@@ -31,6 +31,7 @@ public class NhanBan extends MainObject{
     private short phi_phong;//
 	private short danh_hieu;
     private short weapon;//
+    private short eff;
     private short id_horse;//
     private short id_hair;//
     private short id_wing;//
@@ -70,6 +71,7 @@ public class NhanBan extends MainObject{
         this.mat_na = (short) matna;
         this.phi_phong = (short) phiphong;
         this.weapon = (short) weapon;
+        this.eff = (short) eff;
         this.id_horse = (short) id_horse;
         this.id_hair = (short) id_hair;
         this.id_wing = (short) id_wing;
@@ -144,6 +146,7 @@ public class NhanBan extends MainObject{
         time_hp_buff = (Long) jar.get(31);
         def = ((Long) jar.get(32)).intValue();
         pierce = ((Long) jar.get(33)).intValue();
+        eff = ((Long) jar.get(34)).shortValue();
     }
 
     public JSONArray GetData() {
@@ -190,6 +193,7 @@ public class NhanBan extends MainObject{
             jar.add(mat_na);
             jar.add(phi_phong);
             jar.add(weapon);
+            jar.add(eff);
             jar.add(id_horse);
             jar.add(id_hair);
             jar.add(id_wing);
@@ -253,7 +257,11 @@ public class NhanBan extends MainObject{
         this.fashion = p0.fashion;
         this.mat_na = Service.get_id_mat_na(p0);
         this.phi_phong = Service.get_id_phiphong(p0);
-        this.weapon = Service.get_id_weapon(p0);
+        if(p0.item.wear[0].id >= 4850 && p0.item.wear[0] != null) {
+            this.eff = Service.get_id_eff(p0);
+        }else {
+            this.weapon = Service.get_id_weapon(p0);
+        }
         this.id_horse = p0.id_horse;
         this.id_hair = Service.get_id_hair(p0);
         this.id_wing = Service.get_id_wing(p0);

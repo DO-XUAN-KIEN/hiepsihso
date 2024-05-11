@@ -21,7 +21,7 @@ import template.Level;
 import template.Part_player;
 
 public class BXH {
-
+    public static Player p;
     public static final List<Memin4> BXH_level = new ArrayList<>();
     public static final List<Memin4> BXH_Chientruong = new ArrayList<>();
     public static final List<Memin4> BXH_Dicuop = new ArrayList<>();
@@ -549,6 +549,7 @@ public class BXH {
             Map.eye = -1;
             Map.hair = -1;
             Map.weapon = -1;
+            Map.eff = -1;
             Map.body = -1;
             Map.leg = -1;
             Map.hat = -1;

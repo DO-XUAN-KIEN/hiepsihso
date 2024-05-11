@@ -569,6 +569,23 @@ public class Process_Yes_no_box {
                     }
                     break;
                 }
+                case -1: {
+                    Dungeon d = DungeonManager.get_list(conn.p.name);
+                    if(d == null){
+                        Service.send_notice_box(conn, "Phải vào phó bản trước rồi mới dùng được chức năng này");
+                        return;
+                    }
+                    if(conn.p.point_active[0] <1){
+                        Service.send_notice_box(conn,"Bạn không còn lượt nào để trừ");
+                        return;
+                    }
+                    conn.p.point_active[0] -= 1;
+                    d.finish_dungeon();
+                    conn.p.item.char_inventory(3);
+                    conn.p.item.char_inventory(5);
+                    Service.send_notice_box(conn,"Bạn đã sử dụng quyền trợ giúp hoàn thành phó bản");
+                    break;
+                }
                 case 70: {
                     if (conn.p.get_ngoc() < 20000) {
                         Service.send_notice_box(conn, "20k ngọc còn không có thì không xứng đáng làm anh hùng!");
