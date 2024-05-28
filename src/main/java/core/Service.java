@@ -1533,10 +1533,10 @@ public static int idxDame;
                     conn.p.mypet.get(index_pet).point2 += 10;
                     send_notice_box(conn, "+10 điểm vào nhóm khéo léo");
                 }
-                else {
-                    send_notice_box(conn, "Không thể cho ăn");
-                    return;
-                }
+//                else {
+//                    send_notice_box(conn, "Không thể cho ăn");
+//                    return;
+//                }
                 conn.p.mypet.get(index_pet).update_exp(3250);// cũ 3250
                 conn.p.item.remove(4, id_it, 1);
                 conn.p.item.char_inventory(4);
@@ -1560,10 +1560,10 @@ public static int idxDame;
                     conn.p.mypet.get(index_pet).point2 += 10;
                     send_notice_box(conn, "+10 điểm vào nhóm khéo léo");
                 }
-                else {
-                    send_notice_box(conn, "Không thể cho ăn");
-                    return;
-                }
+//                else {
+//                    send_notice_box(conn, "Không thể cho ăn");
+//                    return;
+//                }
                 His_DelItem hist = new His_DelItem(conn.p.name);
                 hist.Logger = "cho pet ăn";
                 hist.tem3 = conn.p.item.bag3[id_it];

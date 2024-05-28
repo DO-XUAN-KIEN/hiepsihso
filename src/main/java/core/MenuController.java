@@ -2368,7 +2368,6 @@ public class MenuController {
                     conn.p.item.char_inventory(5);
                     send_menu_select(conn, 114, new String[]{"Cầu hôn", "Ly hôn", "Nâng cấp nhẫn", "Hướng dẫn"});
                     break;
-
                 } else {
                     if (conn.p.checkcoin() < 100000) {
                         Service.send_notice_box(conn, "Không đủ điều kiện 100k coin để kết hôn");

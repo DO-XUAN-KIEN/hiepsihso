@@ -34,7 +34,7 @@ public class Part_fashion {
                     }
                 }
             }
-            if (p.item.wear[6] != null && p.item.wear[1].id >= 4850) {
+            if (p.item.wear[6] != null && p.item.wear[6].id >= 4850) {
                 for (Part_fashion temp : entrys) {
                     if (temp.id == p.item.wear[6].id) {
                         return temp.part;

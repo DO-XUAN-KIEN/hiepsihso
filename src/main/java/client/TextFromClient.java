@@ -336,8 +336,7 @@ public class TextFromClient {
                             }
                             Log.gI().add_log(conn.p.name,
                                     "Nhận giftcode " + text + " : " + Util.number_format(vang_up) + " vàng");
-                            Log.gI().add_log(conn.p.name,
-                                    "Nhận giftcode " + text + " : " + Util.number_format(ngoc_up) + " ngọc");
+                            Log.gI().add_log(conn.p.name,"Nhận giftcode " + text + " : " + Util.number_format(ngoc_up) + " ngọc");
 //                            conn.p.item.char_inventory(3);
 //                            conn.p.item.char_inventory(4);
 //                            conn.p.item.char_inventory(7);
