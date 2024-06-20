@@ -1853,7 +1853,7 @@ public static int idxDame;
                     send_notice_box(p.conn, "Không tìm thấy vật phẩm!");
                     return;
                 }
-                if (Helps.CheckItem.isBuyItemSieupham(idbuy))//mua đồ siêu pham
+                if (idbuy >= 4852 && idbuy <= 4902)//mua đồ siêu pham
                 {
                     for (Itemselldosieupham itsell3 : Itemselldosieupham.entry) {
                         if (itsell3.id == idbuy) {

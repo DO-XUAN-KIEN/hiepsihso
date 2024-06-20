@@ -58,7 +58,7 @@ public class UseItem {
     public static void concac(Session conn){
         try{
             conn.p.time_use_item_arena = System.currentTimeMillis() + 10_000;
-            conn.p.pet_di_buon = new Pet_di_buon(84, Manager.gI().get_index_mob_new(), conn.p.x, conn.p.y,
+            conn.p.pet_di_buon = new Pet_di_buon(131, Manager.gI().get_index_mob_new(), conn.p.x, conn.p.y,
                     conn.p.map.map_id, conn.p.name, conn.p);
             Pet_di_buon_manager.add(conn.p.name, conn.p.pet_di_buon);
             //
@@ -325,7 +325,7 @@ public class UseItem {
                 }
                 if (conn.p.pet_di_buon == null) {
                     conn.p.time_use_item_arena = System.currentTimeMillis() + 10_000;
-                    conn.p.pet_di_buon = new Pet_di_buon(86, Manager.gI().get_index_mob_new(), conn.p.x, conn.p.y,
+                    conn.p.pet_di_buon = new Pet_di_buon(132, Manager.gI().get_index_mob_new(), conn.p.x, conn.p.y,
                             conn.p.map.map_id, conn.p.name, conn.p);
                     Pet_di_buon_manager.add(conn.p.name, conn.p.pet_di_buon);
                     //

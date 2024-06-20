@@ -512,7 +512,6 @@ public class Map implements Runnable {
                         if (p.squire != null && p.isLiveSquire) {
                             p.squire.update(this);
                         }
-
                         // auto trừ hp, mp khi dính bỏng lửa, bỏng lạnh
                         // eff medal
                         Item3 it = p.item.wear[12];
