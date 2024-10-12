@@ -384,8 +384,24 @@ public class Session implements Runnable {
         m.cleanup();
         sendKeyComplete = true;
     }
-
+    public boolean checkIP(Session session){
+        for (String ipban : Manager.gI().LIST_IP_BAN){
+            if (session.ip.equals(ipban)){
+                try {
+                    session.concac("Bạn đã bị Ban");
+                    System.out.println("Chặn ip " + session.ip + " thành công");
+                    return true;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return false;
+    }
     public void getclientin4(Message m) throws IOException {
+        if (checkIP(this)){
+            return;
+        }
         if (!CheckDDOS.checkCountIP(ip)) {
             noticelogin("IP này đã đạt đến giới hạn!");
             return;

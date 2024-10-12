@@ -695,7 +695,14 @@ public class LeaveItemMap {
                 }
                 case 125:
                 case 126:
-                case 127: {
+                case 127:
+                case 128:
+                case 129:
+                case 130:
+                case 131:
+                case 132:
+                case 133:
+                case 134: {
                     index_real = Medal_Material.m_white[0][Util.random(6, 10)];
                     break;
                 }

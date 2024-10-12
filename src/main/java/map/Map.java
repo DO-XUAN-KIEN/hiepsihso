@@ -624,9 +624,9 @@ public class Map implements Runnable {
                             switch (it.id) {
 
                                 case 4812: {
-                                    byte eff_ = 76;
+                                    byte eff_ = 71;
                                     if (it.tier == 15) {
-                                        eff_ = 67;
+                                        eff_ = 71;
                                     }
                                     m.writer().writeByte(eff_);
                                     break;
@@ -667,7 +667,7 @@ public class Map implements Runnable {
                             switch (it.id) {
 
                                 case 4784: {
-                                    byte eff_ = 67;
+                                    byte eff_ = 35;
                                     if (it.tier == 15) {
                                         eff_ = 67;
                                     }

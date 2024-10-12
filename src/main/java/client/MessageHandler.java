@@ -468,9 +468,6 @@ public class MessageHandler {
             m.reader().readByte(); // type login
             int id_player_login = m.reader().readInt();
             Player p0 = new Player(conn, id_player_login);
-            if (checkIP(conn)){
-                return;
-            }
             if (p0 != null && p0.setup()) {
 
                 for (int i = Session.client_entrys.size() - 1; i >= 0; i--) {
@@ -499,20 +496,6 @@ public class MessageHandler {
                 MessageHandler.dataloginmap(conn);
             }
         }
-    }
-    private boolean checkIP(Session session){
-        for (String ipban : Manager.gI().LIST_IP_BAN){
-            if (session.ip.equals(ipban)){
-                try {
-                    session.concac("Bạn đã bị Ban");
-                    System.out.println("Chặn ip " + session.ip + " thành công");
-                    return true;
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        return false;
     }
     public static void dataloginmap(Session conn) throws IOException {
         Service.send_quest(conn);

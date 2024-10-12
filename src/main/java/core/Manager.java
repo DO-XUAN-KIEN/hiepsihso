@@ -576,7 +576,6 @@ public class Manager {
                             itemsell3[i + jsar.size()].pricetype = 1;
                         }
                     }
-
                     itemsellTB.add(itemsell3);
                     break;
                 }
